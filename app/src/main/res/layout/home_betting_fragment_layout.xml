@@ -155,12 +155,23 @@
             <com.xbzhangshi.view.CustomViewPager
                 android:id="@+id/fragment_tabmain_viewPager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="签到"/>
+                android:layout_marginTop="@dimen/dp_10"/>
+
+            <com.xbzhangshi.view.ResizableImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/sign_in"
+                android:scaleType="centerInside"
+                android:layout_marginTop="@dimen/dp_25"
+               />
+            <com.xbzhangshi.view.ResizableImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/lucky_disk"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginBottom="@dimen/dp_15"
+               />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

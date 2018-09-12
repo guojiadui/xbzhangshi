@@ -7,10 +7,13 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
 import com.xbzhangshi.view.CustomViewPager;
+import com.xbzhangshi.view.dialog.HomeTipDialog;
 
 import butterknife.BindView;
 
@@ -29,7 +32,7 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
 
-    String[] tabNames = {"彩票","体育","电子","真人"};
+    String[] tabNames = {"彩票", "体育", "电子", "真人"};
 
     public static HomeBettingFragment newInstance() {
         HomeBettingFragment fragment = new HomeBettingFragment();
@@ -41,22 +44,36 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
         return R.layout.home_betting_fragment_layout;
     }
 
+     HomeTipDialog homeTipDialog;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+       /* if (homeTipDialog != null)
+            homeTipDialog.show();*/
+    }
+
+
     @Override
     protected void initView(View view) {
 
+
+
+       /* homeTipDialog = new HomeTipDialog(mActivity);
+        homeTipDialog.show();*/
         fragmentTabmainViewPager.setOffscreenPageLimit(4);
         fragmentTabmainViewPager.addOnPageChangeListener(this);
 
         fragmentTabmainViewPager.setAdapter(new LotteryTypeFraggmentAdapter(mActivity, fragmentTabmainViewPager, getChildFragmentManager()));
         tabLayout.setupWithViewPager(fragmentTabmainViewPager);
         //自定义tab的item
-         for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             //注意！！！这里就是添加我们自定义的布局
             tab.setCustomView(R.layout.tab_hall_item);
             //这里是初始化时，默认item0被选中，setSelected（true）是为了给图片和文字设置选中效果，代码在文章最后贴出
-             TextView tabName =(TextView) tab.getCustomView().findViewById(R.id.tab_text);
-             tabName.setText(tabNames[i]);
+            TextView tabName = (TextView) tab.getCustomView().findViewById(R.id.tab_text);
+            tabName.setText(tabNames[i]);
             if (i == 0) {
                 tabName.setSelected(true);
             }
@@ -96,7 +113,6 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
 
     @Override
     public void onPageSelected(int position) {
-
         fragmentTabmainViewPager.resetHeight(position);
     }
 

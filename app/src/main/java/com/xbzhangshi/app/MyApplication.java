@@ -17,23 +17,25 @@ public class MyApplication extends Application {
     //记录当前栈里所有activity
     private List<Activity> activities = new ArrayList<Activity>();
     android.os.Handler handler = new android.os.Handler();
+
     /**
      * 应用实例
      **/
     private static MyApplication instance;
+
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
         super.onCreate();
-        instance =this;
-        CrashUtils.init(new CrashUtils.OnCrashListener() {
+        instance = this;
+       /* CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override
             public void onCrash(String crashInfo, Throwable e) {
                 AppUtils.relaunchApp();
             }
-        });
+        });*/
         LogUtils.getConfig().setLogSwitch(true);
-        LogUtils.e("TAG","------------------app");
+        LogUtils.e("TAG", "------------------app");
     /*    if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
