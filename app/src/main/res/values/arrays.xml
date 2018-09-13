@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="type">
+        <item >----请选择类型----</item>
+        <item >现金兑换积分</item>
+        <item >积分兑换现金</item>
+    </string-array>
+</resources>
