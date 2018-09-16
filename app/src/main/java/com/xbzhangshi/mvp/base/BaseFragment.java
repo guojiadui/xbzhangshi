@@ -53,7 +53,7 @@ public  abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
             Bundle savedInstanceState) {
         LogUtils.i(getClass().getSimpleName() + ">>>>>>>>>>>　　onCreateView");
-        if (mView == null) {
+         if (mView == null) {
             mView = inflater.inflate(getLayoutId(), container, false);
             unbinder = ButterKnife.bind(this, mView);
             initView(mView);
@@ -68,7 +68,9 @@ public  abstract class BaseFragment extends Fragment {
             unbinder = ButterKnife.bind(this, mView);
             LogUtils.i(getClass().getSimpleName() + ">>>>>>>>>>>　　removeView");
         }
-
+      /*  mView = inflater.inflate(getLayoutId(), container, false);
+        unbinder = ButterKnife.bind(this, mView);
+        initView(mView);*/
         return mView;
     }
 

@@ -7,17 +7,20 @@ import android.app.Application;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CrashUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.Utils;
 import com.squareup.leakcanary.LeakCanary;
+import com.xbzhangshi.single.ServiceTime;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyApplication extends Application {
+public class MyApplication extends Application implements Utils.OnAppStatusChangedListener {
 
     //记录当前栈里所有activity
     private List<Activity> activities = new ArrayList<Activity>();
     android.os.Handler handler = new android.os.Handler();
 
+    public  static  boolean isExit = false;
     /**
      * 应用实例
      **/
@@ -28,6 +31,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        isExit=false;
        /* CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override
             public void onCrash(String crashInfo, Throwable e) {
@@ -35,6 +39,7 @@ public class MyApplication extends Application {
             }
         });*/
         LogUtils.getConfig().setLogSwitch(true);
+        AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(),this);
         LogUtils.e("TAG", "------------------app");
     /*    if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -43,7 +48,11 @@ public class MyApplication extends Application {
         }
 
         LeakCanary.install(this);*/
+        ServiceTime.getInstance();
     }
+
+
+
 
     /**
      * 获得实例
@@ -86,6 +95,17 @@ public class MyApplication extends Application {
                 activity.finish();
             }
         }
+        isExit=true;
         System.exit(0);
+    }
+
+    @Override
+    public void onForeground() {
+        
+    }
+
+    @Override
+    public void onBackground() {
+
     }
 }

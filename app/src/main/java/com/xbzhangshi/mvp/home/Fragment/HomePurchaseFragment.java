@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.PurchaseFragmentAdapter;
+import com.xbzhangshi.mvp.home.baseView.IPurchaseView;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
+import com.xbzhangshi.mvp.home.presenter.PurchasePesenter;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,10 +27,8 @@ import butterknife.Unbinder;
 /**
  * 采购大厅
  */
-public class HomePurchaseFragment extends BaseFragment {
-    public static final String GRID = "grid";
-    public static final String VER = "ver";
-    public static String SHOWTYPE = VER;
+public class HomePurchaseFragment extends BaseFragment implements IPurchaseView {
+
 
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
@@ -40,6 +41,7 @@ public class HomePurchaseFragment extends BaseFragment {
     @BindView(R.id.select2)
     ImageView select2;
 
+    PurchasePesenter purchasePesenter;
 
     public static HomePurchaseFragment newInstance() {
         HomePurchaseFragment fragment = new HomePurchaseFragment();
@@ -56,15 +58,15 @@ public class HomePurchaseFragment extends BaseFragment {
         select1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SHOWTYPE = GRID;
-                EventBus.getDefault().post(new SwithEvent());
+                if (purchasePesenter != null)
+                    purchasePesenter.setLookMode();
             }
         });
         select2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SHOWTYPE = VER;
-                EventBus.getDefault().post(new SwithEvent());
+                if (purchasePesenter != null)
+                    purchasePesenter.setLookMode();
             }
         });
         viewpager.setOffscreenPageLimit(3);
@@ -77,11 +79,22 @@ public class HomePurchaseFragment extends BaseFragment {
             tab.setCustomView(R.layout.tab_purchase_item);
             //这里是初始化时，默认item0被选中，setSelected（true）是为了给图片和文字设置选中效果，代码在文章最后贴出
             TextView tabName = (TextView) tab.getCustomView().findViewById(R.id.tab_name);
+            ImageView tabImg = (ImageView) tab.getCustomView().findViewById(R.id.tab_icon);
             tabName.setText(tabNames[i]);
         }
-
-
+        purchasePesenter = PurchasePesenter.newInstance(this);
+        purchasePesenter.init();
     }
 
 
+    @Override
+    public void setLookModeViewBg(boolean mode) {
+        if (mode) {
+            select1.setBackgroundColor(mActivity.getResources().getColor(R.color.deep_red));
+            select2.setBackgroundColor(0x00ffffff);
+        } else {
+            select2.setBackgroundColor(mActivity.getResources().getColor(R.color.deep_red));
+            select1.setBackgroundColor(0x00ffffff);
+        }
+    }
 }

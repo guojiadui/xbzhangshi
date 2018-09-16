@@ -37,7 +37,7 @@
         <ImageView
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
-           android:src="@mipmap/ic_launcher"/>
+           android:src="@mipmap/login_user"/>
         <EditText
             android:id="@+id/name"
             android:layout_width="wrap_content"
@@ -54,6 +54,7 @@
             android:id="@+id/select_name"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
+            android:visibility="gone"
             android:src="@mipmap/ic_launcher"/>
     </LinearLayout>
     <FrameLayout
@@ -80,7 +81,7 @@
         <ImageView
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/login_clock"/>
         <EditText
             android:id="@+id/password"
             android:layout_width="wrap_content"

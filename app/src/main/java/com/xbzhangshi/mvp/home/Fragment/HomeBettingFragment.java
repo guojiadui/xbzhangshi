@@ -12,19 +12,20 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
+import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.view.CustomViewPager;
 import com.xbzhangshi.view.dialog.HomeTipDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 投注大厅
  */
 public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.fragment_tabmain_viewPager)
     CustomViewPager fragmentTabmainViewPager;
     @BindView(R.id.scrollView)
@@ -105,6 +106,12 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
             }
         });
     }
+
+    @OnClick(R.id.side_icon)
+    public  void  sendEvent(View v){
+        EventBus.getDefault().post(new SideOpenEvent());
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

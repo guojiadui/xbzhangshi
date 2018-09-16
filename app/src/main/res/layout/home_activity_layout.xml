@@ -12,13 +12,13 @@
     <com.xbzhangshi.view.BottomBar
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_52"
+        android:layout_height="@dimen/dp_55"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"/>
     <ImageView
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_52"
+        android:layout_marginBottom="@dimen/dp_55"
         android:layout_height="wrap_content"/>
 
 </FrameLayout>

@@ -11,8 +11,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.xbzhangshi.app.MyApplication;
 
 import butterknife.ButterKnife;
@@ -20,14 +23,26 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends FragmentActivity {
     protected Context mContext;
     private ConnectivityManager manager;
-
+    FrameLayout frameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 锁定竖屏
         mContext = this;
         setContentView(getlayout());
+        LogUtils.e("TAG",findViewById(android.R.id.content).getClass().getName());
         ButterKnife.bind(this);
+        TextView textView = new TextView(this);
+        textView.setText("ddd");
+        textView.setTextColor(0xff000000);
+          frameLayout = findViewById(android.R.id.content);
+        frameLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                frameLayout.addView(textView);
+            }
+        });
+
         MyApplication.getInstance().addActivity(this);
         initView(savedInstanceState);
         initdata();

@@ -1,24 +1,34 @@
 package com.xbzhangshi.mvp.home;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.SpanUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xbzhangshi.R;
+import com.xbzhangshi.app.MyApplication;
 import com.xbzhangshi.mvp.base.BaseActivity;
-import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeBettingFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeOpenPrizeFragmenrt;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeUserCenterFragment;
-import com.xbzhangshi.mvp.home.adapter.HomePagerAdapter;
+import com.xbzhangshi.mvp.home.event.SideOpenEvent;
+import com.xbzhangshi.mvp.home.presenter.SidePesenter;
 import com.xbzhangshi.view.BottomBar;
 import com.xbzhangshi.view.BottomBarTab;
-import com.xbzhangshi.view.NoScrollViewPager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.zip.Inflater;
 
 import butterknife.BindView;
 
@@ -32,7 +42,8 @@ public class HomeActivity extends BaseActivity {
     HomeOpenPrizeFragmenrt homeOpenPrizeFragmenrt;//开奖公告
     HomeUserCenterFragment homeUserCenterFragment;//个人中心
 
-
+    View viewMenu;//菜单
+    SidePesenter sidePesenter;
     @Override
     protected int getlayout() {
         return R.layout.home_activity_layout;
@@ -42,35 +53,18 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        // 设置触摸屏幕的模式
-        menu.setTouchModeAbove(SlidingMenu.LEFT);
-        menu.setShadowWidthRes(R.dimen.shadow_width);
-        menu.setShadowDrawable(R.color.colorAccent);
+        EventBus.getDefault().register(this);
 
-        // 设置滑动菜单视图的宽度
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        // 设置渐入渐出效果的值
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        //为侧滑菜单设置布局
-        menu.setMenu(R.layout.sideslip_layout);
-     /*   noScrollViewpager.setNoScroll(true);
-        homePagerAdapter = new HomePagerAdapter(getSupportFragmentManager());
-        noScrollViewpager.setAdapter(homePagerAdapter);*/
-        mBottomBar.addItem(new BottomBarTab(this, R.drawable.ic_launcher_background, getString(R.string.test)))
-                .addItem(new BottomBarTab(this, R.drawable.ic_launcher_background, getString(R.string.test)))
-                .addItem(new BottomBarTab(this, R.drawable.ic_launcher_background, getString(R.string.test)))
-                .addItem(new BottomBarTab(this, R.drawable.ic_launcher_background, getString(R.string.test)));
+        mBottomBar.addItem(new BottomBarTab(this, R.mipmap.sy_nor, "投注大厅"))
+                .addItem(new BottomBarTab(this, R.mipmap.gcdt_nor, "采购大厅"))
+                .addItem(new BottomBarTab(this, R.mipmap.kjdt_nor, "开奖公告"))
+                .addItem(new BottomBarTab(this, R.mipmap.grzx_nor, "个人中心"));
         mBottomBar.setCurrentItem(0);
         switchFragment(0);
         mBottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, int prePosition) {
-
                 LogUtils.e("onTabSelected:" + position + "+" + prePosition);
-                //noScrollViewpager.setCurrentItem(position);
                 switchFragment(position);
             }
 
@@ -84,31 +78,76 @@ public class HomeActivity extends BaseActivity {
                 LogUtils.e("onTabReselected:" + position + "+");
             }
         });
+        initMenu();
+    }
+
+
+    public void initMenu() {
+        menu = new SlidingMenu(this);
+        menu.setMode(SlidingMenu.LEFT);
+        // 设置触摸屏幕的模式
+        menu.setTouchModeAbove(SlidingMenu.LEFT);
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.color.colorAccent);
+
+        // 设置滑动菜单视图的宽度
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        // 设置渐入渐出效果的值
+        menu.setFadeDegree(0.35f);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        //为侧滑菜单设置布局
+        viewMenu = LayoutInflater.from(this).inflate(R.layout.sideslip_layout, null);
+        menu.setMenu(viewMenu);
+        sidePesenter = SidePesenter.newInstance(viewMenu);
+        RelativeLayout sideExit = viewMenu.findViewById(R.id.side_app_exit);
+        sideExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sidePesenter.exit();
+            }
+        });
+
 
     }
-   /* @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-      if(keyCode== KeyEvent.KEYCODE_BACK){
-          if(menu!=null&&menu.isMenuShowing()){
-              menu.showMenu(false);
-              return true;
-          }
-      }
-        return super.onKeyDown(keyCode, event);
-    }*/
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(SideOpenEvent event) {
+        if (menu != null && !menu.isMenuShowing()) {
+            menu.toggle();
+        }
+    }
+
+    ;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    private long exitTime = 0;
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_UP && event.getRepeatCount() == 0) {
-//         showMenu();
-//         showContent();
-               menu.toggle(false);
+                if (menu != null && menu.isMenuShowing()) {
+                    menu.toggle();
+                    return true;
+                }
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    Toast.makeText(getApplicationContext(), "再按一次退出", Toast.LENGTH_SHORT).show();
+                    exitTime = System.currentTimeMillis();
+                } else {
+                    MyApplication.getInstance().exit();
+                }
             }
             return true;
         }
         return super.onKeyUp(keyCode, event);
     }
+
     /**
      * 切换Fragment
      *
@@ -116,9 +155,9 @@ public class HomeActivity extends BaseActivity {
      */
     private void switchFragment(int position) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if(position==0){
+        if (position == 0) {
             SlidingMenu.isCanMove = true;
-        }else {
+        } else {
             SlidingMenu.isCanMove = false;
         }
         switch (position) {
