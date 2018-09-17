@@ -19,6 +19,7 @@ import com.xbzhangshi.mvp.home.Fragment.HomeBettingFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeOpenPrizeFragmenrt;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeUserCenterFragment;
+import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.mvp.home.presenter.SidePesenter;
 import com.xbzhangshi.view.BottomBar;
@@ -200,43 +201,7 @@ public class HomeActivity extends BaseActivity {
         }
         transaction.commitAllowingStateLoss();
     }
-  /*  private fun switchFragment(position: Int) {
-        val transaction = supportFragmentManager.beginTransaction()
-        hideFragments(transaction)
-        when (position) {
-            0 // 首页
-            -> mHomeFragment?.let {
-                transaction.show(it)
-            } ?: HomeFragment.getInstance(mTitles[position]).let {
-                mHomeFragment = it
-                transaction.add(R.id.fl_container, it, "home")
-            }
-            1  //发现
-            -> mDiscoveryFragment?.let {
-                transaction.show(it)
-            } ?: DiscoveryFragment.getInstance(mTitles[position]).let {
-                mDiscoveryFragment = it
-                transaction.add(R.id.fl_container, it, "discovery") }
-            2  //热门
-            -> mHotFragment?.let {
-                transaction.show(it)
-            } ?: HotFragment.getInstance(mTitles[position]).let {
-                mHotFragment = it
-                transaction.add(R.id.fl_container, it, "hot") }
-            3 //我的
-            -> mMineFragment?.let {
-                transaction.show(it)
-            } ?: MineFragment.getInstance(mTitles[position]).let {
-                mMineFragment = it
-                transaction.add(R.id.fl_container, it, "mine") }
 
-            else -> {
-
-            }
-        }
-
-
-    }*/
 
     /**
      * 隐藏所有的Fragment
@@ -263,6 +228,7 @@ public class HomeActivity extends BaseActivity {
     protected void initdata() {
 
     }
+
 
 
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +19,7 @@ import com.blankj.utilcode.util.LogUtils;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public  abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     protected View mView;
 
@@ -36,12 +37,14 @@ public  abstract class BaseFragment extends Fragment {
     protected boolean isDataInitiated;
     public Activity mActivity;
     Unbinder unbinder;
+
     @Override
     public void onAttach(Context context) {
         LogUtils.i(getClass().getSimpleName() + ">>>>>>>>>>>　　onAttach");
         super.onAttach(context);
-        mActivity =  getActivity();
+        mActivity = getActivity();
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         LogUtils.i(getClass().getSimpleName() + ">>>>>>>>>>>　　onCreate");
@@ -53,7 +56,7 @@ public  abstract class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
             Bundle savedInstanceState) {
         LogUtils.i(getClass().getSimpleName() + ">>>>>>>>>>>　　onCreateView");
-         if (mView == null) {
+        if (mView == null) {
             mView = inflater.inflate(getLayoutId(), container, false);
             unbinder = ButterKnife.bind(this, mView);
             initView(mView);
@@ -72,6 +75,12 @@ public  abstract class BaseFragment extends Fragment {
         unbinder = ButterKnife.bind(this, mView);
         initView(mView);*/
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initData(savedInstanceState);
     }
 
     @Override
@@ -100,11 +109,14 @@ public  abstract class BaseFragment extends Fragment {
      */
     protected abstract void initView(View view);
 
+    protected void initData(Bundle savedInstanceState) {
+
+    }
+
     /**
      * 判断是否是初始化Fragment
      */
     public boolean hasStarted = false;
-
 
 
     @Override
@@ -162,7 +174,6 @@ public  abstract class BaseFragment extends Fragment {
         }
         return false;
     }
-
 
 
     @Override

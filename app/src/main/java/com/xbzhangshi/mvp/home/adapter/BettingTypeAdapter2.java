@@ -11,24 +11,24 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.URL;
 import com.xbzhangshi.mvp.home.bean.BesidesLotteryBean;
-import com.xbzhangshi.mvp.home.bean.BettingTypeBean;
+import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 
 import java.util.List;
 
-public class BettingTypeAdapter extends BaseQuickAdapter<BesidesLotteryBean.ContentBean, BaseViewHolder> {
+public class BettingTypeAdapter2 extends BaseQuickAdapter<LoctteryBean.ContentBean, BaseViewHolder> {
     Context context;
 
-    public BettingTypeAdapter(Context context, @Nullable List<BesidesLotteryBean.ContentBean> data) {
+    public BettingTypeAdapter2(Context context, @Nullable List<LoctteryBean.ContentBean> data) {
         super(R.layout.bettting_type_item_layout, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, BesidesLotteryBean.ContentBean item) {
-        LogUtils.e("TAG",URL.BASE_PNG_URL + item.getImgUrl());
-        Glide.with(context)
-                .load(URL.BASE_PNG_URL + item.getImgUrl())
+    protected void convert(BaseViewHolder helper, LoctteryBean.ContentBean item) {
+        String url = "http://xbzhanshi.com/mobile/v3/images/lottery/"+item.getCode()+".png";
+         Glide.with(context)
+                .load(url)
                 .into((ImageView) helper.getView(R.id.icon));
-        helper.setText(R.id.name, item.getTitle());
+        helper.setText(R.id.name, item.getName());
     }
 }

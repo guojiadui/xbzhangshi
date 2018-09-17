@@ -11,16 +11,14 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
-
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xbzhangshi.R;
-import com.xbzhangshi.mvp.details.BettingDetailsActivity;
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.details.BettingDetailsActivity;
+import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
+import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter2;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
 import com.xbzhangshi.mvp.home.bean.BesidesLotteryBean;
-import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
-
-
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
 import com.xbzhangshi.view.CustomViewPager;
@@ -35,10 +33,10 @@ import butterknife.BindView;
  * 投注类型
  */
 @SuppressLint("ValidFragment")
-public class BettingItemFragment extends BaseFragment implements IBettingItemBaseView<BesidesLotteryBean.ContentBean> {
+public class BettingItemFragment2 extends BaseFragment implements IBettingItemBaseView<LoctteryBean.ContentBean> {
 
-    public static BettingItemFragment newInstance(CustomViewPager vp, int fragmentID) {
-        BettingItemFragment fragment = new BettingItemFragment(vp, fragmentID);
+    public static BettingItemFragment2 newInstance(CustomViewPager vp, int fragmentID) {
+        BettingItemFragment2 fragment = new BettingItemFragment2(vp, fragmentID);
         Bundle bundle = new Bundle();
         bundle.putInt("postion", fragmentID);
         fragment.setArguments(bundle);
@@ -57,11 +55,11 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     View contentView = null;
     BettingItemPresenter bettingItemPresenter;
 
-    public BettingItemFragment() {
+    public BettingItemFragment2() {
     }
 
 
-    public BettingItemFragment(CustomViewPager vp, int fragmentID) {
+    public BettingItemFragment2(CustomViewPager vp, int fragmentID) {
         this();
         this.vp = vp;
         this.fragmentID = fragmentID;
@@ -76,9 +74,8 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     @Override
     public void fetchData() {
         super.fetchData();
-        int p = getArguments().getInt("postion");
         loadingProgress.showLoading();
-        bettingItemPresenter.loadDataBesidesLotterys(mActivity, p);
+        bettingItemPresenter.loadDataLotterys(mActivity );
     }
 
     @Override
@@ -92,17 +89,20 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
             @Override
             public void onClick(View v) {
                 loadingProgress.showLoading();
-                int p = getArguments().getInt("postion");
-                bettingItemPresenter.loadDataBesidesLotterys(mActivity, p);
+                bettingItemPresenter.loadDataLotterys(mActivity );
             }
         });
     }
 
 
     @Override
-    public void onSuccess(List<BesidesLotteryBean.ContentBean> list) {
+    public void onSuccess(List<LoctteryBean.ContentBean> list) {
+
+    }
+    @Override
+    public void onSuccess2(List<LoctteryBean.ContentBean> list) {
         loadingProgress.showContent();
-        BettingTypeAdapter bettingTypeAdapter = new BettingTypeAdapter(mActivity,list);
+        BettingTypeAdapter2 bettingTypeAdapter = new BettingTypeAdapter2(mActivity,list);
         bettingTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -130,11 +130,6 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     }
 
     @Override
-    public void onSuccess2(List<LoctteryBean.ContentBean> list) {
-
-    }
-
-    @Override
     public void onEmpty() {
         loadingProgress.showEmpty();
     }
@@ -142,7 +137,5 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     @Override
     public void onError() {
         loadingProgress.showError();
-
-
     }
 }

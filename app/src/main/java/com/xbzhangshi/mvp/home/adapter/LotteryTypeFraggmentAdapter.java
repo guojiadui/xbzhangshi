@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 
 import com.xbzhangshi.mvp.home.Fragment.BettingItemFragment;
+import com.xbzhangshi.mvp.home.Fragment.BettingItemFragment2;
 import com.xbzhangshi.view.CustomViewPager;
 
 public class LotteryTypeFraggmentAdapter extends FragmentPagerAdapter {
@@ -24,12 +25,14 @@ public class LotteryTypeFraggmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 5;
     }
 
     @Override
     public Fragment getItem(int position) {
-
+         if(position==0){
+             return BettingItemFragment2.newInstance(customViewPager,position);
+         }
         return BettingItemFragment.newInstance(customViewPager,position);
     }
 }

@@ -9,13 +9,13 @@ import com.xbzhangshi.mvp.login.bean.LoginSelectBean;
 
 import java.util.List;
 
-public class LoginSelectAdapter extends BaseQuickAdapter<LoginSelectBean,BaseViewHolder> {
-    public LoginSelectAdapter(  @Nullable List<LoginSelectBean> data) {
+public class LoginSelectAdapter extends BaseQuickAdapter<String,BaseViewHolder> {
+    public LoginSelectAdapter(  @Nullable List<String> data) {
         super(R.layout.login_name_select_item, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, LoginSelectBean item) {
-
+    protected void convert(BaseViewHolder helper, String item) {
+         helper.setText(R.id.name,item);
     }
 }

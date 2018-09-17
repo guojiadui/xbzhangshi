@@ -1,30 +1,35 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
+import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
+import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
 import com.xbzhangshi.view.CustomViewPager;
-import com.xbzhangshi.view.dialog.HomeTipDialog;
+import com.xbzhangshi.view.MarqueeTextView;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * 投注大厅
  */
-public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public class HomeBettingFragment extends BaseFragment implements IBettingBaseView, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.fragment_tabmain_viewPager)
     CustomViewPager fragmentTabmainViewPager;
@@ -33,10 +38,15 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
 
-    String[] tabNames = {"彩票", "体育", "电子", "真人"};
+    String[] tabNames = {"彩票", "体育", "真人","电子","棋牌"};
+    BettingPresenter bettingPresenter;
+    @BindView(R.id.notice)
+    MarqueeTextView notice;
+    Unbinder unbinder;
 
     public static HomeBettingFragment newInstance() {
         HomeBettingFragment fragment = new HomeBettingFragment();
+
         return fragment;
     }
 
@@ -45,30 +55,21 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
         return R.layout.home_betting_fragment_layout;
     }
 
-     HomeTipDialog homeTipDialog;
 
     @Override
     public void onResume() {
         super.onResume();
-       /* if (homeTipDialog != null)
-            homeTipDialog.show();*/
     }
-
 
     @Override
     protected void initView(View view) {
-
-
-
-       /* homeTipDialog = new HomeTipDialog(mActivity);
-        homeTipDialog.show();*/
-        fragmentTabmainViewPager.setOffscreenPageLimit(4);
+        fragmentTabmainViewPager.setOffscreenPageLimit(tabNames.length);
         fragmentTabmainViewPager.addOnPageChangeListener(this);
 
         fragmentTabmainViewPager.setAdapter(new LotteryTypeFraggmentAdapter(mActivity, fragmentTabmainViewPager, getChildFragmentManager()));
         tabLayout.setupWithViewPager(fragmentTabmainViewPager);
         //自定义tab的item
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < tabNames.length; i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             //注意！！！这里就是添加我们自定义的布局
             tab.setCustomView(R.layout.tab_hall_item);
@@ -105,10 +106,18 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
                 fragmentTabmainViewPager.resetHeight(0);
             }
         });
+        bettingPresenter = BettingPresenter.newInstance(this);
+        bettingPresenter.init();
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        super.initData(savedInstanceState);
+        bettingPresenter.loadData(mActivity);
     }
 
     @OnClick(R.id.side_icon)
-    public  void  sendEvent(View v){
+    public void sendEvent(View v) {
         EventBus.getDefault().post(new SideOpenEvent());
     }
 
@@ -126,6 +135,12 @@ public class HomeBettingFragment extends BaseFragment implements ViewPager.OnPag
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+
+    @Override
+    public void setNotice(String content) {
+        notice.setText(Html.fromHtml(content));
     }
 
 

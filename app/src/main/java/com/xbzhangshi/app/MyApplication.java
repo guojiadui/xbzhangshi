@@ -8,8 +8,9 @@ import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CrashUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
+import com.lzy.okgo.OkGo;
 import com.squareup.leakcanary.LeakCanary;
-import com.xbzhangshi.single.ServiceTime;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
         super.onCreate();
         instance = this;
         isExit=false;
+        OkGo.getInstance().init(this);//默认初始化
        /* CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override
             public void onCrash(String crashInfo, Throwable e) {
@@ -41,14 +43,14 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
         LogUtils.getConfig().setLogSwitch(true);
         AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(),this);
         LogUtils.e("TAG", "------------------app");
-    /*    if (LeakCanary.isInAnalyzerProcess(this)) {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return;
         }
 
-        LeakCanary.install(this);*/
-        ServiceTime.getInstance();
+        LeakCanary.install(this);
+
     }
 
 

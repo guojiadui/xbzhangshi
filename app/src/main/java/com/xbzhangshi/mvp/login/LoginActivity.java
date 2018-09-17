@@ -1,11 +1,13 @@
 package com.xbzhangshi.mvp.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,10 +16,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
 import com.xbzhangshi.mvp.login.bean.LoginSelectBean;
+import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +30,25 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 /**
  * 用户登录
  */
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements ILoginView {
+
+
+    public static void startLogin(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.select_name)
     ImageView selectName;
     @BindView(R.id.name)
-    EditText name;
+    EditText mName;
     @BindView(R.id.register_user)
     TextView registerUser;
     @BindView(R.id.free_play)
@@ -47,11 +60,11 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.login)
     TextView login;
     @BindView(R.id.password)
-    EditText password;
+    EditText mPassword;
     @BindView(R.id.checkbox_password)
     CheckBox checkboxPassword;
 
-
+    LogInPresenter logInPresenter;
 
     @Override
     protected int getlayout() {
@@ -60,10 +73,12 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        logInPresenter = LogInPresenter.newInstance(this);
+        logInPresenter.init();
         selectName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initPopuWindow();
+                showHistoryNames(logInPresenter.getNamelist());
             }
         });
         registerUser.setOnClickListener(new View.OnClickListener() {
@@ -81,9 +96,13 @@ public class LoginActivity extends BaseActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                boolean r = checkboxPassword.isChecked();
+                String name = mName.getText().toString();
+                String pwd = mPassword.getText().toString();
+                logInPresenter.login(LoginActivity.this, name, pwd, r);
             }
         });
+
     }
 
     @Override
@@ -92,26 +111,30 @@ public class LoginActivity extends BaseActivity {
     }
 
     RecyclerView nameRecyclerView;
-    private List<LoginSelectBean> datas = new ArrayList<LoginSelectBean>();
+
     private PopupWindow selectPopupWindow = null;
 
     /**
      * 初始化PopupWindow
      */
-    private void initPopuWindow() {
+    private void showHistoryNames(List<String> list) {
 
+        if(list==null||list.size()==0){
+            return;
+        }
         // PopupWindow浮动下拉框布局
         View loginwindow = (View) this.getLayoutInflater().inflate(
                 R.layout.login_user_list, null);
         nameRecyclerView = (RecyclerView) loginwindow.findViewById(R.id.recyclerView);
         nameRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        datas = new ArrayList<LoginSelectBean>();
-        datas.add(new LoginSelectBean());
-        datas.add(new LoginSelectBean());
-        datas.add(new LoginSelectBean());
-        datas.add(new LoginSelectBean());
         // 设置自定义Adapter
-        LoginSelectAdapter optionsAdapter = new LoginSelectAdapter(datas);
+        LoginSelectAdapter optionsAdapter = new LoginSelectAdapter(list);
+        optionsAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                mName.setText(list.get(position));
+            }
+        });
         nameRecyclerView.setAdapter(optionsAdapter);
 
         selectPopupWindow = new PopupWindow(loginwindow, getMobileWidth(),
@@ -131,14 +154,21 @@ public class LoginActivity extends BaseActivity {
                 iv_closelist.setVisibility(View.GONE);*/
             }
         });
-        selectPopupWindow.showAsDropDown(name, 0, dpToPx(this,5));
+        selectPopupWindow.showAsDropDown(mName, 0, dpToPx(this, 5));
     }
 
+    @Override
+    public void setRemmberPwd(Boolean is) {
+        checkboxPassword.setChecked(is);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
+    public void setUserInfo(String name, String pwd) {
+        if (!TextUtils.isEmpty(name)) {
+            mName.setText(name);
+        }
+        if (!TextUtils.isEmpty(pwd)) {
+            mPassword.setText(pwd);
+        }
     }
 }
