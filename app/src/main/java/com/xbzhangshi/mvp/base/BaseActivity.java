@@ -70,7 +70,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected abstract void initView(Bundle savedInstanceState);
 
-    protected abstract void initdata();
+    protected   void initdata(){}
 
     /**
      * 弹出Toast

@@ -12,6 +12,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.URL;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IPurchaseView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
@@ -26,7 +27,7 @@ import java.util.Iterator;
 /**
  * 采购大厅
  */
-public class PurchasePesenter {
+public class PurchasePesenter extends BasePresenter {
 
     public static PurchasePesenter newInstance(IPurchaseView contentView) {
         return new PurchasePesenter(contentView);
@@ -47,7 +48,7 @@ public class PurchasePesenter {
     }
 
     public void getLoadData(Context context) {
-        HttpManager.get(context, URL.BASE_URL + URL.Loctterys, null, new StringCallback() {
+        Object tag = HttpManager.get(context, URL.BASE_URL + URL.Loctterys, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoctteryBean loctteryBean = JSON.parseObject(response.body(), LoctteryBean.class);
@@ -82,6 +83,7 @@ public class PurchasePesenter {
                 contentView.onError();
             }
         });
+        addNet(tag);
     }
 
     /**
@@ -93,13 +95,13 @@ public class PurchasePesenter {
     public void getServiceTime(Context context, String code) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("lotCodes", code);
-        HttpManager.get(context, URL.BASE_URL + URL.LotterysCountDown, httpParams, new StringCallback() {
+        Object tag = HttpManager.get(context, URL.BASE_URL + URL.LotterysCountDown, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LotterysCountDownBean lotterysCountDownBean = JSON.parseObject(response.body(), LotterysCountDownBean.class);
                 if (lotterysCountDownBean.isSuccess()) {
                     if (lotterysCountDownBean.getContent().size() > 0) {
-                        ServiceTime.getInstance(context,lotterysCountDownBean.getContent());
+                        ServiceTime.getInstance(context, lotterysCountDownBean.getContent());
                         contentView.onSuccess();
                     } else {
                         contentView.onEmpty();
@@ -115,7 +117,7 @@ public class PurchasePesenter {
                 contentView.onError();
             }
         });
-
+        addNet(tag);
     }
 
     /**

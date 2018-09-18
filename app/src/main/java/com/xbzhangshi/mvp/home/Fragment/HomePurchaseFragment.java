@@ -57,6 +57,14 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(purchasePesenter!=null){
+            purchasePesenter.onDestory();
+        }
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.home_purchase_fragment_layout;
     }
@@ -86,6 +94,13 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
         });
         purchasePesenter = PurchasePesenter.newInstance(this);
         purchasePesenter.init();
+        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multipleStatusView.showLoading();
+                purchasePesenter.getLoadData(mActivity);
+            }
+        });
     }
 
     @Override

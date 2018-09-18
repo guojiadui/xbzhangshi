@@ -74,6 +74,14 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(bettingItemPresenter!=null){
+            bettingItemPresenter.onDestory();
+        }
+    }
+
+    @Override
     public void fetchData() {
         super.fetchData();
         int p = getArguments().getInt("postion");

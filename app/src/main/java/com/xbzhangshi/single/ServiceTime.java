@@ -95,7 +95,7 @@ public class ServiceTime {
                      * 每一秒回调刷新可见view的时间
                      */
                     Iterator<ObserverListener> it = listeners.iterator();
-                    Log.e("TAG", "view的数量" + listeners.size());
+                   // Log.e("TAG", "view的数量" + listeners.size());
                     while (it.hasNext()) {
                         ObserverListener str = it.next();
                         str.onSecond();

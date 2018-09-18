@@ -62,6 +62,14 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(bettingPresenter!=null){
+            bettingPresenter.onDestory();
+        }
+    }
+
+    @Override
     protected void initView(View view) {
         fragmentTabmainViewPager.setOffscreenPageLimit(tabNames.length);
         fragmentTabmainViewPager.addOnPageChangeListener(this);

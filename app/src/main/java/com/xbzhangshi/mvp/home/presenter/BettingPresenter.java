@@ -10,11 +10,12 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.URL;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.bean.NoticeBean;
 
 
-public class BettingPresenter {
+public class BettingPresenter  extends BasePresenter{
     public static BettingPresenter newInstance(IBettingBaseView contentView) {
         return new BettingPresenter(contentView);
     }
@@ -26,6 +27,9 @@ public class BettingPresenter {
         this.contentView = contentView;
 
     }
+
+
+
     public void init(){
 
     }
@@ -33,7 +37,7 @@ public class BettingPresenter {
         //加载公告
         HttpParams httpParams = new HttpParams();
         httpParams.put("code","13");
-        HttpManager.get(context, URL.BASE_URL + URL.notice, httpParams, new StringCallback() {
+      Object tag=  HttpManager.get(context, URL.BASE_URL + URL.notice, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LogUtils.e("TAG",response.body());
@@ -44,5 +48,6 @@ public class BettingPresenter {
                 }
             }
         });
+      addNet(tag);
     }
 }

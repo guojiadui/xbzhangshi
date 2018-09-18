@@ -21,7 +21,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
     private List<Activity> activities = new ArrayList<Activity>();
     android.os.Handler handler = new android.os.Handler();
 
-    public  static  boolean isExit = false;
+    public static boolean isExit = false;
     /**
      * 应用实例
      **/
@@ -32,7 +32,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
     public void onCreate() {
         super.onCreate();
         instance = this;
-        isExit=false;
+        isExit = false;
         OkGo.getInstance().init(this);//默认初始化
        /* CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override
@@ -41,7 +41,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
             }
         });*/
         LogUtils.getConfig().setLogSwitch(true);
-        AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(),this);
+        AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(), this);
         LogUtils.e("TAG", "------------------app");
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -52,8 +52,6 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
         LeakCanary.install(this);
 
     }
-
-
 
 
     /**
@@ -97,13 +95,14 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
                 activity.finish();
             }
         }
-        isExit=true;
+        OkGo.getInstance().cancelAll();
+        isExit = true;
         System.exit(0);
     }
 
     @Override
     public void onForeground() {
-        
+
     }
 
     @Override

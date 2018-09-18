@@ -70,7 +70,13 @@ public class BettingItemFragment2 extends BaseFragment implements IBettingItemBa
     protected int getLayoutId() {
         return R.layout.betting_item_fragment_layout;
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(bettingItemPresenter!=null){
+            bettingItemPresenter.onDestory();
+        }
+    }
     @Override
     public void fetchData() {
         super.fetchData();
