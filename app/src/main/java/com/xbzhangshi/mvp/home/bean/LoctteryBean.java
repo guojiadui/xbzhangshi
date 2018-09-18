@@ -1,8 +1,12 @@
 package com.xbzhangshi.mvp.home.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class LoctteryBean {
+public class LoctteryBean implements Parcelable {
 
     /**
      * success : true
@@ -38,7 +42,7 @@ public class LoctteryBean {
         this.content = content;
     }
 
-    public static class ContentBean {
+    public static class ContentBean implements Parcelable {
         /**
          * ballonNums : 10
          * code : BJSC
@@ -112,5 +116,80 @@ public class LoctteryBean {
         public void setSys(boolean sys) {
             this.sys = sys;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.ballonNums);
+            dest.writeString(this.code);
+            dest.writeString(this.czCode);
+            dest.writeInt(this.duration);
+            dest.writeString(this.name);
+            dest.writeInt(this.status);
+            dest.writeByte(this.sys ? (byte) 1 : (byte) 0);
+        }
+
+        public ContentBean() {
+        }
+
+        protected ContentBean(Parcel in) {
+            this.ballonNums = in.readInt();
+            this.code = in.readString();
+            this.czCode = in.readString();
+            this.duration = in.readInt();
+            this.name = in.readString();
+            this.status = in.readInt();
+            this.sys = in.readByte() != 0;
+        }
+
+        public static final Creator<ContentBean> CREATOR = new Creator<ContentBean>() {
+            @Override
+            public ContentBean createFromParcel(Parcel source) {
+                return new ContentBean(source);
+            }
+
+            @Override
+            public ContentBean[] newArray(int size) {
+                return new ContentBean[size];
+            }
+        };
     }
+
+    public LoctteryBean() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte(this.success ? (byte) 1 : (byte) 0);
+        dest.writeString(this.accessToken);
+        dest.writeList(this.content);
+    }
+
+    protected LoctteryBean(Parcel in) {
+        this.success = in.readByte() != 0;
+        this.accessToken = in.readString();
+        this.content = new ArrayList<ContentBean>();
+        in.readList(this.content, ContentBean.class.getClassLoader());
+    }
+
+    public static final Creator<LoctteryBean> CREATOR = new Creator<LoctteryBean>() {
+        @Override
+        public LoctteryBean createFromParcel(Parcel source) {
+            return new LoctteryBean(source);
+        }
+
+        @Override
+        public LoctteryBean[] newArray(int size) {
+            return new LoctteryBean[size];
+        }
+    };
 }

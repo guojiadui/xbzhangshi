@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.classic.common.MultipleStatusView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/multipleStatusView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:loadingView="@layout/layout_loading"
+    app:emptyView="@layout/layout_empty"
+    app:errorView="@layout/layout_error">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -9,4 +14,4 @@
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
-</LinearLayout>
+</com.classic.common.MultipleStatusView>

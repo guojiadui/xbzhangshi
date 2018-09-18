@@ -2,6 +2,8 @@ package com.xbzhangshi.mvp.base;
 
 
 
+import com.lzy.okgo.OkGo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,32 +11,32 @@ import io.reactivex.disposables.Disposable;
 
 public class BasePresenter<T extends  IBaseView> {
 
-    private List<Disposable> disposableList;
+    private List<Object> urlList;
 
 
 
     /**
      * 添加网络请求
-     * @param disposable
+     * @param
      */
 
-    public void addNet(Disposable disposable) {
-        if (disposableList == null) {
-            disposableList = new ArrayList<>();
+    public void addNet(Object tag) {
+        if (urlList == null) {
+            urlList = new ArrayList<>();
         }
-        if (!disposableList.contains(disposable))
-            disposableList.add(disposable);
+        if (!urlList.contains(tag))
+            urlList.add(tag);
     }
 
     /**
      * 取消网络请求
      */
     public void OnDestory() {
-        if (disposableList != null) {
-            for (Disposable d : disposableList) {
-
+        if (urlList != null) {
+            for (Object d : urlList) {
+                OkGo.getInstance().cancelTag(d);
             }
-            disposableList.clear();
+            urlList.clear();
         }
     }
 }

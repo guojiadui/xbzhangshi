@@ -8,6 +8,9 @@ public class URL {
      public  final  static String notice ="/notice"+BASE_END;//公告
      public  final  static String Loctterys ="/getLoctterys"+BASE_END;//可以彩种
      public  final  static String DatasBesidesLotterys ="/getDatasBesidesLotterys"+BASE_END;//获取体育，电子，真人分类的种类信息
+     public  final  static String lottert_png ="http://xbzhanshi.com/mobile/v3/images/lottery/";//获取体育，电子，真人分类的种类信息
+     public  final  static String LotterysCountDown ="/getLotterysCountDown"+BASE_END;//获取体育，电子，真人分类的种类信息
+
 
 
 }

@@ -11,14 +11,18 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.PurchaseFragmentAdapter;
 import com.xbzhangshi.mvp.home.baseView.IPurchaseView;
+import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.mvp.home.presenter.PurchasePesenter;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +34,14 @@ import butterknife.Unbinder;
 public class HomePurchaseFragment extends BaseFragment implements IPurchaseView {
 
 
+    public static int curVisPage = 0;
+
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
+    @BindView(R.id.multipleStatusView)
+    MultipleStatusView multipleStatusView;
 
     String[] tabNames = {"全部彩种", "高频彩", "低频彩"};
     @BindView(R.id.select1)
@@ -59,18 +67,67 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
             @Override
             public void onClick(View v) {
                 if (purchasePesenter != null)
-                    purchasePesenter.setLookMode();
+                    purchasePesenter.setLookMode(false);
             }
         });
         select2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (purchasePesenter != null)
-                    purchasePesenter.setLookMode();
+                    purchasePesenter.setLookMode(true);
             }
         });
+        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multipleStatusView.showLoading();
+                purchasePesenter.getLoadData(mActivity);
+            }
+        });
+        purchasePesenter = PurchasePesenter.newInstance(this);
+        purchasePesenter.init();
+    }
+
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        super.initData(savedInstanceState);
+        multipleStatusView.showLoading();
+        purchasePesenter.getLoadData(mActivity);
+    }
+
+    @Override
+    public void setLookModeViewBg(boolean mode) {
+        if (mode) {
+            select2.setBackgroundColor(mActivity.getResources().getColor(R.color.deep_red));
+            select1.setBackgroundColor(0x00ffffff);
+
+        } else {
+            select1.setBackgroundColor(mActivity.getResources().getColor(R.color.deep_red));
+            select2.setBackgroundColor(0x00ffffff);
+        }
+    }
+
+    @Override
+    public void onSuccess() {
+        multipleStatusView.showContent();
         viewpager.setOffscreenPageLimit(3);
         viewpager.setAdapter(new PurchaseFragmentAdapter(getChildFragmentManager()));
+        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                curVisPage = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.setupWithViewPager(viewpager);
         //自定义tab的item
         for (int i = 0; i < 3; i++) {
@@ -82,19 +139,15 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
             ImageView tabImg = (ImageView) tab.getCustomView().findViewById(R.id.tab_icon);
             tabName.setText(tabNames[i]);
         }
-        purchasePesenter = PurchasePesenter.newInstance(this);
-        purchasePesenter.init();
     }
 
+    @Override
+    public void onEmpty() {
+        multipleStatusView.showEmpty();
+    }
 
     @Override
-    public void setLookModeViewBg(boolean mode) {
-        if (mode) {
-            select1.setBackgroundColor(mActivity.getResources().getColor(R.color.deep_red));
-            select2.setBackgroundColor(0x00ffffff);
-        } else {
-            select2.setBackgroundColor(mActivity.getResources().getColor(R.color.deep_red));
-            select1.setBackgroundColor(0x00ffffff);
-        }
+    public void onError() {
+        multipleStatusView.showError();
     }
 }

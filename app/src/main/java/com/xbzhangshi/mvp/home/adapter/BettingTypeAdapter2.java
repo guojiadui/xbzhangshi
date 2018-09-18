@@ -25,7 +25,7 @@ public class BettingTypeAdapter2 extends BaseQuickAdapter<LoctteryBean.ContentBe
 
     @Override
     protected void convert(BaseViewHolder helper, LoctteryBean.ContentBean item) {
-        String url = "http://xbzhanshi.com/mobile/v3/images/lottery/"+item.getCode()+".png";
+        String url = URL.lottert_png+item.getCode()+".png";
          Glide.with(context)
                 .load(url)
                 .into((ImageView) helper.getView(R.id.icon));

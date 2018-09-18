@@ -52,9 +52,7 @@ public class BettingItemPresenter {
     }
     public  void  loadDataLotterys(Context context ){
         //加载彩种
-        HttpParams httpParams = new HttpParams();
-
-        HttpManager.get(context, URL.BASE_URL + URL.Loctterys, httpParams, new StringCallback() {
+        HttpManager.get(context, URL.BASE_URL + URL.Loctterys, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoctteryBean loctteryBean = JSON.parseObject(response.body(),LoctteryBean.class);
