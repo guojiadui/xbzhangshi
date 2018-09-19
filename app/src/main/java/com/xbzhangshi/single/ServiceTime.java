@@ -1,27 +1,29 @@
 package com.xbzhangshi.single;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.AsyncTask;
+
 import android.os.Handler;
-import android.os.SystemClock;
+
 import android.text.TextUtils;
-import android.util.ArraySet;
 import android.util.Log;
 
-import com.alibaba.fastjson.JSON;
+
 import com.blankj.utilcode.util.LogUtils;
-import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.HttpParams;
+
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.MyApplication;
 import com.xbzhangshi.app.URL;
 import com.xbzhangshi.http.HttpManager;
-import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
+import com.xbzhangshi.mvp.home.bean.LoctteryBean;
+
+import com.xbzhangshi.mvp.home.bean.ServiceTimeBean;
 import com.xbzhangshi.mvp.home.event.UpdateLotteryEvent;
 
+
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,26 +41,26 @@ import java.util.concurrent.TimeUnit;
 public class ServiceTime {
 
     static ServiceTime serviceTime;
-
+    public Long remoteServiceTime = System.currentTimeMillis();
 
     private int TIME = 1000;  //每隔1s执行一次.
     Handler handler = new Handler();
     HashSet<ObserverListener> listeners = new HashSet<>();
     Context context;
-    public boolean isStop = true;
 
-    public List<LotterysCountDownBean.ContentBean> getContentBeanList() {
+
+    public List<LoctteryBean.ContentBean> getContentBeanList() {
         return contentBeanList;
     }
 
-    public void setContentBeanList(List<LotterysCountDownBean.ContentBean> contentBeanList) {
+    public void setContentBeanList(List<LoctteryBean.ContentBean> contentBeanList) {
         this.contentBeanList = contentBeanList;
     }
 
-    List<LotterysCountDownBean.ContentBean> contentBeanList;
+    List<LoctteryBean.ContentBean> contentBeanList;
 
 
-    public static ServiceTime getInstance(Context context, List<LotterysCountDownBean.ContentBean> contentBeanList) {
+    public static ServiceTime getInstance(Context context, List<LoctteryBean.ContentBean> contentBeanList) {
         if (serviceTime == null) {
             serviceTime = new ServiceTime(context, contentBeanList);
         }
@@ -70,9 +72,14 @@ public class ServiceTime {
     }
 
 
-    private ServiceTime(Context context, List<LotterysCountDownBean.ContentBean> contentBeanList) {
+    private ServiceTime(Context context, List<LoctteryBean.ContentBean> contentBeanList) {
         this.contentBeanList = contentBeanList;
         this.context = context;
+        remoteServiceTime = contentBeanList.get(contentBeanList.size() - 1).getServerTime();//初始化服务器时间
+        //第一次获取时间
+        for (LoctteryBean.ContentBean contentBean : contentBeanList) {
+            getItemServiceTime(context, contentBean.getCode());
+        }
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -84,21 +91,22 @@ public class ServiceTime {
                     handler.removeCallbacks(this);
                     handler.postDelayed(this, TIME);
                     Long startIime = System.currentTimeMillis();
+                    remoteServiceTime = remoteServiceTime + 1000;//更新服务器时间
                     //判断是否有时间要更新
-                    for (LotterysCountDownBean.ContentBean contentBean : contentBeanList) {
-                        contentBean.setServerTime(contentBean.getServerTime() + 1000);
-                        if (contentBean.getActiveTime() <= contentBean.getServerTime()) {
-                            getItemServiceTime(context, contentBean.getLotCode());
+                    for (LoctteryBean.ContentBean contentBean : contentBeanList) {
+                        // contentBean.setServerTime(contentBean.getServerTime() + 1000);
+                        if (contentBean.getActiveTime() <= remoteServiceTime) {//开奖时间到
+                            getItemServiceTime(context, contentBean.getCode());
                         }
                     }
                     /**
                      * 每一秒回调刷新可见view的时间
                      */
                     Iterator<ObserverListener> it = listeners.iterator();
-                   // Log.e("TAG", "view的数量" + listeners.size());
+                    // Log.e("TAG", "view的数量" + listeners.size());
                     while (it.hasNext()) {
                         ObserverListener str = it.next();
-                        str.onSecond();
+                        str.onSecond(remoteServiceTime);
                     }
                     Long endTime = System.currentTimeMillis();
                    /* long now = SystemClock.uptimeMillis();
@@ -129,34 +137,29 @@ public class ServiceTime {
             return;
         }
         codeLoadings.add(code);
-        HttpParams httpParams = new HttpParams();
-        httpParams.put("lotCodes", code);
-        HttpManager.get(context, URL.BASE_URL + URL.LotterysCountDown, httpParams, new StringCallback() {
+        HttpManager.get(context, URL.ServiceTime1 + code + URL.ServiceTime2, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 codeLoadings.remove(code);
-                LotterysCountDownBean lotterysCountDownBean = null;
-                try {
-                    lotterysCountDownBean = JSON.parseObject(response.body(), LotterysCountDownBean.class);
-                } catch (Exception e) {
 
-                }
-                if (lotterysCountDownBean != null && lotterysCountDownBean.isSuccess()) {
-                    if (lotterysCountDownBean.getContent().size() > 0) {
-                        LotterysCountDownBean.ContentBean resultBean = lotterysCountDownBean.getContent().get(0);
-                        for (LotterysCountDownBean.ContentBean bean : contentBeanList) {
-                            if (!TextUtils.isEmpty(bean.getLotCode()) && bean.getLotCode().equals(resultBean.getLotCode())) {
-                                //更新某一个服务时间
-                                bean.setServerTime(resultBean.getServerTime());
-                                bean.setActiveTime(resultBean.getActiveTime());
-                                bean.setLastQihao(resultBean.getLastQihao());
-                                bean.setQiHao(resultBean.getQiHao());
-                                //发送更是成功的信息
-                                EventBus.getDefault().post(new UpdateLotteryEvent(bean.getLotCode()));
-                            }
+                try {
+                    JSONObject json = new JSONObject(response.body());
+                    remoteServiceTime = json.getLong("serverTime");//服务器时间
+                    JSONObject j = json.getJSONObject(code);
+                    for (LoctteryBean.ContentBean bean : contentBeanList) {
+                        if (!TextUtils.isEmpty(bean.getCode()) && bean.getCode().equals(code)) {
+                            bean.setActiveTime(j.getLong("actionTime"));
+                            bean.setLastQihao(j.getString("lastQiHao"));
+                            bean.setQiHao(j.getString("qiHao"));
+                            bean.setLastHaoMa(j.getString("lastHaoMa"));
+                            //发送更是成功的信息
+                            EventBus.getDefault().post(new UpdateLotteryEvent(bean.getCode()));
                         }
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
@@ -191,7 +194,7 @@ public class ServiceTime {
          *
          * @param
          */
-        public void onSecond();
+        public void onSecond(long serviceitem);
     }
 
 }

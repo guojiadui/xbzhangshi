@@ -46,7 +46,7 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
     PurchaseItemPesenter purchaseItemPesenter;
 
 
-    int curPosition = 0;
+
 
     public static PurchaseItemFragment newInstance(int curPosiition) {
         PurchaseItemFragment fragment = new PurchaseItemFragment();
@@ -93,9 +93,9 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
         if (recyclerView != null && recyclerView.getAdapter() != null) {
             if (recyclerView.getAdapter() instanceof VPurchaseTypeAdapter) {
                 VPurchaseTypeAdapter vPurchaseTypeAdapter = (VPurchaseTypeAdapter) recyclerView.getAdapter();
-                List<LotterysCountDownBean.ContentBean> contentBeans = vPurchaseTypeAdapter.getData();
+                List<LoctteryBean.ContentBean> contentBeans = vPurchaseTypeAdapter.getData();
                 for (int i = 0; i < contentBeans.size(); i++) {
-                    String code = contentBeans.get(i).getLotCode();
+                    String code = contentBeans.get(i).getCode();
                     if (code.equals(event.getCode())) {
                         vPurchaseTypeAdapter.notifyItemChanged(i);
                         break;
@@ -103,9 +103,9 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
                 }
             } else if (recyclerView.getAdapter() instanceof GPurchaseTypeAdapter) {
                 GPurchaseTypeAdapter gPurchaseTypeAdapter = (GPurchaseTypeAdapter) recyclerView.getAdapter();
-                List<LotterysCountDownBean.ContentBean> contentBeans = gPurchaseTypeAdapter.getData();
+                List<LoctteryBean.ContentBean> contentBeans = gPurchaseTypeAdapter.getData();
                 for (int i = 0; i < contentBeans.size(); i++) {
-                    String code = contentBeans.get(i).getLotCode();
+                    String code = contentBeans.get(i).getCode();
                     if (code.equals(event.getCode())) {
                         gPurchaseTypeAdapter.notifyItemChanged(i);
                         break;
@@ -117,8 +117,8 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
 
     @Override
     protected void initView(View view) {
-        this.curPosition = getArguments().getInt("curPosiition");
-        purchaseItemPesenter = PurchaseItemPesenter.newInstance(this);
+        int curPosition = getArguments().getInt("curPosiition");
+        purchaseItemPesenter = PurchaseItemPesenter.newInstance(this,curPosition);
 
     }
 
@@ -141,7 +141,7 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
     VPurchaseTypeAdapter vPurchaseTypeAdapter;
     GPurchaseTypeAdapter gPurchaseTypeAdapter;
     @Override
-    public void onSuccess(List<LotterysCountDownBean.ContentBean> list, boolean mode) {
+    public void onSuccess(List<LoctteryBean.ContentBean> list, boolean mode,int curPosition) {
         multipleStatusView.showContent();
         if (mode) {
             if (linearLayoutManager == null) {
@@ -179,7 +179,7 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
     }
 
     @Override
-    public void swtih(List<LotterysCountDownBean.ContentBean> list, boolean mode) {
+    public void swtih(List<LoctteryBean.ContentBean> list, boolean mode,int curPosition) {
         if (recyclerView.getAdapter() == null) {
             return;
         }

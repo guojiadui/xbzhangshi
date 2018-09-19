@@ -34,6 +34,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
         instance = this;
         isExit = false;
         OkGo.getInstance().init(this);//默认初始化
+
        /* CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override
             public void onCrash(String crashInfo, Throwable e) {

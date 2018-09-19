@@ -1,29 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="?attr/colorPrimary"
-        android:gravity="center"
-        >
-        <RelativeLayout
-            style="@style/ActivityTitle">
+        android:background="@color/colorPrimary"
+        android:gravity="center">
+
+        <RelativeLayout style="@style/ActivityTitle">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="开奖公告"
                 android:layout_centerInParent="true"
-                android:textSize="@dimen/toolbar_title_size"/>
+                android:text="开奖公告"
+                android:textColor="@color/white"
+                android:textSize="@dimen/toolbar_title_size" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+
+    <com.classic.common.MultipleStatusView
+        android:id="@+id/multipleStatusView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        app:emptyView="@layout/layout_empty"
+        app:errorView="@layout/layout_error"
+        app:loadingView="@layout/layout_loading">
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlAccentColor="@android:color/white"
+                app:srlPrimaryColor="@color/bg_gray2"
+                app:srlTextSizeTitle="16sp"
+                app:srlTextSizeTime="10dp"
+                app:srlTextTimeMarginTop="2dp"
+                app:srlEnableLastTime="true"
+                app:srlFinishDuration="500"
+                app:srlDrawableSize="20dp"
+                app:srlDrawableArrowSize="20dp"
+                app:srlDrawableProgressSize="20dp"
+                app:srlDrawableMarginRight="20dp"
+                app:srlDrawableArrow="@drawable/ic_arrow_back_dark_24dp"
+                app:srlDrawableProgress="@mipmap/loading_throbber"
+                app:srlClassicsSpinnerStyle="Translate"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.classic.common.MultipleStatusView>
 </LinearLayout>

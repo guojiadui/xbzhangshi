@@ -55,53 +55,7 @@ public class PurchasePesenter extends BasePresenter {
                 if (loctteryBean.isSuccess()) {
                     if (loctteryBean.getContent() != null && loctteryBean.getContent().size() > 0) {
                         //获取彩所以码
-                        String codes;
-                        Iterator<LoctteryBean.ContentBean> it = loctteryBean.getContent().iterator();
-
-                        StringBuilder sb = new StringBuilder();
-                        for (; ; ) {
-                            LoctteryBean.ContentBean e = it.next();
-                            sb.append(e.getCode());
-                            if (!it.hasNext()) {
-                                codes = sb.toString();
-                                getServiceTime(context, codes);
-                                return;
-                            }
-                            sb.append(',');
-                        }
-                    } else {
-                        contentView.onEmpty();
-                    }
-                } else {
-                    contentView.onError();
-                }
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.onError();
-            }
-        });
-        addNet(tag);
-    }
-
-    /**
-     * 获取所以码的服务时间
-     *
-     * @param context
-     * @param code
-     */
-    public void getServiceTime(Context context, String code) {
-        HttpParams httpParams = new HttpParams();
-        httpParams.put("lotCodes", code);
-        Object tag = HttpManager.get(context, URL.BASE_URL + URL.LotterysCountDown, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LotterysCountDownBean lotterysCountDownBean = JSON.parseObject(response.body(), LotterysCountDownBean.class);
-                if (lotterysCountDownBean.isSuccess()) {
-                    if (lotterysCountDownBean.getContent().size() > 0) {
-                        ServiceTime.getInstance(context, lotterysCountDownBean.getContent());
+                        ServiceTime.getInstance(context, loctteryBean.getContent());
                         contentView.onSuccess();
                     } else {
                         contentView.onEmpty();
@@ -119,6 +73,8 @@ public class PurchasePesenter extends BasePresenter {
         });
         addNet(tag);
     }
+
+
 
     /**
      * 更改查看模式

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoctteryBean implements Parcelable {
+public class LoctteryBean   {
 
     /**
      * success : true
@@ -42,7 +42,7 @@ public class LoctteryBean implements Parcelable {
         this.content = content;
     }
 
-    public static class ContentBean implements Parcelable {
+    public static class ContentBean  {
         /**
          * ballonNums : 10
          * code : BJSC
@@ -60,6 +60,55 @@ public class LoctteryBean implements Parcelable {
         private String name;
         private int status;
         private boolean sys;
+        private long activeTime;
+        private String lastQihao;
+        private String qiHao;
+        private long serverTime;
+
+        public String getLastHaoMa() {
+            return lastHaoMa;
+        }
+
+        public void setLastHaoMa(String lastHaoMa) {
+            this.lastHaoMa = lastHaoMa;
+        }
+
+        private  String lastHaoMa;
+
+        public long getActiveTime() {
+            return activeTime;
+        }
+
+        public void setActiveTime(long activeTime) {
+            this.activeTime = activeTime;
+        }
+
+        public String getLastQihao() {
+            return lastQihao;
+        }
+
+        public void setLastQihao(String lastQihao) {
+            this.lastQihao = lastQihao;
+        }
+
+        public String getQiHao() {
+            return qiHao;
+        }
+
+        public void setQiHao(String qiHao) {
+            this.qiHao = qiHao;
+        }
+
+        public long getServerTime() {
+            return serverTime;
+        }
+
+        public void setServerTime(long serverTime) {
+            this.serverTime = serverTime;
+        }
+
+
+
 
         public int getBallonNums() {
             return ballonNums;
@@ -117,21 +166,7 @@ public class LoctteryBean implements Parcelable {
             this.sys = sys;
         }
 
-        @Override
-        public int describeContents() {
-            return 0;
-        }
 
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(this.ballonNums);
-            dest.writeString(this.code);
-            dest.writeString(this.czCode);
-            dest.writeInt(this.duration);
-            dest.writeString(this.name);
-            dest.writeInt(this.status);
-            dest.writeByte(this.sys ? (byte) 1 : (byte) 0);
-        }
 
         public ContentBean() {
         }
@@ -146,33 +181,13 @@ public class LoctteryBean implements Parcelable {
             this.sys = in.readByte() != 0;
         }
 
-        public static final Creator<ContentBean> CREATOR = new Creator<ContentBean>() {
-            @Override
-            public ContentBean createFromParcel(Parcel source) {
-                return new ContentBean(source);
-            }
 
-            @Override
-            public ContentBean[] newArray(int size) {
-                return new ContentBean[size];
-            }
-        };
     }
 
     public LoctteryBean() {
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.success ? (byte) 1 : (byte) 0);
-        dest.writeString(this.accessToken);
-        dest.writeList(this.content);
-    }
 
     protected LoctteryBean(Parcel in) {
         this.success = in.readByte() != 0;
@@ -181,15 +196,5 @@ public class LoctteryBean implements Parcelable {
         in.readList(this.content, ContentBean.class.getClassLoader());
     }
 
-    public static final Creator<LoctteryBean> CREATOR = new Creator<LoctteryBean>() {
-        @Override
-        public LoctteryBean createFromParcel(Parcel source) {
-            return new LoctteryBean(source);
-        }
 
-        @Override
-        public LoctteryBean[] newArray(int size) {
-            return new LoctteryBean[size];
-        }
-    };
 }

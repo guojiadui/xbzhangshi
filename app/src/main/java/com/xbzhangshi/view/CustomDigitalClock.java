@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.DigitalClock;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
+import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
 import com.xbzhangshi.single.ServiceTime;
 
@@ -27,15 +29,16 @@ public class CustomDigitalClock extends android.support.v7.widget.AppCompatTextV
     private ClockListener mClockListener;
 
 
-    public LotterysCountDownBean.ContentBean getContentBean() {
+    public LoctteryBean.ContentBean getContentBean() {
         return contentBean;
     }
 
-    public void setContentBean(LotterysCountDownBean.ContentBean contentBean) {
+    public void setContentBean(LoctteryBean.ContentBean contentBean) {
         this.contentBean = contentBean;
+
     }
 
-    LotterysCountDownBean.ContentBean contentBean;
+    LoctteryBean.ContentBean contentBean;
 
 
     public CustomDigitalClock(Context context) {
@@ -47,30 +50,49 @@ public class CustomDigitalClock extends android.support.v7.widget.AppCompatTextV
     }
 
     @Override
-    public void onSecond() {
-        countDown();
+    public void onSecond(long serviceitem) {
+        countDown(serviceitem);
     }
 
     /**
      * 倒计时
      */
-    public void countDown() {
+    public void countDown(long servicetime) {
         int i = (int) getTag();
-        if(i!= HomePurchaseFragment.curVisPage){
+        if (i != HomePurchaseFragment.curVisPage) {
             return;
         }
         if (contentBean == null) {
             return;
         }
-        long distanceTime = contentBean.getActiveTime() - contentBean.getServerTime();
-        distanceTime /= 1000;
-        if (distanceTime <= 0) {
-            setText("00:00:00");
-        } else {
-            setText(dealTime(distanceTime));
-        }
-        invalidate();
 
+        //激活时间减去age时间等于封盘时间
+        //激活时间是开奖时间
+        if (servicetime < contentBean.getActiveTime() - (contentBean.getDuration() * 1000)) {
+            //封盘时间
+            if (mClockListener != null) {
+                mClockListener.close();
+            }
+            long distanceTime = contentBean.getActiveTime() - (contentBean.getDuration() * 1000) - servicetime;
+            distanceTime /= 1000;
+            if (distanceTime <= 0) {
+                setText("00:00:00");
+            } else {
+                setText(dealTime(distanceTime));
+            }
+        } else {
+            //开盘时间
+            if (mClockListener != null) {
+                mClockListener.open();
+            }
+            long distanceTime = contentBean.getActiveTime() - servicetime;
+            distanceTime /= 1000;
+            if (distanceTime <= 0) {
+                setText("00:00:00");
+            } else {
+                setText(dealTime(distanceTime));
+            }
+        }
     }
 
     @Override
@@ -83,6 +105,7 @@ public class CustomDigitalClock extends android.support.v7.widget.AppCompatTextV
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         contentBean = null;
+        mClockListener = null;
         ServiceTime.getInstance().removeListener(this);
     }
 
@@ -94,10 +117,11 @@ public class CustomDigitalClock extends android.support.v7.widget.AppCompatTextV
      */
     public static String dealTime(long time) {
         StringBuffer returnString = new StringBuffer();
-        long hours = (time%86400) /3600;
-        long minutes = ((time % 86400) % 3600) / 60;
-        long second = ((time % 86400) % 3600) % 60;
-        String hoursStr = timeStrFormat(String.valueOf(hours));
+
+        long hours = time / 3600;//小时
+        long minutes = (time % 3600) / 60;
+        long second = (time % 3600) % 60;
+        String hoursStr = timeStrFormat(hours + "");
         String minutesStr = timeStrFormat(String.valueOf(minutes));
         String secondStr = timeStrFormat(String.valueOf(second));
         returnString.append(hoursStr).append(":").append(minutesStr).append(":").append(secondStr);
@@ -125,10 +149,33 @@ public class CustomDigitalClock extends android.support.v7.widget.AppCompatTextV
     }
 
 
-    public interface ClockListener {
-        void timeEnd();
+    public abstract static class ClockListener {
+        public boolean close = true;
+        public boolean open = true;
 
-        void remainFiveMinutes();
+        /**
+         * 封盘
+         */
+        public void close() {
+            if (close) {
+                close = false;
+                closeLottery();
+            }
+        }
+
+        public void open() {
+            if (open) {
+                open = false;
+                openPrize();
+            }
+        }
+
+        public abstract void closeLottery();
+
+        /**
+         * 开奖
+         */
+        public abstract void openPrize();
     }
 
 }

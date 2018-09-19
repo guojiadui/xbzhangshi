@@ -10,21 +10,22 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xbzhangshi.R;
+import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
 import com.xbzhangshi.mvp.home.bean.OpenPrizeBean;
 
 import java.util.List;
 
-public class OpenPrizeAdapter extends BaseQuickAdapter<OpenPrizeBean, BaseViewHolder> {
+public class OpenPrizeAdapter extends BaseQuickAdapter<LotterysCountDownBean.ContentBean, BaseViewHolder> {
 
     int[] colors = {0xffff00, 0x0089ff, 0x4d4d4d, 0xff7300, 0x81ffff, 0x5200ff, 0xb8b8b8, 0xff0000, 0x760000, 0x28c200};
     Context context;
-    public OpenPrizeAdapter(Context context,@Nullable List<OpenPrizeBean> data) {
+    public OpenPrizeAdapter(Context context, @Nullable List<LotterysCountDownBean.ContentBean>   data) {
         super(R.layout.open_prize_adapter_item, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, OpenPrizeBean item) {
+    protected void convert(BaseViewHolder helper, LotterysCountDownBean.ContentBean item) {
         LinearLayout content = helper.getView(R.id.content);
         helper.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +33,8 @@ public class OpenPrizeAdapter extends BaseQuickAdapter<OpenPrizeBean, BaseViewHo
 
             }
         });
+        helper.setText(R.id.name,item.getLotName());
+
         content.removeAllViews();
        for(int i=0;i<5;i++){
            TextView textView = new TextView(context);

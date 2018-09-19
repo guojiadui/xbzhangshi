@@ -59,6 +59,10 @@ public class LotterysCountDownBean {
         private String qiHao;
         private long serverTime;
 
+
+
+
+
         public long getActiveTime() {
             return activeTime;
         }

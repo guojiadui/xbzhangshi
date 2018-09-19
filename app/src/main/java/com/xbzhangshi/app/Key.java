@@ -17,4 +17,7 @@ public class Key {
     public  final  static String USER_NAME ="user_name";//用户名
     public  final  static String USER_PWD ="user_pwd";//用户密码
     public  final  static String USER_HISTORY_LSIT ="user_histort_list";//输入过的历史用户
+
+
+
 }
