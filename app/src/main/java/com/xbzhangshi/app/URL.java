@@ -14,8 +14,18 @@ public class URL {
      /**
       * 特殊请求
       * http://xbzhanshi.com/mobile/v3/lotterys.do?lotCode=LHC&version=2&needLast=true
+      * 获取某一彩票的下一期时间和最新一期结果
       */
      public final static  String ServiceTime1 ="http://xbzhanshi.com/mobile/v3/lotterys.do?lotCode=";
      public final static  String ServiceTime2 ="&version=2&needLast=true";
 
+     /**
+      * 获取最新最新的所以彩票的结果，用于开奖公告
+      */
+     public final static  String OpenPrize ="http://xbzhanshi.com/mobile/v3/draw_notice_data.do";
+     /**
+      * 获取彩票结果列表
+      * http://xbzhanshi.com/mobile/v3/draw_notice_details_data.do?lotCode=PCEGG&page=2&rows=10
+      */
+     public final static  String OpenPrizeResultList ="http://xbzhanshi.com/mobile/v3/draw_notice_details_data.do";
 }

@@ -27,6 +27,7 @@
         <activity android:name=".mvp.details.BettingDetailsActivity" />
         <activity android:name=".mvp.login.LoginActivity" />
         <activity android:name=".mvp.login.RegisterUserActivity" />
+        <activity android:name=".mvp.details.OpenPrizedetailsActivity" />
 
     </application>
 

@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.details.OpenPrizedetailsActivity;
 import com.xbzhangshi.mvp.home.adapter.OpenPrizeAdapter;
 import com.xbzhangshi.mvp.home.baseView.IOpenPrizeBaseView;
 import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
@@ -81,13 +83,21 @@ public class HomeOpenPrizeFragmenrt extends BaseFragment implements IOpenPrizeBa
     }
 
     @Override
-    public void onSuccess(List<LotterysCountDownBean.ContentBean> contentBeans) {
+    public void onSuccess(List<OpenPrizeBean.DataBean> contentBeans) {
         multipleStatusView.showContent();
         if(mRefreshlayout!=null ){
             mRefreshlayout.finishRefresh();
             mRefreshlayout=null;
         }
-        recyclerView.setAdapter(new OpenPrizeAdapter(mActivity, contentBeans));
+        OpenPrizeAdapter openPrizeAdapter = new OpenPrizeAdapter(mActivity, contentBeans);
+        openPrizeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                OpenPrizeBean.DataBean dataBean = (OpenPrizeBean.DataBean) adapter.getData().get(position);
+                OpenPrizedetailsActivity.start(mActivity,dataBean);
+            }
+        });
+        recyclerView.setAdapter(openPrizeAdapter);
     }
 
     @Override

@@ -114,16 +114,14 @@ public class VPurchaseTypeAdapter extends BaseQuickAdapter<LoctteryBean.ContentB
 
 
     public void setHaoma(BaseViewHolder helper, LoctteryBean.ContentBean item) {
-        helper.setText(R.id.haoma, item.getLastHaoMa());
+
         if (!TextUtils.isEmpty(item.getLastHaoMa())) {
             if (item.getLastHaoMa().contains("?")) {
-                helper.setText(R.id.haoma, "开奖中...");
                 helper.setVisible(R.id.haoma, true);
                 LinearLayout layout = helper.getView(R.id.haoma_layout);
                 layout.setVisibility(View.INVISIBLE);
                 layout.removeAllViews();
             } else {
-                helper.setText(R.id.haoma, item.getLastHaoMa());
                 helper.setVisible(R.id.haoma, false);
                 LinearLayout layout = helper.getView(R.id.haoma_layout);
                 layout.setVisibility(View.VISIBLE);
@@ -144,7 +142,8 @@ public class VPurchaseTypeAdapter extends BaseQuickAdapter<LoctteryBean.ContentB
                 }
             }
         } else {
-            helper.setText(R.id.haoma, "");
+            helper.setVisible(R.id.haoma, false);
+            helper.setVisible(R.id.haoma_layout, false);
         }
     }
 
