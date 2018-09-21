@@ -94,6 +94,14 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(openPrizeDetailspresenter!=null){
+            openPrizeDetailspresenter.onDestory();
+        }
+    }
+
+    @Override
     protected void initdata() {
         super.initdata();
         multipleStatusView.showLoading();

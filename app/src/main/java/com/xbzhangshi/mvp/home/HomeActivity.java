@@ -9,8 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.SpanUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.MyApplication;
@@ -20,8 +18,13 @@ import com.xbzhangshi.mvp.home.Fragment.HomeOpenPrizeFragmenrt;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeUserCenterFragment;
 import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
+import com.xbzhangshi.mvp.home.event.SelectEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
+import com.xbzhangshi.mvp.home.event.SwithEvent;
+import com.xbzhangshi.mvp.home.presenter.HomePresenter;
 import com.xbzhangshi.mvp.home.presenter.SidePesenter;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.view.BottomBar;
 import com.xbzhangshi.view.BottomBarTab;
 
@@ -29,12 +32,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.zip.Inflater;
-
 import butterknife.BindView;
 
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements IHomeBaseView {
 
     @BindView(R.id.bottomBar)
     BottomBar mBottomBar;
@@ -45,6 +46,7 @@ public class HomeActivity extends BaseActivity {
 
     View viewMenu;//菜单
     SidePesenter sidePesenter;
+    HomePresenter homePresenter;
     @Override
     protected int getlayout() {
         return R.layout.home_activity_layout;
@@ -54,6 +56,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        homePresenter = HomePresenter.newInstance(this);
         EventBus.getDefault().register(this);
 
         mBottomBar.addItem(new BottomBarTab(this, R.mipmap.sy_nor, "投注大厅"))
@@ -63,6 +66,19 @@ public class HomeActivity extends BaseActivity {
         mBottomBar.setCurrentItem(0);
         switchFragment(0);
         mBottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
+            @Override
+            public boolean onInterceptTouchEvent(int position) {
+                //判断是否登录
+                if(homePresenter==null){
+                    return true;
+                }
+                if(position==3&&!homePresenter.isLogin() ){
+                    LoginActivity.startLogin(HomeActivity.this );
+                    return true;
+                }
+                return false;
+            }
+
             @Override
             public void onTabSelected(int position, int prePosition) {
                 LogUtils.e("onTabSelected:" + position + "+" + prePosition);
@@ -118,11 +134,24 @@ public class HomeActivity extends BaseActivity {
         }
     }
 
-    ;
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LoginSuccessEvent event) {
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(SelectEvent event) {
+      if(mBottomBar!=null){
+          mBottomBar.setCurrentItem(event.getPosition());
+      }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(homePresenter!=null){
+            homePresenter.onDestory();
+        }
         EventBus.getDefault().unregister(this);
     }
 
@@ -223,7 +252,6 @@ public class HomeActivity extends BaseActivity {
         }
 
     }
-
 
 
 

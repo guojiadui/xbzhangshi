@@ -37,30 +37,30 @@ public class OpenPrizeDetailspresenter extends BasePresenter {
         httpParams.put("lotCode", code);
         httpParams.put("page", curPage);
         httpParams.put("rows", 10);
-        HttpManager.get(context, URL.OpenPrizeResultList, httpParams, new StringCallback() {
+        Object tag = HttpManager.get(context, URL.OpenPrizeResultList, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                OpenPrizeListBean listBean = JSON.parseObject(response.body(),OpenPrizeListBean.class);
-                if(listBean.isSuccess()){
-                   if(listBean.getData().getList().size()>0){
-                       if(curPage==1){
-                           contentView.onSuccess(listBean.getData().getList(),listBean.getData().isHasNext());
-                       }else {
-                           contentView.onMOre(listBean.getData().getList(),listBean.getData().isHasNext());
-                       }
-                       curPage = listBean.getData().getNextPage();
-                   }else {
-                       if(curPage==1){
-                           contentView.onEmpty();
-                       }else {
-                           contentView.onMoreEmpty();
-                       }
-                   }
-                }else {
-                    if(curPage==1){
+                OpenPrizeListBean listBean = JSON.parseObject(response.body(), OpenPrizeListBean.class);
+                if (listBean.isSuccess()) {
+                    if (listBean.getData().getList().size() > 0) {
+                        if (curPage == 1) {
+                            contentView.onSuccess(listBean.getData().getList(), listBean.getData().isHasNext());
+                        } else {
+                            contentView.onMOre(listBean.getData().getList(), listBean.getData().isHasNext());
+                        }
+                        curPage = listBean.getData().getNextPage();
+                    } else {
+                        if (curPage == 1) {
+                            contentView.onEmpty();
+                        } else {
+                            contentView.onMoreEmpty();
+                        }
+                    }
+                } else {
+                    if (curPage == 1) {
                         contentView.onError();
-                    }else {
-                      contentView.onMoreError();
+                    } else {
+                        contentView.onMoreError();
                     }
                 }
             }
@@ -68,13 +68,14 @@ public class OpenPrizeDetailspresenter extends BasePresenter {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-                if(curPage==1){
+                if (curPage == 1) {
                     contentView.onError();
-                }else {
+                } else {
                     contentView.onMoreError();
                 }
             }
         });
+        addNet(tag);
     }
 
 

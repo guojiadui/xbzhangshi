@@ -10,9 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
+import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.login.bean.LoginBean;
+import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.ConfirmDialog;
 
 import butterknife.BindView;
@@ -22,7 +29,7 @@ import butterknife.Unbinder;
 /**
  * 用户中心
  */
-public class HomeUserCenterFragment extends BaseFragment {
+public class HomeUserCenterFragment extends BaseFragment implements IUserCenterBaseView {
 
     @BindView(R.id.user_name)
     TextView userName;
@@ -64,7 +71,7 @@ public class HomeUserCenterFragment extends BaseFragment {
         HomeUserCenterFragment fragment = new HomeUserCenterFragment();
         return fragment;
     }
-
+  UserCenterPresenter userCenterPresenter;
     @Override
     protected int getLayoutId() {
         return R.layout.home_user_center_fragment;
@@ -72,18 +79,37 @@ public class HomeUserCenterFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
+
+       userCenterPresenter = UserCenterPresenter.newInstance(this);
+       withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 String s =null;
-                 Log.e("TAG",s);
-                /* ConfirmDialog confirmDialog = new ConfirmDialog(mActivity);
-                 confirmDialog.show();
-                 AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);*/
+
 
              }
          });
     }
+
+    @Override
+    public void setUserVisibleHint(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        LogUtils.d("TAG", "setUserVisibleHint" + toString() + ";   isVisibleToUser:" + hidden);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            //不可见
+
+        }else {
+            //可见
+
+        }
+
+    }
+
+
 
 
 }

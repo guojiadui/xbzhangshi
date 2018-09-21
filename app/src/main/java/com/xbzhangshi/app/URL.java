@@ -10,6 +10,10 @@ public class URL {
      public  final  static String DatasBesidesLotterys ="/getDatasBesidesLotterys"+BASE_END;//获取体育，电子，真人分类的种类信息
      public  final  static String lottert_png ="http://xbzhanshi.com/mobile/v3/images/lottery/";//获取体育，电子，真人分类的种类信息
      public  final  static String LotterysCountDown ="/getLotterysCountDown"+BASE_END;//获取体育，电子，真人分类的种类信息
+     public  final  static String login ="/login"+BASE_END;//登录
+     public  final  static String accountInfo ="/accountInfo"+BASE_END;//获取用户信息
+     public  final  static String reg_guest ="/reg_guest"+BASE_END;//获取免费账号
+     public  final  static String meminfo ="/meminfo"+BASE_END;//获取免费账号
 
      /**
       * 特殊请求

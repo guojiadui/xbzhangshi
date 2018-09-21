@@ -5,10 +5,8 @@ import android.content.Context;
 import android.os.Handler;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 
-import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.callback.StringCallback;
 
 import com.lzy.okgo.model.Response;
@@ -17,7 +15,6 @@ import com.xbzhangshi.app.URL;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 
-import com.xbzhangshi.mvp.home.bean.ServiceTimeBean;
 import com.xbzhangshi.mvp.home.event.UpdateLotteryEvent;
 
 
@@ -28,12 +25,7 @@ import org.json.JSONObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 服务器时间
@@ -90,7 +82,7 @@ public class ServiceTime {
                     }
                     handler.removeCallbacks(this);
                     handler.postDelayed(this, TIME);
-                    Long startIime = System.currentTimeMillis();
+                   // Long startIime = System.currentTimeMillis();
                     remoteServiceTime = remoteServiceTime + 1000;//更新服务器时间
                     //判断是否有时间要更新
                     for (LoctteryBean.ContentBean contentBean : contentBeanList) {
@@ -108,10 +100,10 @@ public class ServiceTime {
                         ObserverListener str = it.next();
                         str.onSecond(remoteServiceTime);
                     }
-                    Long endTime = System.currentTimeMillis();
+                  //  Long endTime = System.currentTimeMillis();
                    /* long now = SystemClock.uptimeMillis();
                     long next = now + (1000 - now % 1000);*/
-                    Log.e("TAG", "耗时" + (endTime - startIime));
+                   // Log.e("TAG", "耗时" + (endTime - startIime));
 
                 } catch (Exception e) {
                     e.printStackTrace();

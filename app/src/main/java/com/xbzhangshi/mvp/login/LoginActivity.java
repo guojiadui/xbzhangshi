@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -15,14 +17,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
 import com.xbzhangshi.mvp.login.bean.LoginSelectBean;
 import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
+import com.xbzhangshi.view.CustomToolbar;
+import com.xbzhangshi.view.dialog.LoadingDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +48,11 @@ import butterknife.ButterKnife;
 public class LoginActivity extends BaseActivity implements ILoginView {
 
 
-    public static void startLogin(Context context) {
+    public static void startLogin(Activity context) {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
     }
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.select_name)
     ImageView selectName;
     @BindView(R.id.name)
@@ -63,8 +71,10 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     EditText mPassword;
     @BindView(R.id.checkbox_password)
     CheckBox checkboxPassword;
-
+    @BindView(R.id.customtoolbar)
+    CustomToolbar customToolbar;
     LogInPresenter logInPresenter;
+    LoadingDialog loadingDialog;
 
     @Override
     protected int getlayout() {
@@ -73,18 +83,35 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         logInPresenter = LogInPresenter.newInstance(this);
         logInPresenter.init();
+        customToolbar.setMainTitle("登录");
+        customToolbar.mTvMainTitleLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        backHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         selectName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showHistoryNames(logInPresenter.getNamelist());
             }
         });
+        /**
+         * 注册
+         */
         registerUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RegisterUserActivity.start(LoginActivity.this);
             }
         });
         onlineCustomer.setOnClickListener(new View.OnClickListener() {
@@ -93,16 +120,63 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
             }
         });
+        /**
+         * 获取免费账号
+         */
+        freePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (logInPresenter != null) {
+                    if (loadingDialog == null) {
+                        loadingDialog = new LoadingDialog(LoginActivity.this);
+                    }
+                    loadingDialog.show();
+                    logInPresenter.getFreeUser(LoginActivity.this);
+                }
+            }
+        });
+        /**
+         * 登录
+         */
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean r = checkboxPassword.isChecked();
                 String name = mName.getText().toString();
                 String pwd = mPassword.getText().toString();
-                logInPresenter.login(LoginActivity.this, name, pwd, r);
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(LoginActivity.this, "账号不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(pwd)) {
+                    Toast.makeText(LoginActivity.this, "密码不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (logInPresenter != null) {
+                    if (loadingDialog == null) {
+                        loadingDialog = new LoadingDialog(LoginActivity.this);
+                    }
+                    loadingDialog.show();
+                    logInPresenter.login(LoginActivity.this, name, pwd, r);
+                }
+
             }
         });
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LoginSuccessEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+        if (logInPresenter != null) {
+            logInPresenter.onDestory();
+        }
     }
 
     @Override
@@ -119,7 +193,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
      */
     private void showHistoryNames(List<String> list) {
 
-        if(list==null||list.size()==0){
+        if (list == null || list.size() == 0) {
             return;
         }
         // PopupWindow浮动下拉框布局
@@ -169,6 +243,24 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         }
         if (!TextUtils.isEmpty(pwd)) {
             mPassword.setText(pwd);
+        }
+    }
+
+    @Override
+    public void loginSuccess() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
+        finish();
+    }
+
+    @Override
+    public void LoginonError(String msg) {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
+        if (TextUtils.isEmpty(msg)) {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
     }
 }

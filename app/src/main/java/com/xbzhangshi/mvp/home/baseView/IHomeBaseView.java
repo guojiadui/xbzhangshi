@@ -5,4 +5,6 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 public interface IHomeBaseView  {
 
 
+
+
 }

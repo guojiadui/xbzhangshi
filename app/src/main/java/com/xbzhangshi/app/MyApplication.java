@@ -5,17 +5,24 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.blankj.utilcode.util.AppUtils;
-import com.blankj.utilcode.util.CrashUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
+
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cookie.CookieJarImpl;
+import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.squareup.leakcanary.LeakCanary;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyApplication extends Application implements Utils.OnAppStatusChangedListener {
+import okhttp3.OkHttpClient;
+
+public class MyApplication extends Application implements Utils.OnAppStatusChangedListener  {
+
 
     //记录当前栈里所有activity
     private List<Activity> activities = new ArrayList<Activity>();
@@ -33,7 +40,11 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
         super.onCreate();
         instance = this;
         isExit = false;
+
         OkGo.getInstance().init(this);//默认初始化
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)));
+        OkGo.getInstance().setOkHttpClient(builder.build());
 
        /* CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override

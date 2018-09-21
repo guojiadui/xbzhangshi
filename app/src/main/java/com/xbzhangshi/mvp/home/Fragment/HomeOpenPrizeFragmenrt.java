@@ -76,6 +76,13 @@ public class HomeOpenPrizeFragmenrt extends BaseFragment implements IOpenPrizeBa
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(openPrizePresenter!=null)
+            openPrizePresenter.onDestory();
+    }
+
+    @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
         multipleStatusView.showLoading();

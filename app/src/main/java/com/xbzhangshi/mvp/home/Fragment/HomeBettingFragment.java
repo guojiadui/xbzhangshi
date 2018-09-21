@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -7,19 +8,35 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
+
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
+import com.xbzhangshi.mvp.home.event.SelectEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.login.RegisterUserActivity;
 import com.xbzhangshi.view.CustomViewPager;
+import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.MarqueeTextView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,11 +55,23 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
 
-    String[] tabNames = {"彩票", "体育", "真人","电子","棋牌"};
+    String[] tabNames = {"彩票", "体育", "真人", "电子", "棋牌"};
     BettingPresenter bettingPresenter;
     @BindView(R.id.notice)
     MarqueeTextView notice;
     Unbinder unbinder;
+    @BindView(R.id.login)
+    TextView login;
+    @BindView(R.id.register)
+    TextView register;
+    @BindView(R.id.no_login_layout)
+    LinearLayout noLoginLayout;
+    @BindView(R.id.balance)
+    TextView balance;
+    Unbinder unbinder1;
+    @BindView(R.id.user_icon)
+    ImageView userIcon;
+    Unbinder unbinder2;
 
     public static HomeBettingFragment newInstance() {
         HomeBettingFragment fragment = new HomeBettingFragment();
@@ -62,10 +91,55 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
-        if(bettingPresenter!=null){
+        if (bettingPresenter != null) {
             bettingPresenter.onDestory();
+        }
+    }
+
+     @OnClick({R.id.menu1,R.id.menu2,R.id.menu3,R.id.menu4,R.id.login,R.id.register})
+     public   void  click(View v){
+        switch (v.getId()){
+            case  R.id.menu1:
+            case  R.id.menu2:
+                //判断是否登录
+                if(bettingPresenter==null){
+                    return  ;
+                }
+                if(!bettingPresenter.isLogin() ){
+                    LoginActivity.startLogin(mActivity );
+                    return;
+                }
+                EventBus.getDefault().post(new SelectEvent(3));
+                break;
+            case   R.id.login:
+                LoginActivity.startLogin(mActivity );
+                break;
+            case   R.id.register:
+                RegisterUserActivity.start(mActivity);
+                break;
+        }
+     }
+
+    //成功是否
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LoginSuccessEvent event) {
+        if (noLoginLayout != null) {
+            noLoginLayout.setVisibility(View.GONE);
+            balance.setVisibility(View.VISIBLE);
+            balance.setText("");
+            if (bettingPresenter != null) {
+                //获取余额
+                bettingPresenter.getBalance(mActivity);
+            }
         }
     }
 
@@ -121,7 +195,10 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
+        //加载数据
         bettingPresenter.loadData(mActivity);
+        //自动登录
+        bettingPresenter.outologin(mActivity);
     }
 
     @OnClick(R.id.side_icon)
@@ -147,8 +224,44 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
 
 
     @Override
+    public void loginSuccess() {
+        if (noLoginLayout != null) {
+            noLoginLayout.setVisibility(View.GONE);
+            balance.setVisibility(View.VISIBLE);
+            balance.setText("");
+            if (bettingPresenter != null) {
+                //获取余额
+                bettingPresenter.getBalance(mActivity);
+            }
+        }
+    }
+
+    @Override
+    public void LoginonError(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void setNotice(String content) {
         notice.setText(Html.fromHtml(content));
+    }
+
+    @Override
+    public void updateBalance(String msg) {
+        if (noLoginLayout != null) {
+            noLoginLayout.setVisibility(View.GONE);
+            balance.setVisibility(View.VISIBLE);
+            balance.setText(msg);
+            RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
+            Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
+           /* GlideApp.with(this)
+                    .load("http://xbzhanshi.com/mobile/v3/images/touxiang.png")
+                    .centerCrop()
+                    .transform(new GlideCircleBorderTransform(9, 0xffff5555))
+                    .into(userIcon);*/
+
+
+        }
     }
 
 

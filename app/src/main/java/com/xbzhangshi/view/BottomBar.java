@@ -68,8 +68,11 @@ public class BottomBar extends LinearLayout {
             @Override
             public void onClick(View v) {
                 if (mListener == null) return;
-
                 int pos = tab.getTabPosition();
+                if (mListener.onInterceptTouchEvent(pos)) {
+                    return;
+                }
+
                 if (mCurrentPosition == pos) {
                     mListener.onTabReselected(pos);
                 } else {
@@ -114,6 +117,15 @@ public class BottomBar extends LinearLayout {
     }
 
     public interface OnTabSelectedListener {
+
+        /**
+         * 是否进行点击事件的拦截
+         *
+         * @param position
+         * @param
+         */
+        public boolean onInterceptTouchEvent(int position);
+
         void onTabSelected(int position, int prePosition);
 
         void onTabUnselected(int position);
