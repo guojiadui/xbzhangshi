@@ -13,16 +13,23 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary"
-            android:gravity="center_vertical"
             android:minHeight="@dimen/dp_50"
             android:textColor="@color/colorPrimary"
             app:layout_scrollFlags="scroll">
-
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginStart="@dimen/dp_7"
+                android:layout_centerVertical="true"
+                />
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_40"
+                android:layout_marginStart="@dimen/dp_5"
+                android:layout_toRightOf="@+id/user_icon"
+                android:layout_centerVertical="true"
                 android:text="name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_large" />
@@ -33,6 +40,7 @@
                 android:layout_marginStart="@dimen/dp_15"
                 android:layout_toRightOf="@+id/user_name"
                 android:text="VIP1"
+                android:layout_centerVertical="true"
                 android:textColor="@color/yellow"
                 android:textSize="@dimen/font_size_large" />
           <LinearLayout
@@ -40,6 +48,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
               android:layout_marginEnd="@dimen/dp_7"
               android:gravity="center_vertical">
               <TextView

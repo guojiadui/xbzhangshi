@@ -21,8 +21,10 @@
         android:textSize="@dimen/font_size_large" />
 
     <LinearLayout
+        android:id="@+id/user_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <View
@@ -51,18 +53,17 @@
                 android:layout_marginStart="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_toRightOf="@+id/sideslip_user_icon"
-                android:text="zhang"
                 android:textColor="#dddddd"
                 android:textSize="@dimen/font_size_large" />
 
             <TextView
+                android:id="@+id/sideslip_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/sideslip_user_name"
                 android:layout_marginStart="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_3"
                 android:layout_toRightOf="@+id/sideslip_user_icon"
-                android:text="1222222"
                 android:textColor="#dddddd"
                 android:textSize="@dimen/font_size_large" />
         </RelativeLayout>
@@ -265,6 +266,7 @@
             android:textColor="#dddddd"
             android:textSize="@dimen/font_size_large" />
         <com.suke.widget.SwitchButton
+            android:id="@+id/check1"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentRight="true"
@@ -305,6 +307,7 @@
             android:textColor="#dddddd"
             android:textSize="@dimen/font_size_large" />
         <com.suke.widget.SwitchButton
+            android:id="@+id/check2"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentRight="true"
@@ -332,6 +335,7 @@
             android:layout_marginStart="@dimen/dp_15"
             android:src="@mipmap/animation_effect" />
         <com.suke.widget.SwitchButton
+            android:id="@+id/check3"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_30"
             android:layout_alignParentRight="true"

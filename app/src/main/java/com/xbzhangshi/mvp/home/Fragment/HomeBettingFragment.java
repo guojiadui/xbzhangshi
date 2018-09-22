@@ -4,22 +4,28 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.text.Annotation;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
 
+import com.xbzhangshi.app.Key;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
@@ -34,6 +40,7 @@ import com.xbzhangshi.mvp.login.RegisterUserActivity;
 import com.xbzhangshi.view.CustomViewPager;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.MarqueeTextView;
+import com.xbzhangshi.view.dialog.HomeTipDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -69,10 +76,13 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     LinearLayout noLoginLayout;
     @BindView(R.id.balance)
     TextView balance;
-    Unbinder unbinder1;
     @BindView(R.id.user_icon)
     ImageView userIcon;
-    Unbinder unbinder2;
+    @BindView(R.id.anim1)
+    View anim1;
+    @BindView(R.id.anim2)
+    View anim2;
+
 
     public static HomeBettingFragment newInstance() {
         HomeBettingFragment fragment = new HomeBettingFragment();
@@ -106,29 +116,29 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         }
     }
 
-     @OnClick({R.id.menu1,R.id.menu2,R.id.menu3,R.id.menu4,R.id.login,R.id.register})
-     public   void  click(View v){
-        switch (v.getId()){
-            case  R.id.menu1:
-            case  R.id.menu2:
+    @OnClick({R.id.menu1, R.id.menu2, R.id.menu3, R.id.menu4, R.id.login, R.id.register})
+    public void click(View v) {
+        switch (v.getId()) {
+            case R.id.menu1:
+            case R.id.menu2:
                 //判断是否登录
-                if(bettingPresenter==null){
-                    return  ;
+                if (bettingPresenter == null) {
+                    return;
                 }
-                if(!bettingPresenter.isLogin() ){
-                    LoginActivity.startLogin(mActivity );
+                if (!bettingPresenter.isLogin()) {
+                    LoginActivity.startLogin(mActivity);
                     return;
                 }
                 EventBus.getDefault().post(new SelectEvent(3));
                 break;
-            case   R.id.login:
-                LoginActivity.startLogin(mActivity );
+            case R.id.login:
+                LoginActivity.startLogin(mActivity);
                 break;
-            case   R.id.register:
+            case R.id.register:
                 RegisterUserActivity.start(mActivity);
                 break;
         }
-     }
+    }
 
     //成功
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -143,6 +153,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             }
         }
     }
+
     //退出
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LogoutEvent event) {
@@ -155,6 +166,36 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
 
     @Override
     protected void initView(View view) {
+        Boolean an = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.ANIMATION_STATE);
+        if(an){
+            notice.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //动画1
+                    TranslateAnimation mShowAction1 = new TranslateAnimation(
+                            Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                    mShowAction1.setDuration(600);
+                    anim1.setVisibility(View.VISIBLE);
+                    anim1.setAnimation(mShowAction1);
+                    mShowAction1.start();
+                    //动画2
+                    TranslateAnimation mShowAction2 = new TranslateAnimation(
+                            Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                    mShowAction2.setDuration(600);
+                    anim2.setVisibility(View.VISIBLE);
+                    anim2.setAnimation(mShowAction2);
+                    mShowAction2.start();
+
+                }
+            }, 50);
+        }else {
+            anim1.setVisibility(View.VISIBLE);
+            anim2.setVisibility(View.VISIBLE);
+        }
+
+
         fragmentTabmainViewPager.setOffscreenPageLimit(tabNames.length);
         fragmentTabmainViewPager.addOnPageChangeListener(this);
 
@@ -251,9 +292,18 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
+    HomeTipDialog homeTipDialog;
+
     @Override
-    public void setNotice(String content) {
+    public void setNotice(String content, boolean isShow) {
         notice.setText(Html.fromHtml(content));
+        if (isShow) {
+            if (homeTipDialog == null) {
+                homeTipDialog = new HomeTipDialog(mActivity, content);
+            }
+            homeTipDialog.show();
+        }
+
     }
 
     @Override

@@ -11,11 +11,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.view.GlideCircleBorderTransform;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,6 +70,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     NestedScrollView flControl;
     @BindView(R.id.balance)
     TextView balance;
+    @BindView(R.id.user_icon)
+    ImageView userIcon;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -131,7 +136,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         }
     }
 
-    //成功成功
+    //成功
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoginSuccessEvent event) {
         if (userCenterPresenter != null) {
@@ -142,6 +147,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     @Override
     public void setUserinfo(String name) {
         userName.setText(name);
+        RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
+        Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
     }
 
     @Override

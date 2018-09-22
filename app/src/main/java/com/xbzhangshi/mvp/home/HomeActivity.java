@@ -118,6 +118,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         viewMenu = LayoutInflater.from(this).inflate(R.layout.sideslip_layout, null);
         menu.setMenu(viewMenu);
         sidePesenter = SidePesenter.newInstance(viewMenu);
+        sidePesenter.init(this);
         RelativeLayout sideExit = viewMenu.findViewById(R.id.side_app_exit);
         sideExit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,11 +143,16 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         if (mBottomBar != null) {
             mBottomBar.setCurrentItem(0);
         }
+        if(sidePesenter!=null){
+            sidePesenter.loginout();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoginSuccessEvent event) {
-
+        if(sidePesenter!=null){
+            sidePesenter.login(this);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -161,6 +167,9 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         super.onDestroy();
         if (homePresenter != null) {
             homePresenter.onDestory();
+        }
+        if(sidePesenter!=null){
+            sidePesenter.onDestory();
         }
         EventBus.getDefault().unregister(this);
     }

@@ -16,7 +16,7 @@ public interface IBettingBaseView   {
     /**
      * 公告
      */
-    public  void setNotice(String content);
+    public  void setNotice(String content,boolean isShow);
     /**
      * 更新余额
      * @param msg

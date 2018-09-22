@@ -59,8 +59,11 @@ public class BettingPresenter extends BasePresenter {
                 LogUtils.e("TAG", response.body());
                 NoticeBean noticeBean = JSON.parseObject(response.body(), NoticeBean.class);
                 if (noticeBean.isSuccess()) {
-                    if (!TextUtils.isEmpty(noticeBean.getContent()))
-                        contentView.setNotice(noticeBean.getContent());
+                    if (!TextUtils.isEmpty(noticeBean.getContent())){
+                        //是否登出提窗口
+                        boolean ishow  =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP);
+                        contentView.setNotice(noticeBean.getContent(),ishow);
+                    }
                 }
             }
         });

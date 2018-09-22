@@ -44,7 +44,8 @@
                 android:id="@+id/no_login_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/dp_7">
 
                 <TextView
                     android:id="@+id/login"
@@ -61,6 +62,8 @@
                     android:layout_gravity="center_vertical"
                     android:background="@color/white"
                     android:text="|"
+                    android:layout_marginStart="@dimen/dp_2"
+                    android:layout_marginEnd="@dimen/dp_2"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -84,7 +87,7 @@
                 android:layout_marginStart="@dimen/dp_3"
                 android:text=""
                 android:visibility="gone"
-                android:layout_marginEnd="@dimen/dp_3"
+                android:layout_marginEnd="@dimen/dp_7"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size_large" />
         </LinearLayout>
@@ -144,6 +147,8 @@
                 android:background="#efeff4" />
 
             <LinearLayout
+                android:id="@+id/anim1"
+                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -285,7 +290,11 @@
                     android:textColor="#cccccc"
                     android:textSize="18sp" />
             </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/anim2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -317,7 +326,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10" />
-
+    </LinearLayout>
             <com.xbzhangshi.view.ResizableImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

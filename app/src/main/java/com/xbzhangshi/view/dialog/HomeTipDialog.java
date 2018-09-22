@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.xbzhangshi.R;
 
@@ -14,9 +16,11 @@ import com.xbzhangshi.R;
  */
 public class HomeTipDialog    extends Dialog {
     Context context;
-    public HomeTipDialog(Context context ) {
+    String notice;
+    public HomeTipDialog(Context context,String notice ) {
         super(context, R.style.MyDialog);
         this.context = context;
+        this.notice = notice;
     }
 
 
@@ -30,6 +34,15 @@ public class HomeTipDialog    extends Dialog {
     public void init() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.home_tip_dialog, null);
+        TextView mNotice = view.findViewById(R.id.notice);
+        TextView cancel = view.findViewById(R.id.cancel_action);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        mNotice.setText(Html.fromHtml(notice));
         setContentView(view);
 
     }

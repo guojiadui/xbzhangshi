@@ -8,6 +8,9 @@ public class Key {
     public final static String APP_SET_NAME = "app_set_name";//保持应用设置的文件名称
     public final static String GRID_STATE_KEY = "grid_state_key";//采购大厅的查看list的模式;
     public final static String LOGIN_C_ISCHECK_PWD = "login_ischeck_pwd";//是否记住密码
+    public final static String RED_ENVELOPPES_STATE = "red_envelopes_state";//红包的状态
+    public final static String HOME_WINDOW_TIP = "home_window_tip";//首页的弹窗
+    public final static String ANIMATION_STATE = "animation_state";//动画
 
 
     /**
