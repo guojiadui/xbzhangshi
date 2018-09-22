@@ -24,6 +24,7 @@ import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
+import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.home.event.SelectEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
@@ -129,7 +130,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         }
      }
 
-    //成功是否
+    //成功
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoginSuccessEvent event) {
         if (noLoginLayout != null) {
@@ -140,6 +141,15 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
                 //获取余额
                 bettingPresenter.getBalance(mActivity);
             }
+        }
+    }
+    //退出
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LogoutEvent event) {
+        if (noLoginLayout != null) {
+            noLoginLayout.setVisibility(View.VISIBLE);
+            balance.setVisibility(View.GONE);
+            balance.setText("");
         }
     }
 
@@ -254,13 +264,6 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             balance.setText(msg);
             RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
             Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
-           /* GlideApp.with(this)
-                    .load("http://xbzhanshi.com/mobile/v3/images/touxiang.png")
-                    .centerCrop()
-                    .transform(new GlideCircleBorderTransform(9, 0xffff5555))
-                    .into(userIcon);*/
-
-
         }
     }
 

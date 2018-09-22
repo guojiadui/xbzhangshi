@@ -1,9 +1,7 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +15,15 @@ import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
-import com.xbzhangshi.mvp.login.LoginActivity;
-import com.xbzhangshi.mvp.login.bean.LoginBean;
-import com.xbzhangshi.single.UserInfo;
-import com.xbzhangshi.view.ConfirmDialog;
+import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -65,29 +65,53 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     ImageView icon11;
     @BindView(R.id.fl_control)
     NestedScrollView flControl;
-    Unbinder unbinder;
+    @BindView(R.id.balance)
+    TextView balance;
+
 
     public static HomeUserCenterFragment newInstance() {
         HomeUserCenterFragment fragment = new HomeUserCenterFragment();
         return fragment;
     }
-  UserCenterPresenter userCenterPresenter;
+
+    UserCenterPresenter userCenterPresenter;
+
     @Override
     protected int getLayoutId() {
         return R.layout.home_user_center_fragment;
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     protected void initView(View view) {
+        userCenterPresenter = UserCenterPresenter.newInstance(this);
+        withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-       userCenterPresenter = UserCenterPresenter.newInstance(this);
-       withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
 
+            }
+        });
+    }
 
-             }
-         });
+    @Override
+    protected void initData(Bundle savedInstanceState) {
+        super.initData(savedInstanceState);
+        userCenterPresenter.init(mActivity);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+        if (userCenterPresenter != null) {
+            userCenterPresenter.onDestory();
+        }
     }
 
     @Override
@@ -96,20 +120,45 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         LogUtils.d("TAG", "setUserVisibleHint" + toString() + ";   isVisibleToUser:" + hidden);
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(hidden){
-            //不可见
-
-        }else {
-            //可见
-
+    @OnClick({R.id.logout})
+    public void click(View v) {
+        switch (v.getId()) {
+            case R.id.logout:
+                if (userCenterPresenter != null) {
+                    userCenterPresenter.Logout(mActivity);
+                }
+                break;
         }
-
     }
 
+    //成功成功
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LoginSuccessEvent event) {
+        if (userCenterPresenter != null) {
+            userCenterPresenter.init(mActivity);
+        }
+    }
 
+    @Override
+    public void setUserinfo(String name) {
+        userName.setText(name);
+    }
+
+    @Override
+    public void LogoutSuccess() {
+        userName.setText("");
+        balance.setText("可用余额: ");
+    }
+
+    @Override
+    public void LogoutonError() {
+        Toast.makeText(mActivity, "登出出错", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateBalance(String meg) {
+        balance.setText("可用余额: " + meg + "元");
+    }
 
 
 }

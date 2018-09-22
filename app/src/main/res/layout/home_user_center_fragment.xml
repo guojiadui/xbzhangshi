@@ -36,6 +36,7 @@
                 android:textColor="@color/yellow"
                 android:textSize="@dimen/font_size_large" />
           <LinearLayout
+              android:id="@+id/logout"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentRight="true"
@@ -78,6 +79,7 @@
                 android:background="@color/gray2"
                 app:layout_scrollFlags="scroll" />
             <TextView
+                android:id="@+id/balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_7"

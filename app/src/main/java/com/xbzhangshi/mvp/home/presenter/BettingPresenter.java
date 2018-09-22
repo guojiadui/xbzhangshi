@@ -26,7 +26,7 @@ import com.xbzhangshi.util.DES;
 import org.greenrobot.eventbus.EventBus;
 
 
-public class BettingPresenter  extends BasePresenter{
+public class BettingPresenter extends BasePresenter {
     public static BettingPresenter newInstance(IBettingBaseView contentView) {
         return new BettingPresenter(contentView);
     }
@@ -40,34 +40,36 @@ public class BettingPresenter  extends BasePresenter{
     }
 
 
-
-    public void init(){
+    public void init() {
 
     }
+
     public boolean isLogin() {
         return UserInfo.getInstance().isLogin();
     }
+
     //加载公告
-    public  void  loadData(Context context){
+    public void loadData(Context context) {
         //加载公告
         HttpParams httpParams = new HttpParams();
-        httpParams.put("code","13");
-      Object tag=  HttpManager.get(context, URL.BASE_URL + URL.notice, httpParams, new StringCallback() {
+        httpParams.put("code", "13");
+        Object tag = HttpManager.get(context, URL.BASE_URL + URL.notice, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                LogUtils.e("TAG",response.body());
-                NoticeBean noticeBean = JSON.parseObject(response.body(),NoticeBean.class);
-                if(noticeBean.isSuccess()){
-                    if(!TextUtils.isEmpty(noticeBean.getContent()))
+                LogUtils.e("TAG", response.body());
+                NoticeBean noticeBean = JSON.parseObject(response.body(), NoticeBean.class);
+                if (noticeBean.isSuccess()) {
+                    if (!TextUtils.isEmpty(noticeBean.getContent()))
                         contentView.setNotice(noticeBean.getContent());
                 }
             }
         });
-      addNet(tag);
+        addNet(tag);
     }
 
     /**
      * 自动登录
+     *
      * @param context
      */
     public void outologin(Context context) {
@@ -79,7 +81,7 @@ public class BettingPresenter  extends BasePresenter{
             return;
         }
         pwd = DES.decryptDES(pwd, Key.decryptKey);
-        if(!TextUtils.isEmpty(pwd)){
+        if (!TextUtils.isEmpty(pwd)) {
             login(context, name, pwd);
         }
     }
@@ -99,7 +101,7 @@ public class BettingPresenter  extends BasePresenter{
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
                 if (loginBean.isSuccess()) {
                     //获取用户信息
-                    getUserInfo(context, name, pwd );
+                    getUserInfo(context, name, pwd);
                 } else {
                     if (!TextUtils.isEmpty(loginBean.getMsg())) {
                         contentView.LoginonError(loginBean.getMsg());
@@ -126,7 +128,7 @@ public class BettingPresenter  extends BasePresenter{
      * @param context
      * @param
      */
-    private void getUserInfo(Context context, String name, String pwd ) {
+    private void getUserInfo(Context context, String name, String pwd) {
         //获取用户信息
         Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
             @Override
@@ -157,22 +159,25 @@ public class BettingPresenter  extends BasePresenter{
         });
         addNet(tag);
     }
+
     /**
      * 获取余额
      */
-    public  void  getBalance(Context context){
-       HttpManager.get(context, URL.BASE_URL + URL.meminfo, null, new StringCallback() {
-           @Override
-           public void onSuccess(Response<String> response) {
-               BalanceBean balanceBean = JSON.parseObject(response.body(),BalanceBean.class);
-               if(balanceBean.isSuccess()){
-                 contentView.updateBalance(subZeroAndDot(balanceBean.getContent().getBalance()+""));
-               }
-           }
-       });
+    public void getBalance(Context context) {
+        Object tag = HttpManager.get(context, URL.BASE_URL + URL.meminfo, null, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
+                if (balanceBean.isSuccess()) {
+                    contentView.updateBalance(subZeroAndDot(balanceBean.getContent().getBalance() + ""));
+                }
+            }
+        });
+        addNet(tag);
     }
-    public static String subZeroAndDot(String s){
-        if(s.indexOf(".") > 0){
+
+    public static String subZeroAndDot(String s) {
+        if (s.indexOf(".") > 0) {
             s = s.replaceAll("0+?$", "");//去掉多余的0
             s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
         }

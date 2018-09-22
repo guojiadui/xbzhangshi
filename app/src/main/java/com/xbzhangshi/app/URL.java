@@ -14,6 +14,7 @@ public class URL {
      public  final  static String accountInfo ="/accountInfo"+BASE_END;//获取用户信息
      public  final  static String reg_guest ="/reg_guest"+BASE_END;//获取免费账号
      public  final  static String meminfo ="/meminfo"+BASE_END;//获取免费账号
+     public  final  static String logout ="/logout"+BASE_END;//登出
 
      /**
       * 特殊请求

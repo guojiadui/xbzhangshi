@@ -41,6 +41,16 @@ public class UserInfo {
     }
 
     /**
+     * 登出
+     */
+    public void logout() {
+        isLogin = false;
+        mUsername = "";
+        mPassword = "";
+        loginUserInfoBean = null;
+    }
+
+    /**
      * 登录
      */
     public Object login(Context context, String name, String password, StringCallback stringCallback) {

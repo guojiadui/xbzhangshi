@@ -18,6 +18,7 @@ import com.xbzhangshi.mvp.home.Fragment.HomeOpenPrizeFragmenrt;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeUserCenterFragment;
 import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
+import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.home.event.SelectEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
@@ -47,6 +48,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
     View viewMenu;//菜单
     SidePesenter sidePesenter;
     HomePresenter homePresenter;
+
     @Override
     protected int getlayout() {
         return R.layout.home_activity_layout;
@@ -69,11 +71,11 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
             @Override
             public boolean onInterceptTouchEvent(int position) {
                 //判断是否登录
-                if(homePresenter==null){
+                if (homePresenter == null) {
                     return true;
                 }
-                if(position==3&&!homePresenter.isLogin() ){
-                    LoginActivity.startLogin(HomeActivity.this );
+                if (position == 3 && !homePresenter.isLogin()) {
+                    LoginActivity.startLogin(HomeActivity.this);
                     return true;
                 }
                 return false;
@@ -134,22 +136,30 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         }
     }
 
+    //退出
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(LogoutEvent event) {
+        if (mBottomBar != null) {
+            mBottomBar.setCurrentItem(0);
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoginSuccessEvent event) {
 
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(SelectEvent event) {
-      if(mBottomBar!=null){
-          mBottomBar.setCurrentItem(event.getPosition());
-      }
+        if (mBottomBar != null) {
+            mBottomBar.setCurrentItem(event.getPosition());
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(homePresenter!=null){
+        if (homePresenter != null) {
             homePresenter.onDestory();
         }
         EventBus.getDefault().unregister(this);
@@ -252,7 +262,6 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         }
 
     }
-
 
 
 }
