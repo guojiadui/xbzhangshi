@@ -27,6 +27,7 @@
             android:layout_toRightOf="@+id/content_text"
             android:background="@null"
             android:hint="请输入验证码"
+            android:minWidth="@dimen/dp_150"
             android:lines="1"
             android:textColor="@color/txt_normal"
             android:textSize="@dimen/font_size_large" />

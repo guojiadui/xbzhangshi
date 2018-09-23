@@ -1,31 +1,31 @@
 package com.xbzhangshi.mvp.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.lzy.okgo.OkGo;
 import com.xbzhangshi.R;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseActivity;
-import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
-import com.xbzhangshi.mvp.login.bean.LoginSelectBean;
 import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.LoadingDialog;
@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,6 +46,15 @@ import butterknife.ButterKnife;
 
 public class LoginActivity extends BaseActivity implements ILoginView {
 
+
+    @BindView(R.id.verifyCode_line)
+    FrameLayout verifyCodeLine;
+    @BindView(R.id.verifyCode)
+    EditText verifyCode;
+    @BindView(R.id.verifyCode_img)
+    ImageView verifyCodeImg;
+    @BindView(R.id.verifyCode_layout)
+    RelativeLayout verifyCodeLayout;
 
     public static void startLogin(Activity context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -157,7 +165,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                         loadingDialog = new LoadingDialog(LoginActivity.this);
                     }
                     loadingDialog.show();
-                    logInPresenter.login(LoginActivity.this, name, pwd, r);
+                    String code = verifyCode.getText().toString();
+                    logInPresenter.login(LoginActivity.this, name, pwd, code,r);
                 }
 
             }
@@ -177,6 +186,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         if (logInPresenter != null) {
             logInPresenter.onDestory();
         }
+        OkGo.getInstance().cancelTag(Url.login_code);
     }
 
     @Override
@@ -259,8 +269,25 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
-        if (TextUtils.isEmpty(msg)) {
+        if (!TextUtils.isEmpty(msg)) {
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void showCode(Bitmap bitmap) {
+        verifyCodeLine.setVisibility(View.VISIBLE);
+        verifyCodeLayout.setVisibility(View.VISIBLE);
+        verifyCodeImg.setImageBitmap(bitmap);
+        verifyCodeImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(logInPresenter!=null){
+                    logInPresenter.upDateCode(LoginActivity.this);
+                }
+            }
+        });
+    }
+
+
 }

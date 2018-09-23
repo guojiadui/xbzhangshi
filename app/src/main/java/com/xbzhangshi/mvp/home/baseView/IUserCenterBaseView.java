@@ -7,4 +7,5 @@ public interface IUserCenterBaseView {
     public  void  LogoutSuccess();
     public  void  LogoutonError();
     public  void updateBalance(String meg);
+    public  void upVip(String meg);
 }

@@ -1,6 +1,7 @@
 package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.SPUtils;
@@ -13,6 +14,7 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.home.bean.LogOutBean;
+import com.xbzhangshi.mvp.home.bean.VIPBean;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.single.UserInfo;
@@ -41,30 +43,33 @@ public class UserCenterPresenter extends BasePresenter {
         }
         contentView.setUserinfo(UserInfo.getInstance().mUsername);
         getBalance(context);
+        getVip(context);
+        getConfigure(context);
     }
 
-    //成功
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LoginSuccessEvent event) {
-       /* if (noLoginLayout != null) {
-            noLoginLayout.setVisibility(View.GONE);
-            balance.setVisibility(View.VISIBLE);
-            balance.setText("");
-            if (bettingPresenter != null) {
-                //获取余额
-                bettingPresenter.getBalance(mActivity);
+    public void getVip(Context context) {
+        Object tag = HttpManager.get(context, Url.getVip, null, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                VIPBean vipBean = JSON.parseObject(response.body(), VIPBean.class);
+                if (!TextUtils.isEmpty(vipBean.getCurrent())) {
+                    contentView.upVip(vipBean.getCurrent());
+                }
             }
-        }*/
+        });
+        addNet(tag);
     }
 
-    //退出
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(LogoutEvent event) {
-      /*  if (noLoginLayout != null) {
-            noLoginLayout.setVisibility(View.VISIBLE);
-            balance.setVisibility(View.GONE);
-            balance.setText("");
-        }*/
+    /**
+     * 获取页面配置信息
+     */
+    public void getConfigure(Context context) {
+        HttpManager.get(context, "http://xbzhanshi.com/native/getUniversalSwitch.do", null, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+
+            }
+        });
     }
 
     /**
@@ -107,8 +112,8 @@ public class UserCenterPresenter extends BasePresenter {
                 BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
                 if (balanceBean.isSuccess()) {
                     try {
-                        contentView.updateBalance(subZeroAndDot(balanceBean.getContent().getBalance()+""));
-                    }catch (Exception e){
+                        contentView.updateBalance(subZeroAndDot(balanceBean.getContent().getBalance() + ""));
+                    } catch (Exception e) {
 
                     }
 
@@ -117,6 +122,7 @@ public class UserCenterPresenter extends BasePresenter {
         });
         addNet(tag);
     }
+
     public static String subZeroAndDot(String s) {
         if (s.indexOf(".") > 0) {
             s = s.replaceAll("0+?$", "");//去掉多余的0

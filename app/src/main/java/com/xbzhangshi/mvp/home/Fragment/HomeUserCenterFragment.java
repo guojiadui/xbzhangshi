@@ -73,6 +73,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     TextView balance;
     @BindView(R.id.user_icon)
     ImageView userIcon;
+    @BindView(R.id.vip)
+    TextView vip;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -172,6 +174,11 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     @Override
     public void updateBalance(String meg) {
         balance.setText("可用余额: " + meg + "元");
+    }
+
+    @Override
+    public void upVip(String meg) {
+        vip.setText(meg);
     }
 
 

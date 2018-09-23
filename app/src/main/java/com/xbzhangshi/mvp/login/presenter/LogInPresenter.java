@@ -1,11 +1,14 @@
 package com.xbzhangshi.mvp.login.presenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.SPUtils;
+import com.lzy.okgo.callback.BitmapCallback;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
@@ -34,6 +37,7 @@ public class LogInPresenter extends BasePresenter {
     ILoginView contentView;
 
     List<String> namelist;
+    boolean isshowCode =false;
 
     public LogInPresenter(ILoginView contentView) {
         this.contentView = contentView;
@@ -67,9 +71,15 @@ public class LogInPresenter extends BasePresenter {
      * @param remmber
      */
 
-    public void login(Context context, String name, String pwd, boolean remmber) {
+    public void login(Context context, String name, String pwd,String code, boolean remmber) {
+        if(isshowCode){
+           if(TextUtils.isEmpty(code)){
+               contentView.LoginonError("验证码不能我空");
+               return;
+           }
+        }
 
-        Object tag = UserInfo.getInstance().login(context, name, pwd, new StringCallback() {
+        Object tag = UserInfo.getInstance().login(context, name, pwd,code, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
@@ -79,6 +89,18 @@ public class LogInPresenter extends BasePresenter {
                 } else {
                     if (!TextUtils.isEmpty(loginBean.getMsg())) {
                         contentView.LoginonError(loginBean.getMsg());
+                        /**
+                         * 添加验证码判断
+                         */
+                       /* isshowCode =true;
+                        HttpParams httpParams = new HttpParams();
+                        httpParams.put("timestamp",System.currentTimeMillis());
+                        HttpManager.getBitmap(context, Url.login_code, httpParams, new BitmapCallback() {
+                            @Override
+                            public void onSuccess(Response<Bitmap> response) {
+                                contentView.showCode(response.body());
+                            }
+                        });*/
                     } else {
                         contentView.LoginonError("登录失败");
                     }
@@ -95,7 +117,20 @@ public class LogInPresenter extends BasePresenter {
 
     }
 
-
+    /**
+     * 更新验证码
+     * @param context
+     */
+   public  void  upDateCode(Context context){
+       HttpParams httpParams = new HttpParams();
+       httpParams.put("timestamp",System.currentTimeMillis());
+       HttpManager.getBitmap(context, Url.login_code , httpParams, new BitmapCallback() {
+           @Override
+           public void onSuccess(Response<Bitmap> response) {
+               contentView.showCode(response.body());
+           }
+       });
+   }
     /**
      * 获取用户信息
      *

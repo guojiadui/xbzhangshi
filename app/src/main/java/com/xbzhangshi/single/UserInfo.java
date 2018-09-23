@@ -1,6 +1,7 @@
 package com.xbzhangshi.single;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
@@ -45,10 +46,13 @@ public class UserInfo {
     /**
      * 登录
      */
-    public Object login(Context context, String name, String password, StringCallback stringCallback) {
+    public Object login(Context context, String name, String password,String code, StringCallback stringCallback) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("username", name);
         httpParams.put("password", password);
+        if(!TextUtils.isEmpty(code)){
+            httpParams.put("verifyCode", code);
+        }
         return HttpManager.post(context, Url.BASE_URL + Url.login, httpParams, stringCallback);
     }
 

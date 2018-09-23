@@ -97,7 +97,7 @@ public class BettingPresenter extends BasePresenter {
      */
 
     private void login(Context context, String name, String pwd) {
-        Object tag = UserInfo.getInstance().login(context, name, pwd, new StringCallback() {
+        Object tag = UserInfo.getInstance().login(context, name, pwd,"" ,new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);

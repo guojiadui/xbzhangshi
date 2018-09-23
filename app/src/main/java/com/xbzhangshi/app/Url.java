@@ -18,7 +18,14 @@ public class Url {
      public  final  static String register ="/register"+BASE_END;//注册
      public  final  static String regVerifycode ="/regVerifycode"+BASE_END;//验  证  码
      public  final  static String regconfig ="/regconfig"+BASE_END;//2.	获取注册界面配置信息
+     public  final  static String getVip ="http://xbzhanshi.com/center/member/meminfo/mobieLevel.do";//2.	获取注册界面配置信息
+     public  final  static String updateuserInfo ="/update_sysaccount"+BASE_END;//更新用户内容
 
+
+     /**
+      * 获取登录的验证码
+      */
+  public  final  static  String login_code="http://xbzhanshi.com/mobile/authnum.do";
      /**
       * 特殊请求
       * http://xbzhanshi.com/mobile/v3/lotterys.do?lotCode=LHC&version=2&needLast=true

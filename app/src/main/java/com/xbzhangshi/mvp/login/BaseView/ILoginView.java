@@ -1,5 +1,7 @@
 package com.xbzhangshi.mvp.login.BaseView;
 
+import android.graphics.Bitmap;
+
 public interface ILoginView {
 
 
@@ -25,5 +27,9 @@ public interface ILoginView {
     /**
      * 登录出错
      */
-    public void LoginonError(String msg);
+    public void LoginonError(String msg );
+    /**
+     * 显示验证码
+     */
+    public  void  showCode(Bitmap bitmap);
 }
