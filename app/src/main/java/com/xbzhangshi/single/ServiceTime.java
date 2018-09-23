@@ -11,7 +11,7 @@ import com.lzy.okgo.callback.StringCallback;
 
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.MyApplication;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 
@@ -129,7 +129,7 @@ public class ServiceTime {
             return;
         }
         codeLoadings.add(code);
-        HttpManager.get(context, URL.ServiceTime1 + code + URL.ServiceTime2, null, new StringCallback() {
+        HttpManager.get(context, Url.ServiceTime1 + code + Url.ServiceTime2, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 codeLoadings.remove(code);

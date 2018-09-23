@@ -30,6 +30,7 @@
         <activity android:name=".mvp.login.RegisterUserActivity"
             android:launchMode="singleTask"/>
         <activity android:name=".mvp.details.OpenPrizedetailsActivity" />
+        <activity android:name=".mvp.usercenter.UserInfoActivity" />
 
     </application>
 

@@ -18,6 +18,7 @@ import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 
 import org.greenrobot.eventbus.EventBus;
@@ -100,6 +101,12 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             public void onClick(View v) {
 
 
+            }
+        });
+        userIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserInfoActivity.start(mActivity);
             }
         });
     }

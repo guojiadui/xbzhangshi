@@ -7,22 +7,17 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.SPUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.suke.widget.SwitchButton;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.MyApplication;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.single.UserInfo;
-import com.xbzhangshi.view.GlideCircleBorderTransform;
-
-import static com.xbzhangshi.app.Key.RED_ENVELOPPES_STATE;
 
 public class SidePesenter extends BasePresenter {
     public static SidePesenter newInstance(View sideView) {
@@ -103,7 +98,7 @@ public class SidePesenter extends BasePresenter {
      * 获取余额
      */
     public void getBalance(Context context,TextView textView) {
-        Object tag = HttpManager.get(context, URL.BASE_URL + URL.meminfo, null, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);

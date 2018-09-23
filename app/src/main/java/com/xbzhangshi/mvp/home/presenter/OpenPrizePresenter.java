@@ -4,20 +4,12 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
-import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.base.BasePresenter;
-import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
 import com.xbzhangshi.mvp.home.baseView.IOpenPrizeBaseView;
-import com.xbzhangshi.mvp.home.bean.LoctteryBean;
-import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
 import com.xbzhangshi.mvp.home.bean.OpenPrizeBean;
-import com.xbzhangshi.single.ServiceTime;
-
-import java.util.Iterator;
 
 public class OpenPrizePresenter extends BasePresenter {
 
@@ -33,7 +25,7 @@ public class OpenPrizePresenter extends BasePresenter {
 
     }
     public void getLoadData(Context context) {
-        Object tag = HttpManager.get(context, URL.OpenPrize  , null, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.OpenPrize  , null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 OpenPrizeBean openPrizeBean = JSON.parseObject(response.body(), OpenPrizeBean.class);

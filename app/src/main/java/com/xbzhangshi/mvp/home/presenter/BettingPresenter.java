@@ -1,7 +1,6 @@
 package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
-import android.net.UrlQuerySanitizer;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -11,7 +10,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
@@ -53,7 +52,7 @@ public class BettingPresenter extends BasePresenter {
         //加载公告
         HttpParams httpParams = new HttpParams();
         httpParams.put("code", "13");
-        Object tag = HttpManager.get(context, URL.BASE_URL + URL.notice, httpParams, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.BASE_URL + Url.notice, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LogUtils.e("TAG", response.body());
@@ -167,7 +166,7 @@ public class BettingPresenter extends BasePresenter {
      * 获取余额
      */
     public void getBalance(Context context) {
-        Object tag = HttpManager.get(context, URL.BASE_URL + URL.meminfo, null, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);

@@ -9,9 +9,8 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xbzhangshi.R;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.home.bean.BesidesLotteryBean;
-import com.xbzhangshi.mvp.home.bean.BettingTypeBean;
 
 import java.util.List;
 
@@ -25,9 +24,9 @@ public class BettingTypeAdapter extends BaseQuickAdapter<BesidesLotteryBean.Cont
 
     @Override
     protected void convert(BaseViewHolder helper, BesidesLotteryBean.ContentBean item) {
-        LogUtils.e("TAG",URL.BASE_PNG_URL + item.getImgUrl());
+        LogUtils.e("TAG", Url.BASE_PNG_URL + item.getImgUrl());
         Glide.with(context)
-                .load(URL.BASE_PNG_URL + item.getImgUrl())
+                .load(Url.BASE_PNG_URL + item.getImgUrl())
                 .into((ImageView) helper.getView(R.id.icon));
         helper.setText(R.id.name, item.getTitle());
     }

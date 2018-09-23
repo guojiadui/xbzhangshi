@@ -12,9 +12,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.xbzhangshi.R;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -82,7 +85,14 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initData(savedInstanceState);
     }
-
+  /*  @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (enter) {
+            return AnimationUtils.loadAnimation(getActivity(), R.anim.anim_left_in);
+        } else {
+            return AnimationUtils.loadAnimation(getActivity(), R.anim.anim_left_out);
+        }
+    }*/
     @Override
     public void onDestroyView() {
         super.onDestroyView();

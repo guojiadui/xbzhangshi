@@ -7,7 +7,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,10 +16,8 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xbzhangshi.R;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
-import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
-import com.xbzhangshi.mvp.home.bean.PurchaseTypeBean;
 import com.xbzhangshi.single.ServiceTime;
 import com.xbzhangshi.view.CustomDigitalClock;
 
@@ -40,7 +37,7 @@ public class VPurchaseTypeAdapter extends BaseQuickAdapter<LoctteryBean.ContentB
 
     @Override
     protected void convert(BaseViewHolder helper, LoctteryBean.ContentBean item) {
-        String url = URL.lottert_png + item.getCode() + ".png";
+        String url = Url.lottert_png + item.getCode() + ".png";
         Glide.with(context).load(url).into((ImageView) helper.getView(R.id.icon));
         helper.setText(R.id.name, item.getName());
 

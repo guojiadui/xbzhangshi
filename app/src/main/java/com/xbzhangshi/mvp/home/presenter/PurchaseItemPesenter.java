@@ -2,24 +2,13 @@ package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
 
-import com.alibaba.fastjson.JSON;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
-import com.xbzhangshi.app.URL;
-import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.home.baseView.IPurchaseItemView;
-import com.xbzhangshi.mvp.home.baseView.IPurchaseView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
-import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
 import com.xbzhangshi.single.ServiceTime;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PurchaseItemPesenter {

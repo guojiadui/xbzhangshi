@@ -6,16 +6,11 @@ import com.alibaba.fastjson.JSON;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.details.baseview.IOpenPrizeDetailsBaseView;
 import com.xbzhangshi.mvp.details.bean.OpenPrizeListBean;
-import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
-import com.xbzhangshi.mvp.home.bean.OpenPrizeBean;
-import com.xbzhangshi.mvp.home.presenter.HomePresenter;
-
-import org.json.JSONObject;
 
 public class OpenPrizeDetailspresenter extends BasePresenter {
     public static OpenPrizeDetailspresenter newInstance(IOpenPrizeDetailsBaseView contentView, String code) {
@@ -37,7 +32,7 @@ public class OpenPrizeDetailspresenter extends BasePresenter {
         httpParams.put("lotCode", code);
         httpParams.put("page", curPage);
         httpParams.put("rows", 10);
-        Object tag = HttpManager.get(context, URL.OpenPrizeResultList, httpParams, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.OpenPrizeResultList, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 OpenPrizeListBean listBean = JSON.parseObject(response.body(), OpenPrizeListBean.class);

@@ -1,20 +1,12 @@
 package com.xbzhangshi.single;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
-import com.lzy.okgo.model.Response;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
-import com.xbzhangshi.mvp.home.bean.LoctteryBean;
-import com.xbzhangshi.mvp.login.bean.LoginBean;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
-
-import java.util.List;
 
 public class UserInfo {
     public static UserInfo userInfo;
@@ -57,7 +49,7 @@ public class UserInfo {
         HttpParams httpParams = new HttpParams();
         httpParams.put("username", name);
         httpParams.put("password", password);
-        return HttpManager.post(context, URL.BASE_URL + URL.login, httpParams, stringCallback);
+        return HttpManager.post(context, Url.BASE_URL + Url.login, httpParams, stringCallback);
     }
 
     /**
@@ -66,7 +58,7 @@ public class UserInfo {
      * @param
      */
     public Object getUserInfo(Context context, StringCallback stringCallback) {
-        return HttpManager.get(context, URL.BASE_URL + URL.accountInfo, null, stringCallback);
+        return HttpManager.get(context, Url.BASE_URL + Url.accountInfo, null, stringCallback);
     }
 
     public void setLogin(boolean login) {

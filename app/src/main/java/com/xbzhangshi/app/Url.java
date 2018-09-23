@@ -1,6 +1,6 @@
 package com.xbzhangshi.app;
 
-public class URL {
+public class Url {
 
      public  final  static String BASE_PNG_URL ="http://xbzhanshi.com";
      public  final  static String BASE_URL ="http://xbzhanshi.com/native";
@@ -15,6 +15,9 @@ public class URL {
      public  final  static String reg_guest ="/reg_guest"+BASE_END;//获取免费账号
      public  final  static String meminfo ="/meminfo"+BASE_END;//获取免费账号
      public  final  static String logout ="/logout"+BASE_END;//登出
+     public  final  static String register ="/register"+BASE_END;//注册
+     public  final  static String regVerifycode ="/regVerifycode"+BASE_END;//验  证  码
+     public  final  static String regconfig ="/regconfig"+BASE_END;//2.	获取注册界面配置信息
 
      /**
       * 特殊请求

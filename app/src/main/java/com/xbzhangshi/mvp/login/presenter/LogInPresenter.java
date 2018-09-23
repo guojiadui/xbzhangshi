@@ -2,22 +2,15 @@ package com.xbzhangshi.mvp.login.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.blankj.utilcode.util.EncryptUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.SpanUtils;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
-import com.xbzhangshi.mvp.home.baseView.IPurchaseItemView;
-import com.xbzhangshi.mvp.home.presenter.PurchaseItemPesenter;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
@@ -31,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class LogInPresenter extends BasePresenter {
 
@@ -164,7 +156,7 @@ public class LogInPresenter extends BasePresenter {
      * @param
      */
     public void getFreeUser(Context context) {
-        Object tag = HttpManager.get(context, URL.BASE_URL + URL.reg_guest, null, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.BASE_URL + Url.reg_guest, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);

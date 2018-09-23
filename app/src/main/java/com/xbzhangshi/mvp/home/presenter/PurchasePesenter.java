@@ -1,28 +1,21 @@
 package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
-import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.SpanUtils;
 import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
-import com.xbzhangshi.app.URL;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IPurchaseView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
-import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.single.ServiceTime;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * 采购大厅
@@ -48,7 +41,7 @@ public class PurchasePesenter extends BasePresenter {
     }
 
     public void getLoadData(Context context) {
-        Object tag = HttpManager.get(context, URL.BASE_URL + URL.Loctterys, null, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.BASE_URL + Url.Loctterys, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoctteryBean loctteryBean = JSON.parseObject(response.body(), LoctteryBean.class);
