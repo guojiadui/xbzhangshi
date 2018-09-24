@@ -5,25 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="?attr/colorPrimary"
-        android:gravity="center">
-
-        <RelativeLayout style="@style/ActivityTitle">
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="积分兑换"
-                android:textColor="@color/white"
-                android:textSize="@dimen/toolbar_title_size" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+  <include
+      layout="@layout/custom_toolbar"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -45,9 +28,9 @@
                 android:textSize="@dimen/font_size_large" />
 
             <TextView
+                android:id="@+id/acount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="zhang"
                 android:layout_marginStart="@dimen/dp_5"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/font_size_large" />
@@ -76,9 +59,9 @@
                 android:text="账户余额:"
                 android:textSize="@dimen/font_size_large"/>
             <TextView
+                android:id="@+id/balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10000.00"
                 android:textSize="@dimen/font_size_large"
                 android:layout_marginStart="@dimen/dp_30"/>
         </LinearLayout>
@@ -100,9 +83,9 @@
                 android:text="账户积分:"
                 android:textSize="@dimen/font_size_large"/>
             <TextView
+                android:id="@+id/integral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
                 android:textSize="@dimen/font_size_large"
                 android:layout_marginStart="@dimen/dp_30"/>
         </LinearLayout>
@@ -129,6 +112,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_30"/>
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/tip_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/line_gray"/>
+            <TextView
+                android:id="@+id/exchange_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_13"
+                android:layout_marginBottom="@dimen/dp_12"
+                android:textColor="@color/colorPrimary"
+
+                android:textSize="@dimen/font_size_large"/>
+
+        </FrameLayout>
 <View
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_1"
@@ -147,6 +154,7 @@
                 android:layout_marginBottom="@dimen/dp_12"
                 android:textSize="@dimen/font_size_large"/>
             <EditText
+                android:id="@+id/value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_bg_gray"
@@ -162,9 +170,10 @@
 
     </LinearLayout>
     <TextView
+        android:id="@+id/commit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="提交"
+        android:text="立即兑换"
         android:textColor="@color/white"
         android:background="@drawable/btn_bg_red_selector"
         android:layout_marginStart="@dimen/dp_20"

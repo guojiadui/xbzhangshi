@@ -19,6 +19,8 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.single.UserInfo;
 
+import java.text.DecimalFormat;
+
 public class SidePesenter extends BasePresenter {
     public static SidePesenter newInstance(View sideView) {
         return new SidePesenter(sideView);
@@ -103,7 +105,8 @@ public class SidePesenter extends BasePresenter {
             public void onSuccess(Response<String> response) {
                 BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
                 if (balanceBean.isSuccess()) {
-                    textView.setText(subZeroAndDot(balanceBean.getContent().getBalance() + "")+"元");
+                    DecimalFormat df = new DecimalFormat("#0.00");
+                    textView.setText(df.format(balanceBean.getContent().getBalance())+"元");
 
                 }
             }

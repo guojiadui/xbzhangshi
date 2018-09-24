@@ -18,6 +18,7 @@ import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 
@@ -101,7 +102,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ExchangeActivity.start(mActivity);
 
             }
         });

@@ -13,13 +13,15 @@ public class Url {
      public  final  static String login ="/login"+BASE_END;//登录
      public  final  static String accountInfo ="/accountInfo"+BASE_END;//获取用户信息
      public  final  static String reg_guest ="/reg_guest"+BASE_END;//获取免费账号
-     public  final  static String meminfo ="/meminfo"+BASE_END;//获取免费账号
+     public  final  static String meminfo ="/meminfo"+BASE_END;//余额
      public  final  static String logout ="/logout"+BASE_END;//登出
      public  final  static String register ="/register"+BASE_END;//注册
      public  final  static String regVerifycode ="/regVerifycode"+BASE_END;//验  证  码
      public  final  static String regconfig ="/regconfig"+BASE_END;//2.	获取注册界面配置信息
      public  final  static String getVip ="http://xbzhanshi.com/center/member/meminfo/mobieLevel.do";//2.	获取注册界面配置信息
      public  final  static String updateuserInfo ="/update_sysaccount"+BASE_END;//更新用户内容
+     public  final  static String exchangeConfig ="/exchangeConfig"+BASE_END;//兑换配置
+     public  final  static String exchange ="/exchange"+BASE_END;//兑换交换
 
 
      /**

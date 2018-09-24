@@ -23,6 +23,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DecimalFormat;
+
 public class UserCenterPresenter extends BasePresenter {
 
     public static UserCenterPresenter newInstance(IUserCenterBaseView contentView) {
@@ -102,9 +104,7 @@ public class UserCenterPresenter extends BasePresenter {
         addNet(tag);
     }
 
-    /**
-     * 获取余额
-     */
+
     public void getBalance(Context context) {
         Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
             @Override
@@ -112,7 +112,8 @@ public class UserCenterPresenter extends BasePresenter {
                 BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
                 if (balanceBean.isSuccess()) {
                     try {
-                        contentView.updateBalance(subZeroAndDot(balanceBean.getContent().getBalance() + ""));
+                        DecimalFormat df = new DecimalFormat("#0.00");
+                        contentView.updateBalance(df.format(balanceBean.getContent().getBalance()));
                     } catch (Exception e) {
 
                     }
