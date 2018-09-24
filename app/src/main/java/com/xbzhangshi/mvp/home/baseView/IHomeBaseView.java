@@ -5,6 +5,6 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 public interface IHomeBaseView  {
 
 
-
+    public  void upMsgCount(int msg);
 
 }

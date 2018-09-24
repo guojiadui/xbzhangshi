@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.home;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.xbzhangshi.mvp.home.Fragment.HomeOpenPrizeFragmenrt;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeUserCenterFragment;
 import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
+import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.home.event.SelectEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
@@ -100,6 +102,11 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         initMenu();
     }
 
+    @Override
+    protected void initdata() {
+        super.initdata();
+
+    }
 
     public void initMenu() {
         menu = new SlidingMenu(this);
@@ -157,12 +164,22 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         if (sidePesenter != null) {
             sidePesenter.login(this);
         }
+        //登录成功后获取没读
+        if(homePresenter!=null){
+            homePresenter.getMsgCount(this);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(SelectEvent event) {
         if (mBottomBar != null) {
             mBottomBar.setCurrentItem(event.getPosition());
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ClearHomeMsgEvent event) {
+        if (mBottomBar != null) {
+            mBottomBar.getItem(3).setUnreadCount(0);
         }
     }
 
@@ -275,6 +292,12 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         }
 
     }
-
+    @Override
+    public void upMsgCount(int msg) {
+        if(mBottomBar==null){
+            return;
+        }
+        mBottomBar.getItem(3).setUnreadCount(msg);
+    }
 
 }

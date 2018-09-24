@@ -14,6 +14,7 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.home.bean.LogOutBean;
+import com.xbzhangshi.mvp.home.bean.MsgCountBean;
 import com.xbzhangshi.mvp.home.bean.VIPBean;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
@@ -47,6 +48,7 @@ public class UserCenterPresenter extends BasePresenter {
         getBalance(context);
         getVip(context);
         getConfigure(context);
+        getMsgCount(context);
     }
 
     public void getVip(Context context) {
@@ -124,11 +126,20 @@ public class UserCenterPresenter extends BasePresenter {
         addNet(tag);
     }
 
-    public static String subZeroAndDot(String s) {
-        if (s.indexOf(".") > 0) {
-            s = s.replaceAll("0+?$", "");//去掉多余的0
-            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
-        }
-        return s;
+    public void getMsgCount(Context context) {
+        Object tag = HttpManager.get(context, Url.BASE_URL + Url.getMsgCount, null, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                MsgCountBean msgCountBean = JSON.parseObject(response.body(),MsgCountBean.class);
+                if(msgCountBean.isSuccess()){
+                    if(msgCountBean.getContent()>0){
+                        contentView.upMsgCount(msgCountBean.getContent()+"");
+                    }else {
+                        contentView.upMsgCount("");
+                    }
+                }
+            }
+        });
+        addNet(tag);
     }
 }

@@ -2,9 +2,8 @@ package com.xbzhangshi.mvp.home.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,9 +15,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
+import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
+import com.xbzhangshi.mvp.usercenter.MessageListActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 
@@ -27,9 +28,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * 用户中心
@@ -76,6 +75,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     ImageView userIcon;
     @BindView(R.id.vip)
     TextView vip;
+    @BindView(R.id.msg_count)
+    TextView msgCount;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -112,6 +113,15 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 UserInfoActivity.start(mActivity);
             }
         });
+        EventBus.getDefault().post(new ClearHomeMsgEvent());
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            EventBus.getDefault().post(new ClearHomeMsgEvent());
+        }
     }
 
     @Override
@@ -135,12 +145,17 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         LogUtils.d("TAG", "setUserVisibleHint" + toString() + ";   isVisibleToUser:" + hidden);
     }
 
-    @OnClick({R.id.logout})
+    @OnClick({R.id.logout, R.id.msg_count_layout})
     public void click(View v) {
         switch (v.getId()) {
             case R.id.logout:
                 if (userCenterPresenter != null) {
                     userCenterPresenter.Logout(mActivity);
+                }
+                break;
+            case R.id.msg_count_layout:
+                if (userCenterPresenter != null) {
+                    MessageListActivity.start(mActivity);
                 }
                 break;
         }
@@ -180,6 +195,16 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     @Override
     public void upVip(String meg) {
         vip.setText(meg);
+    }
+
+    @Override
+    public void upMsgCount(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            msgCount.setVisibility(View.INVISIBLE);
+        } else {
+            msgCount.setVisibility(View.VISIBLE);
+            msgCount.setText(msg);
+        }
     }
 
 

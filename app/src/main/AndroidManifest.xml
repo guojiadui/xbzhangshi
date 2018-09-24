@@ -33,6 +33,7 @@
         <activity android:name=".mvp.usercenter.UserInfoActivity" />
         <activity android:name=".mvp.usercenter.BindingBankCardActivity" />
         <activity android:name=".mvp.usercenter.ExchangeActivity" />
+        <activity android:name=".mvp.usercenter.MessageListActivity" />
 
     </application>
 

@@ -18,10 +18,14 @@ public class Url {
      public  final  static String register ="/register"+BASE_END;//注册
      public  final  static String regVerifycode ="/regVerifycode"+BASE_END;//验  证  码
      public  final  static String regconfig ="/regconfig"+BASE_END;//2.	获取注册界面配置信息
-     public  final  static String getVip ="http://xbzhanshi.com/center/member/meminfo/mobieLevel.do";//2.	获取注册界面配置信息
+     public  final  static String getVip ="http://xbzhanshi.com/center/member/meminfo/mobieLevel.do";//2.	vip
      public  final  static String updateuserInfo ="/update_sysaccount"+BASE_END;//更新用户内容
      public  final  static String exchangeConfig ="/exchangeConfig"+BASE_END;//兑换配置
      public  final  static String exchange ="/exchange"+BASE_END;//兑换交换
+     public  final  static String getMsgCount ="/getMsgCount"+BASE_END;//获取站内没读信息
+     public  final  static String message_list ="/message_list"+BASE_END;//获取站内信
+     public  final  static String read ="http://xbzhanshi.com/center/news/message/batchRead.do";//设置站内信已读
+     public  final  static String del_msg ="http://xbzhanshi.com/center/news/message/batchDelete.do ";//s删除内信
 
 
      /**

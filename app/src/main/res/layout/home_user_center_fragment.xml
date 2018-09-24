@@ -195,6 +195,7 @@
                 android:background="@color/bg_gray" />
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dp_20"
@@ -465,26 +466,43 @@
                 android:background="@color/bg_gray" />
 
             <RelativeLayout
+                android:id="@+id/msg_count_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_45"
                 android:background="@color/white"
-                android:paddingBottom="@dimen/dp_12"
-                android:paddingTop="@dimen/dp_12">
+                >
 
                 <ImageView
                     android:id="@+id/icon11"
-                    android:layout_width="@dimen/dp_18"
-                    android:layout_height="@dimen/dp_18"
+                    android:layout_width="@dimen/dp_25"
+                    android:layout_height="@dimen/dp_25"
                     android:layout_marginStart="@dimen/dp_20"
-                    android:src="@mipmap/ic_launcher" />
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/msg_icon" />
 
                 <TextView
+                    android:id="@+id/msg_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_12"
+                    android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/icon11"
                     android:text="我的站内信"
                     android:textSize="@dimen/font_size_large" />
+                <TextView
+                    android:id="@+id/msg_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/msg_tip"
+                    android:layout_marginStart="@dimen/dp_5"
+                     android:visibility="invisible"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_1"
+                    android:textColor="@color/white"
+                   android:minWidth="@dimen/dp_16"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/font_size_small"
+                    android:background="@drawable/bg_msg_bubble2"/>
             </RelativeLayout>
 
             <View
