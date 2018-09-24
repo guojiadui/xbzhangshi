@@ -3,6 +3,7 @@ package com.xbzhangshi.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -12,10 +13,17 @@ import com.xbzhangshi.R;
 public class MsgTipDialog extends Dialog {
     Context context;
     View.OnClickListener clickListener;
+    String content;
     public MsgTipDialog(Context context ,View.OnClickListener clickListener ) {
         super(context, R.style.MyDialog);
         this.context = context;
         this.clickListener = clickListener;
+    }
+    public MsgTipDialog(Context context ,String content,View.OnClickListener clickListener ) {
+        super(context, R.style.MyDialog);
+        this.context = context;
+        this.clickListener = clickListener;
+        this.content = content;
     }
 
 
@@ -30,6 +38,10 @@ public class MsgTipDialog extends Dialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.msg_tip_dialog_layout, null);
         setContentView(view);
+        TextView mContent = view.findViewById(R.id.content);
+        if(!TextUtils.isEmpty(content)){
+            mContent.setText(content);
+        }
         TextView yes = view.findViewById(R.id.yes_action);
         TextView cancel = view.findViewById(R.id.cancel_action);
         cancel.setOnClickListener(new View.OnClickListener() {

@@ -18,8 +18,11 @@ import com.xbzhangshi.mvp.usercenter.BaseView.IMesssageListBaseView;
 import com.xbzhangshi.mvp.usercenter.bean.ExchangeConfigBean;
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
 import com.xbzhangshi.mvp.usercenter.bean.ReadBean;
+import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.dialog.MsgTipDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +79,31 @@ public class MessageListPresenter extends BasePresenter {
 
     MsgTipDialog tipDialog;
 
+    public void setdel(Context context, List<MsgBean.ContentBean.DatasBean> datasBeans) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (MsgBean.ContentBean.DatasBean datasBean : datasBeans) {
+            if (datasBean.ischeck) {
+                stringBuilder.append(datasBean.getId() + ",");
+
+            }
+        }
+        String value = stringBuilder.toString();
+        if (TextUtils.isEmpty(value)) {
+            Toast.makeText(context, "请选择", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        tipDialog = new MsgTipDialog(context,"确定删除选中的选项？", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipDialog.dismiss();
+                del(context, value.substring(0, value.length() - 1));
+            }
+        });
+        tipDialog.show();
+
+
+    }
     public void setRead(Context context, List<MsgBean.ContentBean.DatasBean> datasBeans) {
         StringBuilder stringBuilder = new StringBuilder();
         List<MsgBean.ContentBean.DatasBean> list = new ArrayList<>();
@@ -123,6 +151,7 @@ public class MessageListPresenter extends BasePresenter {
                 ReadBean readBean = JSON.parseObject(response.body(), ReadBean.class);
                 if (readBean.isSuccess()) {
                     contentView.readSuccess(value);
+                    EventBus.getDefault().post(new UpdateMsgCount());
                 } else {
                     if (!TextUtils.isEmpty(readBean.getMsg())) {
                         contentView.readError(readBean.getMsg());
@@ -134,6 +163,31 @@ public class MessageListPresenter extends BasePresenter {
             public void onError(Response<String> response) {
                 super.onError(response);
                 contentView.readError("请求出错");
+            }
+        });
+        addNet(tag);
+    }
+    public void del(Context context, String value) {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("id", value);
+        Object tag = HttpManager.post(context, Url.del_msg, httpParams, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                ReadBean readBean = JSON.parseObject(response.body(), ReadBean.class);
+                if (readBean.isSuccess()) {
+                    contentView.delSuccess(value);
+                    EventBus.getDefault().post(new UpdateMsgCount());
+                } else {
+                    if (!TextUtils.isEmpty(readBean.getMsg())) {
+                        contentView.delError(readBean.getMsg());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                contentView.delError("请求出错");
             }
         });
         addNet(tag);

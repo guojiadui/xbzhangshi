@@ -14,4 +14,6 @@ public interface IMesssageListBaseView {
     public  void ishowEditLayout(boolean isShow);
     public  void readSuccess(String s);
     public  void readError(String  msg);
+    public  void delSuccess(String s);
+    public  void delError(String  msg);
 }

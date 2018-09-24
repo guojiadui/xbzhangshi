@@ -25,6 +25,7 @@ import com.xbzhangshi.mvp.usercenter.presener.MessageListPresenter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -83,7 +84,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(listPresenter!=null){
+        if (listPresenter != null) {
             listPresenter.onDestory();
         }
     }
@@ -97,13 +98,13 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
                 }
                 break;
             case R.id.readed:
-                if(recyclerView!=null&&recyclerView.getAdapter()!=null){
+                if (recyclerView != null && recyclerView.getAdapter() != null) {
                     MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
-                      listPresenter.setRead(this,msgAdapter.getData());
+                    listPresenter.setRead(this, msgAdapter.getData());
                 }
                 break;
             case R.id.select_all:
-                if(recyclerView!=null&&recyclerView.getAdapter()!=null){
+                if (recyclerView != null && recyclerView.getAdapter() != null) {
                     MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
                     for (MsgBean.ContentBean.DatasBean datasBean : msgAdapter.getData()) {
                         datasBean.setIscheck(true);
@@ -112,6 +113,10 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
                 }
                 break;
             case R.id.del:
+                if (recyclerView != null && recyclerView.getAdapter() != null) {
+                    MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
+                    listPresenter.setdel(this, msgAdapter.getData());
+                }
                 break;
         }
     }
@@ -143,10 +148,6 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     }
 
 
-
-
-
-
     @Override
     public void empty() {
         multipleStatusView.showEmpty();
@@ -166,7 +167,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
             if (recyclerView != null && recyclerView.getAdapter() != null) {
                 MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
                 for (MsgBean.ContentBean.DatasBean datasBean : msgAdapter.getData()) {
-                      datasBean.setIscheck(false);
+                    datasBean.setIscheck(false);
                 }
                 msgAdapter.notifyDataSetChanged();
             }
@@ -181,19 +182,19 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
 
     @Override
     public void readSuccess(String s) {
-        if(recyclerView!=null&&recyclerView.getAdapter()!=null){
+        if (recyclerView != null && recyclerView.getAdapter() != null) {
             String[] strs = s.split(",");
-            List<String> strings=null;
-            if(strs.length>0){
-                 strings = Arrays.asList(strs);
+            List<String> strings = null;
+            if (strs.length > 0) {
+                strings = Arrays.asList(strs);
             }
-            if(strings==null||strings.size()==0){
+            if (strings == null || strings.size() == 0) {
                 return;
             }
             MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
             List<MsgBean.ContentBean.DatasBean> datasBeans = msgAdapter.getData();
-            for(MsgBean.ContentBean.DatasBean datasBean:datasBeans){
-                if(strings.contains(datasBean.getId()+"")){
+            for (MsgBean.ContentBean.DatasBean datasBean : datasBeans) {
+                if (strings.contains(datasBean.getId() + "")) {
                     datasBean.setStatus(2);
                 }
                 datasBean.setIscheck(false);
@@ -204,6 +205,37 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
 
     @Override
     public void readError(String msg) {
-        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void delSuccess(String s) {
+        if (recyclerView != null && recyclerView.getAdapter() != null) {
+            String[] strs = s.split(",");
+            List<String> strings = null;
+            if (strs.length > 0) {
+                strings = Arrays.asList(strs);
+            }
+            if (strings == null || strings.size() == 0) {
+                return;
+            }
+            MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
+            List<MsgBean.ContentBean.DatasBean> datasBeans = msgAdapter.getData();
+            Iterator<MsgBean.ContentBean.DatasBean> it = datasBeans.iterator();
+            while (it.hasNext()) {
+                MsgBean.ContentBean.DatasBean x = it.next();
+                if (strings.contains(x.getId() + "")) {
+                    it.remove();
+                    continue;
+                }
+                x.setIscheck(false);
+            }
+            msgAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void delError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }

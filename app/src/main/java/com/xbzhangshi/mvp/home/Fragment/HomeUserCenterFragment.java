@@ -21,6 +21,7 @@ import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
+import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 
 import org.greenrobot.eventbus.EventBus;
@@ -166,6 +167,13 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     public void onMessageEvent(LoginSuccessEvent event) {
         if (userCenterPresenter != null) {
             userCenterPresenter.init(mActivity);
+        }
+    }
+    //更新未读
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UpdateMsgCount event) {
+        if (userCenterPresenter != null) {
+            userCenterPresenter.getMsgCount(mActivity);
         }
     }
 

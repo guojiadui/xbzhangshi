@@ -22,10 +22,10 @@ public class Url {
      public  final  static String updateuserInfo ="/update_sysaccount"+BASE_END;//更新用户内容
      public  final  static String exchangeConfig ="/exchangeConfig"+BASE_END;//兑换配置
      public  final  static String exchange ="/exchange"+BASE_END;//兑换交换
-     public  final  static String getMsgCount ="/getMsgCount"+BASE_END;//获取站内没读信息
+     public  final  static String getMsgCount ="/getMsgCount"+BASE_END;//获取站内没读信息昨天
      public  final  static String message_list ="/message_list"+BASE_END;//获取站内信
      public  final  static String read ="http://xbzhanshi.com/center/news/message/batchRead.do";//设置站内信已读
-     public  final  static String del_msg ="http://xbzhanshi.com/center/news/message/batchDelete.do ";//s删除内信
+     public  final  static String del_msg ="http://xbzhanshi.com/center/news/message/batchDelete.do";//删除内信
 
 
      /**
