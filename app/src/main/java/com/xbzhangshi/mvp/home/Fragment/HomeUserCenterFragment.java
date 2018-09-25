@@ -13,6 +13,8 @@ import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
+import com.xbzhangshi.app.Url;
+import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
@@ -97,6 +99,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        HttpManager.post(mActivity, Url.BASE_URL+Url.regconfig,null,null);
     }
 
     @Override

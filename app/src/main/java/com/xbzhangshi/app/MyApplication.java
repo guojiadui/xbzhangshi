@@ -14,6 +14,8 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.squareup.leakcanary.LeakCanary;
+import com.xbzhangshi.single.ServiceTime;
+import com.xbzhangshi.single.UserInfo;
 
 
 import java.util.ArrayList;
@@ -108,8 +110,11 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
             }
         }
         OkGo.getInstance().cancelAll();
+        if(ServiceTime.getInstance()!=null){
+            ServiceTime.getInstance().exit();
+        }
         isExit = true;
-        System.exit(0);
+       System.exit(0);
     }
 
     @Override

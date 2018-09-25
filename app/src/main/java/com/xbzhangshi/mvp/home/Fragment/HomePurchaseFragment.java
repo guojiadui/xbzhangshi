@@ -44,6 +44,7 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
     MultipleStatusView multipleStatusView;
 
     String[] tabNames = {"全部彩种", "高频彩", "低频彩"};
+    int[] tabIcons = {R.mipmap.shoping_cart, R.mipmap.time_clock2, R.mipmap.time_clock1};
     @BindView(R.id.select1)
     ImageView select1;
     @BindView(R.id.select2)
@@ -153,6 +154,7 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
             TextView tabName = (TextView) tab.getCustomView().findViewById(R.id.tab_name);
             ImageView tabImg = (ImageView) tab.getCustomView().findViewById(R.id.tab_icon);
             tabName.setText(tabNames[i]);
+            tabImg.setImageResource(tabIcons[i]);
         }
     }
 

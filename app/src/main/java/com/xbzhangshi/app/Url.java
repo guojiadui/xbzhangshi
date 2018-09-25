@@ -24,6 +24,7 @@ public class Url {
      public  final  static String exchange ="/exchange"+BASE_END;//兑换交换
      public  final  static String getMsgCount ="/getMsgCount"+BASE_END;//获取站内没读信息昨天
      public  final  static String message_list ="/message_list"+BASE_END;//获取站内信
+     public  final  static String user_config ="/getUniversalSwitch"+BASE_END;//获取站内信
      public  final  static String read ="http://xbzhanshi.com/center/news/message/batchRead.do";//设置站内信已读
      public  final  static String del_msg ="http://xbzhanshi.com/center/news/message/batchDelete.do";//删除内信
      public  final  static String up_login_pwd ="http://xbzhanshi.com/center/member/meminfo/newpwd.do";//更新登录密码
