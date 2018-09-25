@@ -59,6 +59,7 @@
     <dimen name="dp_60">60dp</dimen>
     <dimen name="dp_65">65dp</dimen>
     <dimen name="dp_68">68dp</dimen>
+    <dimen name="dp_70">70dp</dimen>
     <dimen name="dp_80">80dp</dimen>
     <dimen name="dp_90">90dp</dimen>
     <dimen name="dp_95">95dp</dimen>
@@ -75,4 +76,5 @@
     <dimen name="dp_210">210dp</dimen>
     <dimen name="dp_220">220dp</dimen>
     <dimen name="dp_250">250dp</dimen>
+    <dimen name="dp_260">260dp</dimen>
 </resources>

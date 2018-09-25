@@ -22,6 +22,7 @@ import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
+import com.xbzhangshi.mvp.usercenter.SetPasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
@@ -109,7 +110,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             @Override
             public void onClick(View v) {
               //  ExchangeActivity.start(mActivity);
-                UpdatePasswordActivity.start(mActivity,1);
+             //   UpdatePasswordActivity.start(mActivity,1);
+                SetPasswordActivity.start(mActivity);
             }
         });
         userIcon.setOnClickListener(new View.OnClickListener() {

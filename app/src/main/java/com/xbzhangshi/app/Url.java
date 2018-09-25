@@ -28,6 +28,7 @@ public class Url {
      public  final  static String read ="http://xbzhanshi.com/center/news/message/batchRead.do";//设置站内信已读
      public  final  static String del_msg ="http://xbzhanshi.com/center/news/message/batchDelete.do";//删除内信
      public  final  static String up_login_pwd ="http://xbzhanshi.com/center/member/meminfo/newpwd.do";//更新登录密码
+     public  final  static String drawing_money_pwd ="http://xbzhanshi.com/center/member/meminfo/repwd.do";//设置取款密码
 
 
      /**
