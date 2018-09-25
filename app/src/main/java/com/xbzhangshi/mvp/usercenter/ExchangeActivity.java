@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.usercenter.BaseView.IExchangeBaseView;
-import com.xbzhangshi.mvp.usercenter.presener.ExchangePresenter;
+import com.xbzhangshi.mvp.usercenter.presenter.ExchangePresenter;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.ExchangeDialog;
 
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 积分兑换

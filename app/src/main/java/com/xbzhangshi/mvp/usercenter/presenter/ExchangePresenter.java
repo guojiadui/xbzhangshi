@@ -1,4 +1,4 @@
-package com.xbzhangshi.mvp.usercenter.presener;
+package com.xbzhangshi.mvp.usercenter.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -13,11 +13,9 @@ import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.usercenter.BaseView.IExchangeBaseView;
-import com.xbzhangshi.mvp.usercenter.BaseView.IUserInfoBaseView;
 import com.xbzhangshi.mvp.usercenter.bean.ExchangeBean;
 import com.xbzhangshi.mvp.usercenter.bean.ExchangeConfigBean;
 import com.xbzhangshi.single.UserInfo;
-import com.xbzhangshi.view.dialog.ExchangeDialog;
 
 import java.text.DecimalFormat;
 

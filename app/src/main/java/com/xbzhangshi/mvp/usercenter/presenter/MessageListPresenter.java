@@ -1,8 +1,7 @@
-package com.xbzhangshi.mvp.usercenter.presener;
+package com.xbzhangshi.mvp.usercenter.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,13 +12,10 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
-import com.xbzhangshi.mvp.usercenter.BaseView.IExchangeBaseView;
 import com.xbzhangshi.mvp.usercenter.BaseView.IMesssageListBaseView;
-import com.xbzhangshi.mvp.usercenter.bean.ExchangeConfigBean;
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
 import com.xbzhangshi.mvp.usercenter.bean.ReadBean;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
-import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.dialog.MsgTipDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -93,7 +89,7 @@ public class MessageListPresenter extends BasePresenter {
             Toast.makeText(context, "请选择", Toast.LENGTH_SHORT).show();
             return;
         }
-        tipDialog = new MsgTipDialog(context,"确定删除选中的选项？", new View.OnClickListener() {
+        tipDialog = new MsgTipDialog(context, "确定删除选中的选项？", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tipDialog.dismiss();
@@ -104,6 +100,7 @@ public class MessageListPresenter extends BasePresenter {
 
 
     }
+
     public void setRead(Context context, List<MsgBean.ContentBean.DatasBean> datasBeans) {
         StringBuilder stringBuilder = new StringBuilder();
         List<MsgBean.ContentBean.DatasBean> list = new ArrayList<>();
@@ -142,6 +139,35 @@ public class MessageListPresenter extends BasePresenter {
 
     }
 
+    public void readitem(Context context, MsgBean.ContentBean.DatasBean datasBean) {
+        if (datasBean.getStatus() != 1) {
+            return;
+        }
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("id", datasBean.getId());
+        Object tag = HttpManager.get(context, Url.read, httpParams, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                ReadBean readBean = JSON.parseObject(response.body(), ReadBean.class);
+                if (readBean.isSuccess()) {
+                    contentView.readSuccess(datasBean.getId() + "");
+                    EventBus.getDefault().post(new UpdateMsgCount());
+                } else {
+                    if (!TextUtils.isEmpty(readBean.getMsg())) {
+                        contentView.readError(readBean.getMsg());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                contentView.readError("请求出错");
+            }
+        });
+        addNet(tag);
+    }
+
     public void read(Context context, String value) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("id", value);
@@ -167,6 +193,7 @@ public class MessageListPresenter extends BasePresenter {
         });
         addNet(tag);
     }
+
     public void del(Context context, String value) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("id", value);

@@ -9,15 +9,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.xbzhangshi.R;
-import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUserInfoBaseView;
-import com.xbzhangshi.mvp.usercenter.presener.UserInfoPresener;
+import com.xbzhangshi.mvp.usercenter.presenter.UserInfoPresener;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.BindingDialog;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 用户信息

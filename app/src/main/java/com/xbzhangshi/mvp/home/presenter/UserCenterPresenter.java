@@ -56,6 +56,8 @@ public class UserCenterPresenter extends BasePresenter {
             @Override
             public void onSuccess(Response<String> response) {
                 VIPBean vipBean = JSON.parseObject(response.body(), VIPBean.class);
+                if (vipBean == null)
+                    return;
                 if (!TextUtils.isEmpty(vipBean.getCurrent())) {
                     contentView.upVip(vipBean.getCurrent());
                 }
@@ -130,11 +132,11 @@ public class UserCenterPresenter extends BasePresenter {
         Object tag = HttpManager.get(context, Url.BASE_URL + Url.getMsgCount, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                MsgCountBean msgCountBean = JSON.parseObject(response.body(),MsgCountBean.class);
-                if(msgCountBean.isSuccess()){
-                    if(msgCountBean.getContent()>0){
-                        contentView.upMsgCount(msgCountBean.getContent()+"");
-                    }else {
+                MsgCountBean msgCountBean = JSON.parseObject(response.body(), MsgCountBean.class);
+                if (msgCountBean.isSuccess()) {
+                    if (msgCountBean.getContent() > 0) {
+                        contentView.upMsgCount(msgCountBean.getContent() + "");
+                    } else {
                         contentView.upMsgCount("");
                     }
                 }

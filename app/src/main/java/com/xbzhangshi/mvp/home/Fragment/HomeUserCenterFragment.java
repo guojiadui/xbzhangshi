@@ -20,6 +20,7 @@ import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
+import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
@@ -104,8 +105,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExchangeActivity.start(mActivity);
-
+              //  ExchangeActivity.start(mActivity);
+                UpdatePasswordActivity.start(mActivity,1);
             }
         });
         userIcon.setOnClickListener(new View.OnClickListener() {

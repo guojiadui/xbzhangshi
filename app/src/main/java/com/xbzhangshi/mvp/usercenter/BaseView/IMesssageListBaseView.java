@@ -1,7 +1,7 @@
 package com.xbzhangshi.mvp.usercenter.BaseView;
 
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
-import com.xbzhangshi.mvp.usercenter.presener.MessageListPresenter;
+import com.xbzhangshi.mvp.usercenter.presenter.MessageListPresenter;
 
 import java.util.List;
 

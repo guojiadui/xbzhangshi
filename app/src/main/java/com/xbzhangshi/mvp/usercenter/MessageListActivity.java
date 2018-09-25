@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -20,16 +19,13 @@ import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.usercenter.BaseView.IMesssageListBaseView;
 import com.xbzhangshi.mvp.usercenter.adapter.MsgAdapter;
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
-import com.xbzhangshi.mvp.usercenter.presener.MessageListPresenter;
+import com.xbzhangshi.mvp.usercenter.presenter.MessageListPresenter;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -137,11 +133,25 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
         msgAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                MsgAdapter adapter1 = (MsgAdapter) adapter;
-                MsgBean.ContentBean.DatasBean datasBean = adapter1.getData().get(position);
-                datasBean.setIscheck(!datasBean.isIscheck());
-                RadioButton radioButton = view.findViewById(R.id.radio);
-                radioButton.setChecked(datasBean.ischeck);
+                if (listPresenter == null) {
+                    return;
+                }
+                if (listPresenter.isEdit) {
+                    //编辑的选中
+                    MsgAdapter adapter1 = (MsgAdapter) adapter;
+                    MsgBean.ContentBean.DatasBean datasBean = adapter1.getData().get(position);
+                    datasBean.setIscheck(!datasBean.isIscheck());
+                    RadioButton radioButton = view.findViewById(R.id.radio);
+                    radioButton.setChecked(datasBean.ischeck);
+                } else {
+                    //查看
+                    MsgAdapter adapter1 = (MsgAdapter) adapter;
+                    MsgBean.ContentBean.DatasBean datasBean = adapter1.getData().get(position);
+                    MsgActivity.start(MessageListActivity.this, datasBean.getTitle(), datasBean.getMessage());
+                    //把信息设置为已读状态
+                    listPresenter.readitem(MessageListActivity.this,datasBean);
+                }
+
             }
         });
         recyclerView.setAdapter(msgAdapter);

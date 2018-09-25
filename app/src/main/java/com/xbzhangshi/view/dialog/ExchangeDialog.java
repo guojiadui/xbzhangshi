@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -15,6 +16,13 @@ public class ExchangeDialog extends Dialog {
     public ExchangeDialog(Context context  ) {
         super(context, R.style.MyDialog);
         this.context = context;
+
+    }
+    String content;
+    public ExchangeDialog(Context context ,String content ) {
+        super(context, R.style.MyDialog);
+        this.context = context;
+        this.content =content;
 
     }
 
@@ -30,6 +38,10 @@ public class ExchangeDialog extends Dialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.exchange_dialog_layout, null);
         setContentView(view);
+        TextView mContent = view.findViewById(R.id.content);
+        if(!TextUtils.isEmpty(content)){
+            mContent.setText(content);
+        }
         TextView yes = view.findViewById(R.id.yes_action);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,8 +1,7 @@
-package com.xbzhangshi.mvp.usercenter.presener;
+package com.xbzhangshi.mvp.usercenter.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -12,14 +11,10 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
-import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
-import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUserInfoBaseView;
 import com.xbzhangshi.mvp.usercenter.bean.UpDataUserbean;
 import com.xbzhangshi.single.UserInfo;
-
-import java.util.List;
 
 public class UserInfoPresener extends BasePresenter {
 
