@@ -2,7 +2,9 @@ package com.xbzhangshi.http;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.TimeUtils;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.BitmapCallback;
@@ -10,8 +12,13 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 
+import java.util.HashSet;
+
 
 public class HttpManager {
+
+   // public static HashSet<String> loadingUrls = new HashSet<>();
+   // public static HashSet<String> loadingparams = new HashSet<>();
 
     public static Object get(Context context, String url, HttpParams params, StringCallback back) {
         Log.e("net",url);
@@ -26,6 +33,7 @@ public class HttpManager {
 
             @Override
             public void onError(Response<String> response) {
+                if(response!=null&&!TextUtils.isEmpty(response.body()))
                 Log.e("net", response.body());
                 super.onError(response);
                 if (back != null) {
@@ -50,6 +58,7 @@ public class HttpManager {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
+                if(response!=null&&!TextUtils.isEmpty(response.body()))
                 Log.e("net", response.body());
                 if (back != null) {
                     back.onError(response);

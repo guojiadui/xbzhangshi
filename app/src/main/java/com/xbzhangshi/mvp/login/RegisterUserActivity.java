@@ -1,11 +1,8 @@
 package com.xbzhangshi.mvp.login;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +11,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.tu.loadingdialog.LoadingDailog;
+
 import com.classic.common.MultipleStatusView;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.HttpParams;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseActivity;
@@ -26,13 +24,10 @@ import com.xbzhangshi.mvp.login.adapter.RegisterAdapter;
 import com.xbzhangshi.mvp.login.bean.RegisterItemBean;
 import com.xbzhangshi.mvp.login.presenter.RegisterPresenter;
 import com.xbzhangshi.view.CustomToolbar;
-import com.xbzhangshi.view.dialog.LoadingDialog;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -42,14 +37,14 @@ public class RegisterUserActivity extends BaseActivity implements IRegisterView 
 
     @BindView(R.id.customtoolbar)
     CustomToolbar customtoolbar;
-    LoadingDialog loadingDialog;
+
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.register_user)
     TextView registerUser;
     @BindView(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
-
+    LoadingDailog loadingDialog;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, RegisterUserActivity.class);
@@ -104,7 +99,11 @@ public class RegisterUserActivity extends BaseActivity implements IRegisterView 
                 break;
             case R.id.free_play://试玩
                 if (loadingDialog == null) {
-                    loadingDialog = new LoadingDialog(this);
+                    LoadingDailog.Builder loadBuilder=new LoadingDailog.Builder(RegisterUserActivity.this)
+                            .setMessage("加载中...")
+                            .setCancelable(true)
+                            .setCancelOutside(true);
+                    loadingDialog=loadBuilder.create();
                 }
                 loadingDialog.show();
                 registerPresenter.getFreeUser(this);

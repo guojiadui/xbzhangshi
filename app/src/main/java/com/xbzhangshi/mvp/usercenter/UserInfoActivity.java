@@ -10,10 +10,16 @@ import android.widget.TextView;
 
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUserInfoBaseView;
+import com.xbzhangshi.mvp.usercenter.event.UpUserInfoEvent;
 import com.xbzhangshi.mvp.usercenter.presenter.UserInfoPresener;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.BindingDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 
@@ -60,10 +66,24 @@ public class UserInfoActivity extends BaseActivity implements IUserInfoBaseView 
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
-        if(userInfoPresener!=null){
+        if (userInfoPresener != null) {
             userInfoPresener.onDestory();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UpUserInfoEvent event) {
+        if (userInfoPresener != null) {
+            userInfoPresener.initData();
         }
     }
 
@@ -77,8 +97,8 @@ public class UserInfoActivity extends BaseActivity implements IUserInfoBaseView 
                 finish();
             }
         });
-      //  HttpManager.get(this,"http://xbzhanshi.com/mobile/v3/personal_info.do",null,null);
-     //   HttpManager.get(this,"http://xbzhanshi.com/mobile/v3/withdraw_money.do",null,null);
+        //  HttpManager.get(this,"http://xbzhanshi.com/mobile/v3/personal_info.do",null,null);
+        //   HttpManager.get(this,"http://xbzhanshi.com/mobile/v3/withdraw_money.do",null,null);
     }
 
     @Override
@@ -134,7 +154,7 @@ public class UserInfoActivity extends BaseActivity implements IUserInfoBaseView 
                             new BindingDialog.ClickListener() {
                                 @Override
                                 public void onClickListener(String content) {
-                                  userInfoPresener.upDateInfo(UserInfoActivity.this,"phone",content);
+                                    userInfoPresener.upDateInfo(UserInfoActivity.this, "phone", content);
                                 }
                             });
                     bindingDialog.show();
@@ -163,7 +183,7 @@ public class UserInfoActivity extends BaseActivity implements IUserInfoBaseView 
                             new BindingDialog.ClickListener() {
                                 @Override
                                 public void onClickListener(String content) {
-                                    userInfoPresener.upDateInfo(UserInfoActivity.this,"email",content);
+                                    userInfoPresener.upDateInfo(UserInfoActivity.this, "email", content);
                                 }
                             });
                     bindingDialog.show();
@@ -192,7 +212,7 @@ public class UserInfoActivity extends BaseActivity implements IUserInfoBaseView 
                             new BindingDialog.ClickListener() {
                                 @Override
                                 public void onClickListener(String content) {
-                                    userInfoPresener.upDateInfo(UserInfoActivity.this,"qq",content);
+                                    userInfoPresener.upDateInfo(UserInfoActivity.this, "qq", content);
                                 }
                             });
                     bindingDialog.show();
@@ -261,7 +281,7 @@ public class UserInfoActivity extends BaseActivity implements IUserInfoBaseView 
                             new BindingDialog.ClickListener() {
                                 @Override
                                 public void onClickListener(String content) {
-                                    userInfoPresener.upDateInfo(UserInfoActivity.this,"bankAddress",content);
+                                    userInfoPresener.upDateInfo(UserInfoActivity.this, "bankAddress", content);
                                 }
                             });
                     bindingDialog.show();

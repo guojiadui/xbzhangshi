@@ -7,7 +7,11 @@ public class LoginBean {
      * accessToken : 93631014-b0b1-4cec-84f1-cde4f28438e8
      * content : {"cpVersion":"2","accountType":4,"account":"zhang"}
      */
-
+    /**
+     * //试玩账号
+     * {"success":true,"accessToken":"cf7cf796-68c3-4174-ac77-6b79d2b8df2b",
+     * "content":{"cpVersion":"2","accountType":6,"account":"guest1433"}}
+     */
     private boolean success;
     private String accessToken;
     private ContentBean content;

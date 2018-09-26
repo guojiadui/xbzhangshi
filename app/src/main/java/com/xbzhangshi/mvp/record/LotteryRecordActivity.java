@@ -1,49 +1,47 @@
-package com.xbzhangshi.mvp.usercenter;
+package com.xbzhangshi.mvp.record;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.blankj.utilcode.util.TimeUtils;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
-import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
-import com.xbzhangshi.mvp.login.bean.LoginSelectBean;
-import com.xbzhangshi.mvp.usercenter.bean.BettingItemBean;
+import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
+import com.xbzhangshi.mvp.record.presenter.LotteryRecordPresenter;
 import com.xbzhangshi.view.dialog.SelectListDialog;
 
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
- * 投注记录
+ * 彩票投注记录
  */
-public class NoteRecordActivity extends BaseActivity {
-    @BindView(R.id.select)
-    TextView select;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseView {
+
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, LotteryRecordActivity.class);
+        context.startActivity(intent);
+    }
+
+
     PopupWindow selectPopupWindow;//查询选中
     View topwindow;
+    LotteryRecordPresenter lotteryRecordPresenter;
+
     @Override
     protected int getlayout() {
         return R.layout.note_record_activity;
@@ -51,19 +49,13 @@ public class NoteRecordActivity extends BaseActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
+        lotteryRecordPresenter = LotteryRecordPresenter.newInstance(this);
 
-        select.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TopPopuWindow();
-
-            }
-        });
     }
 
     @Override
     protected void initdata() {
-
+           lotteryRecordPresenter.initData(this);
     }
 
     /**
@@ -110,7 +102,7 @@ public class NoteRecordActivity extends BaseActivity {
             selectPopupWindow.setFocusable(false);
             selectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         }
-        selectPopupWindow.showAsDropDown(toolbar, 0, dpToPx(this, 5));
+       // selectPopupWindow.showAsDropDown(toolbar, 0, dpToPx(this, 5));
     }
 
     /**
@@ -119,7 +111,7 @@ public class NoteRecordActivity extends BaseActivity {
     public void showDateDialog(TextView textView) {
         String data = textView.getText().toString();
         if (TextUtils.isEmpty(data)) {
-            DatePickerDialog dp = new DatePickerDialog(NoteRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(LotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "/" + month + "/" + dayOfMonth);
@@ -129,7 +121,7 @@ public class NoteRecordActivity extends BaseActivity {
             dp.show();
         } else {
             String[] strs = data.split("/");
-            DatePickerDialog dp = new DatePickerDialog(NoteRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(LotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "/" + month + "/" + dayOfMonth);
@@ -162,16 +154,16 @@ public class NoteRecordActivity extends BaseActivity {
         list.add("dddddddd");
         list.add("dddddddd");
         String s = textView.getText().toString();
-        if(!TextUtils.isEmpty(s)&&!s.equals("全部")){
-            SelectListDialog selectListDialog = new SelectListDialog(this,s, list, new SelectListDialog.SelectListener() {
+        if (!TextUtils.isEmpty(s) && !s.equals("全部")) {
+            SelectListDialog selectListDialog = new SelectListDialog(this, s, list, new SelectListDialog.SelectListener() {
                 @Override
                 public void onSelectListener(String string) {
                     textView.setText(string);
                 }
             });
             selectListDialog.show();
-        }else {
-            SelectListDialog selectListDialog = new SelectListDialog(this,null, list, new SelectListDialog.SelectListener() {
+        } else {
+            SelectListDialog selectListDialog = new SelectListDialog(this, null, list, new SelectListDialog.SelectListener() {
                 @Override
                 public void onSelectListener(String string) {
                     textView.setText(string);

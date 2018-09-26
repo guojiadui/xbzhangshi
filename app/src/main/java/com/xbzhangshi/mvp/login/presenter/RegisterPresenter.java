@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.blankj.utilcode.util.SPUtils;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
@@ -36,7 +37,7 @@ public class RegisterPresenter extends BasePresenter {
     IRegisterView contentView;
     String name;
     String pwd;
-
+  LoadingDailog loadingDialog;
     public RegisterPresenter(IRegisterView contentView) {
         this.contentView = contentView;
     }
@@ -112,6 +113,7 @@ public class RegisterPresenter extends BasePresenter {
             showDialog(context, "俩次密码不一致");
             return;
         }
+
         final String name1 = datas.get(0).getValue();
         final String pwd1 = datas.get(1).getValue();
         HttpParams httpParams = new HttpParams();
@@ -130,9 +132,20 @@ public class RegisterPresenter extends BasePresenter {
                 httpParams.put(contentBean.getKey(), contentBean.getValue());
             }
         }
+        if (loadingDialog == null) {
+            LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(context)
+                    .setMessage("加载中...")
+                    .setCancelable(true)
+                    .setCancelOutside(true);
+            loadingDialog = loadBuilder.create();
+        }
+        loadingDialog.show();
         HttpManager.post(context, Url.BASE_URL + Url.register, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
                 RegisterBean registerBean = JSON.parseObject(response.body(), RegisterBean.class);
                 if (registerBean.isSuccess()) {
                     name = name1;
@@ -152,6 +165,9 @@ public class RegisterPresenter extends BasePresenter {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
                 contentView.registerError("请求失败");
                 contentView.updateCode();
             }

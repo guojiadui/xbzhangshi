@@ -70,7 +70,7 @@ public class UserCenterPresenter extends BasePresenter {
      * 获取页面配置信息
      */
     public void getConfigure(Context context) {
-        HttpManager.get(context, "http://xbzhanshi.com/native/getUniversalSwitch.do", null, new StringCallback() {
+        HttpManager.get(context, Url.BASE_URL + Url.geRecordSwitch, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
 

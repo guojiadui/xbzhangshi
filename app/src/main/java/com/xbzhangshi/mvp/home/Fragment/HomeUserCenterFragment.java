@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
@@ -20,6 +21,9 @@ import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.record.AcountChangeActivity;
+import com.xbzhangshi.mvp.record.LotteryRecordActivity;
+import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
 import com.xbzhangshi.mvp.usercenter.SetPasswordActivity;
@@ -27,6 +31,7 @@ import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
+import com.xbzhangshi.view.dialog.TipDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -82,6 +87,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     TextView vip;
     @BindView(R.id.msg_count)
     TextView msgCount;
+    @BindView(R.id.record)
+    RelativeLayout record;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -100,18 +107,27 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        HttpManager.post(mActivity, Url.BASE_URL+Url.regconfig,null,null);
+
     }
 
     @Override
     protected void initView(View view) {
         userCenterPresenter = UserCenterPresenter.newInstance(this);
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AcountChangeActivity.start(mActivity);
+            }
+        });
         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  ExchangeActivity.start(mActivity);
-             //   UpdatePasswordActivity.start(mActivity,1);
-                SetPasswordActivity.start(mActivity);
+                //  ExchangeActivity.start(mActivity);
+                //   UpdatePasswordActivity.start(mActivity,1);
+               // SetPasswordActivity.start(mActivity);
+             //   DrawingMoneyActivity.start(mActivity);
+               // LotteryRecordActivity.start(mActivity);
+                AcountChangeActivity.start(mActivity);
             }
         });
         userIcon.setOnClickListener(new View.OnClickListener() {
@@ -156,9 +172,21 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     public void click(View v) {
         switch (v.getId()) {
             case R.id.logout:
-                if (userCenterPresenter != null) {
-                    userCenterPresenter.Logout(mActivity);
-                }
+                TipDialog tipDialog = new TipDialog(mActivity, "确定要退出吗?", "", "", new TipDialog.ClickListener() {
+                    @Override
+                    public void but1(Dialog dialog, View v) {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void but2(Dialog dialog, View v) {
+                        dialog.dismiss();
+                        if (userCenterPresenter != null) {
+                            userCenterPresenter.Logout(mActivity);
+                        }
+                    }
+                });
+                tipDialog.show();
                 break;
             case R.id.msg_count_layout:
                 if (userCenterPresenter != null) {
@@ -175,6 +203,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             userCenterPresenter.init(mActivity);
         }
     }
+
     //更新未读
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(UpdateMsgCount event) {

@@ -36,7 +36,8 @@
         <activity android:name=".mvp.usercenter.MessageListActivity" />
         <activity android:name=".mvp.usercenter.MsgActivity" />
         <activity android:name=".mvp.usercenter.UpdatePasswordActivity" />
-        <activity android:name=".mvp.usercenter.SetPasswordActivity" />
+        <activity android:name=".mvp.record.LotteryRecordActivity" />
+        <activity android:name=".mvp.record.AcountChangeActivity" />
 
     </application>
 

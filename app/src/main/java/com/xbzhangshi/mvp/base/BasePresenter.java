@@ -2,6 +2,9 @@ package com.xbzhangshi.mvp.base;
 
 
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.lzy.okgo.OkGo;
 
 import java.util.ArrayList;
@@ -25,7 +28,9 @@ public class BasePresenter {
         if (!urlList.contains(tag))
             urlList.add(tag);
     }
-
+public  void toast(Context context,String msg){
+    Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+}
     /**
      * 取消网络请求
      */

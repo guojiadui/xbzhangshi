@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.tu.loadingdialog.LoadingDailog;
+import com.android.tu.loadingdialog.LoadingDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.xbzhangshi.R;
@@ -28,7 +30,6 @@ import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
 import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
 import com.xbzhangshi.view.CustomToolbar;
-import com.xbzhangshi.view.dialog.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,7 +38,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -82,8 +82,8 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @BindView(R.id.customtoolbar)
     CustomToolbar customToolbar;
     LogInPresenter logInPresenter;
-    LoadingDialog loadingDialog;
-
+    //LoadingDialog loadingDialog;
+   LoadingDailog loadingDialog;
     @Override
     protected int getlayout() {
         return R.layout.login_activity_layout;
@@ -136,7 +136,11 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             public void onClick(View v) {
                 if (logInPresenter != null) {
                     if (loadingDialog == null) {
-                        loadingDialog = new LoadingDialog(LoginActivity.this);
+                        LoadingDailog.Builder loadBuilder=new LoadingDailog.Builder(LoginActivity.this)
+                                .setMessage("加载中...")
+                                .setCancelable(true)
+                                .setCancelOutside(true);
+                        loadingDialog=loadBuilder.create();
                     }
                     loadingDialog.show();
                     logInPresenter.getFreeUser(LoginActivity.this);
@@ -162,7 +166,11 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 }
                 if (logInPresenter != null) {
                     if (loadingDialog == null) {
-                        loadingDialog = new LoadingDialog(LoginActivity.this);
+                        LoadingDailog.Builder loadBuilder=new LoadingDailog.Builder(LoginActivity.this)
+                                .setMessage("加载中...")
+                                .setCancelable(true)
+                                .setCancelOutside(true);
+                        loadingDialog=loadBuilder.create();
                     }
                     loadingDialog.show();
                     String code = verifyCode.getText().toString();

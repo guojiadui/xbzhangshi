@@ -82,7 +82,7 @@ public class SetPasswordActivity extends BaseActivity implements ISetPwdBaseView
 
     @Override
     public void success() {
-        TipDialog tipDialog = new TipDialog(this, "设置成功！", "返回首页", "继续设置", new TipDialog.ClickListener() {
+        TipDialog tipDialog = new TipDialog(this, "设置成功！", "返回", "继续设置", new TipDialog.ClickListener() {
             @Override
             public void but1(Dialog dialog, View v) {
                 dialog.dismiss();

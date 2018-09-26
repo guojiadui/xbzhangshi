@@ -68,6 +68,8 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     implementation 'com.android.support:appcompat-v7:25.3.1'//版本 23以上（必须）
 
+    implementation 'com.github.gittjy:LoadingDialog:1.0.2'
+
 }
 repositories {
     mavenCentral()

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.CrashUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 
@@ -48,12 +49,12 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)));
         OkGo.getInstance().setOkHttpClient(builder.build());
 
-       /* CrashUtils.init(new CrashUtils.OnCrashListener() {
+         CrashUtils.init(new CrashUtils.OnCrashListener() {
             @Override
             public void onCrash(String crashInfo, Throwable e) {
-                AppUtils.relaunchApp();
+               exit();
             }
-        });*/
+        });
         LogUtils.getConfig().setLogSwitch(true);
         AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(), this);
         LogUtils.e("TAG", "------------------app");

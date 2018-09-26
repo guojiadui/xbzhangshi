@@ -25,4 +25,5 @@
 
     <color name="blink_color">#b1b1b1</color>
     <color name="shimmer_color">#a2878787</color>
+    <color name="record_title_black">#3d4145</color>
 </resources>

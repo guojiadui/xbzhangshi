@@ -2,39 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_gray"
     android:orientation="vertical">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+  <include
+      layout="@layout/custom_toolbar"/>
+
+    <com.classic.common.MultipleStatusView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="?attr/colorPrimary"
-        android:gravity="center"
-        >
-        <RelativeLayout
-            style="@style/ActivityTitle">
-            <TextView
-                android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:emptyView="@layout/layout_empty"
+        app:errorView="@layout/layout_error"
+        app:loadingView="@layout/layout_loading">
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="登录"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/toolbar_title_size"/>
-            <TextView
-                android:id="@+id/select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="筛选"
-                android:padding="@dimen/dp_2"
-               android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="@dimen/font_size_normal"/>
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-  <ProgressBar
-      android:layout_width="@dimen/dp_27"
-      android:layout_height="@dimen/dp_27"
-      android:layout_gravity="center"
-      android:indeterminateDrawable="@drawable/bg_progressbar"/>
+                app:srlPrimaryColor="@color/white"
+                app:srlTextSizeTitle="16sp"
+                app:srlTextSizeTime="10dp"
+                app:srlTextTimeMarginTop="2dp"
+                app:srlEnableLastTime="true"
+                app:srlFinishDuration="500"
+                app:srlDrawableSize="20dp"
+                app:srlDrawableArrowSize="20dp"
+                app:srlDrawableProgressSize="20dp"
+                app:srlDrawableMarginRight="20dp"
+                app:srlDrawableArrow="@mipmap/loading_throbber"
+                app:srlClassicsSpinnerStyle="Translate"/>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.classic.common.MultipleStatusView>
 </LinearLayout>

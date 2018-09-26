@@ -73,6 +73,7 @@
                 android:textSize="@dimen/font_size_large" />
 
             <EditText
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_30"
@@ -107,7 +108,8 @@
                 android:text="提款银行:"
                 android:textSize="@dimen/font_size_large" />
 
-            <TextView
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/blank_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_30"
@@ -142,6 +144,7 @@
                 android:textSize="@dimen/font_size_large" />
 
             <EditText
+                android:id="@+id/bank_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_30"
@@ -177,7 +180,8 @@
                 android:textSize="@dimen/font_size_large" />
 
             <EditText
-                android:id="@+id/spinner_car"
+
+                android:id="@+id/blank_car"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_large"
@@ -215,6 +219,7 @@
                 android:textSize="@dimen/font_size_large" />
 
             <EditText
+                android:id="@+id/pwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_large"
@@ -228,6 +233,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dp_20"
