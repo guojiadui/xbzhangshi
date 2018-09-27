@@ -15,6 +15,7 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.record.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
+import com.xbzhangshi.mvp.usercenter.bean.ResultBean;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -76,7 +77,6 @@ public class LotteryRecordPresenter extends BasePresenter {
 
     public void query(Context context, String start, String end) {
 
-
         HttpParams httpParams = new HttpParams();
         if (!TextUtils.isEmpty(start)) {
             httpParams.put("startTime", start + " 00:00:00");
@@ -105,31 +105,33 @@ public class LotteryRecordPresenter extends BasePresenter {
         }
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
-        Log.e("TAg", httpParams.toString());
-        HttpManager.post(context, Url.get_lottery_order, httpParams, new StringCallback() {
+
+        Object tag = HttpManager.post(context, Url.get_lottery_order, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 ResultLotteryRecordBean bean = null;
                 try {
                     bean = JSON.parseObject(response.body(), ResultLotteryRecordBean.class);
                 } catch (Exception e) {
-
+                    contentView.error("请求出错");
+                    return;
                 }
+
                 if (bean != null && bean.getPage() != null) {
                     double d = bean.getSumWinMoney() - bean.getSumBuyMoney();
                     String s = df.format(d);
                     contentView.setprofit(bean.getSumBuyMoney(), bean.getSumWinMoney(), Double.valueOf(s));
                     if (bean.getPage().getList() != null && bean.getPage().getList().size() > 0) {
-                        if(curpage==1){
-                            contentView.successData(bean.getPage().getList(),bean.getPage().isHasNext());
-                        }else {
-                            contentView.successMore(bean.getPage().getList(),bean.getPage().isHasNext());
+                        if (curpage == 1) {
+                            contentView.successData(bean.getPage().getList(), bean.getPage().isHasNext());
+                        } else {
+                            contentView.successMore(bean.getPage().getList(), bean.getPage().isHasNext());
                         }
 
                     } else {
-                        if(curpage==1){
+                        if (curpage == 1) {
                             contentView.empty();
-                        }else {
+                        } else {
                             contentView.emptyMore(bean.getPage().isHasNext());
                         }
 
@@ -150,7 +152,38 @@ public class LotteryRecordPresenter extends BasePresenter {
                 contentView.error("请求出错");
             }
         });
+        addNet(tag);
     }
 
 
+    public void cancelOrder(Context context, String orderId) {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("orderId", orderId);
+        Object tag = HttpManager.post(context, Url.cancelOrder, httpParams, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                ResultBean resultBean = null;
+                try {
+                    resultBean = JSON.parseObject(response.body(), ResultBean.class);
+                } catch (Exception e) {
+                    contentView.cancalError("撤单失败");
+                    return;
+                }
+                if (resultBean.isSuccess()) {
+                    contentView.cancalSuccess(orderId);
+                } else {
+                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
+                        contentView.cancalError(resultBean.getMsg());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                contentView.cancalError("请求出错");
+            }
+        });
+        addNet(tag);
+    }
 }

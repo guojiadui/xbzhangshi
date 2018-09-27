@@ -1,6 +1,7 @@
 package com.xbzhangshi.mvp.record;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -31,6 +34,7 @@ import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
 import com.xbzhangshi.mvp.record.presenter.LotteryRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
+import com.xbzhangshi.view.dialog.TipDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -138,6 +142,22 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         recordAdapter = new LotterytRecordAdapter(new ArrayList<>());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(recordAdapter);
+        recordAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
+                String id = recordAdapter.getData().get(position).getOrderId();
+                if (view.getId() == R.id.cancel) {
+                    cancelId(id);
+                }
+            }
+        });
+        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+            }
+        });
     }
 
     @Override
@@ -152,6 +172,22 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     protected void initdata() {
         multipleStatusView.showLoading();
         lotteryRecordPresenter.initData(this);
+    }
+
+    private void cancelId(String id) {
+        TipDialog tipDialog = new TipDialog(LotteryRecordActivity.this, "您确定要撤单？", "", "", new TipDialog.ClickListener() {
+            @Override
+            public void but1(Dialog dialog, View v) {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void but2(Dialog dialog, View v) {
+                dialog.dismiss();
+                lotteryRecordPresenter.cancelOrder(LotteryRecordActivity.this, id);
+            }
+        });
+        tipDialog.show();
     }
 
 
@@ -187,6 +223,22 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     public void successData(List<ResultLotteryRecordBean.PageBean.ListBean> listBeans, boolean ismore) {
         multipleStatusView.showContent();
         recordAdapter = new LotterytRecordAdapter(listBeans);
+        recordAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
+                String id = recordAdapter.getData().get(position).getOrderId();
+                if (view.getId() == R.id.cancel) {
+                    cancelId(id);
+                }
+            }
+        });
+        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+            }
+        });
         recyclerView.setAdapter(recordAdapter);
         if (!ismore) {
             smartRefreshLayout.setNoMoreData(true);
@@ -213,6 +265,26 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         betting.setText(sbetting + "");
         prize.setText(sprize + "");
         profit.setText(sprofit + "");
+    }
+
+    @Override
+    public void cancalSuccess(String id) {
+        if (recyclerView != null && recyclerView.getAdapter() != null) {
+            LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) recyclerView.getAdapter();
+            if (recordAdapter.getData() != null && recordAdapter.getData().size() > 0) {
+                for (int i = 0; i < recordAdapter.getData().size(); i++) {
+                    if (id.equals(recordAdapter.getData().get(i).getOrderId())) {
+                        recordAdapter.getData().get(i).setStatus(4);
+                        recordAdapter.notifyItemChanged(i);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void cancalError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override

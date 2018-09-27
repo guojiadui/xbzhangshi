@@ -38,6 +38,7 @@
         <activity android:name=".mvp.usercenter.UpdatePasswordActivity" />
         <activity android:name=".mvp.record.LotteryRecordActivity" />
         <activity android:name=".mvp.record.AcountChangeActivity" />
+        <activity android:name=".mvp.record.LotteryRecorDetailsActivity" />
 
     </application>
 

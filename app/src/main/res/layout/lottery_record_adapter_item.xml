@@ -49,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/icon"
         android:text="撤单"
+        android:clickable="true"
         android:textSize="@dimen/font_size_large"
         android:layout_centerVertical="true"
         android:visibility="gone"

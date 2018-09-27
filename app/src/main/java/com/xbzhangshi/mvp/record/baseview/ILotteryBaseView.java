@@ -14,4 +14,6 @@ public interface ILotteryBaseView {
     public void error(String msg);
     public void empty();
     public void setprofit(double sbetting,double sprize,double sprofit);
+    public  void  cancalSuccess(String id);
+    public  void  cancalError(String msg);
 }

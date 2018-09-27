@@ -49,7 +49,7 @@ public class HttpManager {
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("net", response.body());
+                Log.e("netuccess", response.body());
                 if (back != null) {
                     back.onSuccess(response);
                 }
@@ -59,7 +59,7 @@ public class HttpManager {
             public void onError(Response<String> response) {
                 super.onError(response);
                 if(response!=null&&!TextUtils.isEmpty(response.body()))
-                Log.e("net", response.body());
+                Log.e("netonError", response.body());
                 if (back != null) {
                     back.onError(response);
                 }
