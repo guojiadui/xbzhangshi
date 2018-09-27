@@ -36,8 +36,9 @@ public class Url {
     /**
      * 投注记录
      */
-    public  final  static String getLotteryList ="/getLotteryList"+BASE_END;//获取彩票投注的彩票
+    //public  final  static String getLotteryList ="/getLotteryList"+BASE_END;//获取彩票投注的彩票
     public  final  static String getMnyrecordType ="/getMnyrecordType"+BASE_END;//获取账变记录的类型
+    public  final  static String get_lottery_order ="http://xbzhanshi.com/mobile/v3/get_lottery_order.do";// 	彩票投注记录查询
 
      /**
       * 获取登录的验证码

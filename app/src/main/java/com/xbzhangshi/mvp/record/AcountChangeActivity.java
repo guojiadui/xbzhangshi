@@ -173,4 +173,14 @@ public class AcountChangeActivity extends BaseActivity implements IAcountChangeB
         }
 
     }
+
+    @Override
+    public void success() {
+
+    }
+
+    @Override
+    public void error(String msg) {
+
+    }
 }

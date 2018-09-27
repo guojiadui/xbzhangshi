@@ -116,7 +116,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AcountChangeActivity.start(mActivity);
+               // AcountChangeActivity.start(mActivity);
+                LotteryRecordActivity.start(mActivity);
             }
         });
         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
