@@ -1,9 +1,7 @@
 package com.xbzhangshi.mvp.record.baseview;
 
-import com.xbzhangshi.mvp.record.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.bean.BSSportsRecordBean;
 import com.xbzhangshi.mvp.record.bean.HGSportsRecordBean;
-import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
 
 import java.util.List;
 

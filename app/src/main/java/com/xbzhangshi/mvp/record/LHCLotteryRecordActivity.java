@@ -28,10 +28,12 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.record.adapter.LotterytRecordAdapter;
+import com.xbzhangshi.mvp.record.baseview.ILHCLotteryBaseView;
 import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
 import com.xbzhangshi.mvp.record.details.LotteryRecorDetailsActivity;
+import com.xbzhangshi.mvp.record.presenter.LHCLotteryRecordPresenter;
 import com.xbzhangshi.mvp.record.presenter.LotteryRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.TipDialog;
@@ -44,9 +46,9 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * 彩票投注记录
+ * 六合彩投注记录
  */
-public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseView, OnLoadMoreListener {
+public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotteryBaseView, OnLoadMoreListener {
 
 
     @BindView(R.id.lt_main_title_left)
@@ -77,22 +79,21 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     TextView startTime;
     @BindView(R.id.end_time)
     TextView endTime;
-    @BindView(R.id.lottery_type)
-    AppCompatSpinner lotteryType;
+
     @BindView(R.id.lottery_state)
     AppCompatSpinner lotteryState;
     @BindView(R.id.query)
     TextView query;
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, LotteryRecordActivity.class);
+        Intent intent = new Intent(context, LHCLotteryRecordActivity.class);
         context.startActivity(intent);
     }
 
 
     //  PopupWindow selectPopupWindow;//查询选中
 
-    LotteryRecordPresenter lotteryRecordPresenter;
+    LHCLotteryRecordPresenter lotteryRecordPresenter;
     LotterytRecordAdapter recordAdapter;
 
     @Override
@@ -102,8 +103,8 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        lotteryRecordPresenter = LotteryRecordPresenter.newInstance(this);
-        ltMainTitle.setText("彩票投注记录");
+        lotteryRecordPresenter = LHCLotteryRecordPresenter.newInstance(this);
+        ltMainTitle.setText("六合彩投注记录");
         ltMainTitleRight.setText("筛选");
         ltMainTitleLeft.setText("返回");
         ltMainTitleLeft.setOnClickListener(new View.OnClickListener() {
@@ -154,9 +155,10 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this);
             }
         });
+        initsearch();
     }
 
     @Override
@@ -174,7 +176,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     }
 
     private void cancelId(String id) {
-        TipDialog tipDialog = new TipDialog(LotteryRecordActivity.this, "您确定要撤单？", "", "", new TipDialog.ClickListener() {
+        TipDialog tipDialog = new TipDialog(LHCLotteryRecordActivity.this, "您确定要撤单？", "", "", new TipDialog.ClickListener() {
             @Override
             public void but1(Dialog dialog, View v) {
                 dialog.dismiss();
@@ -183,17 +185,14 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             @Override
             public void but2(Dialog dialog, View v) {
                 dialog.dismiss();
-                lotteryRecordPresenter.cancelOrder(LotteryRecordActivity.this, id);
+                lotteryRecordPresenter.cancelOrder(LHCLotteryRecordActivity.this, id);
             }
         });
         tipDialog.show();
     }
 
 
-    @Override
-    public void successType(List<LotteryRecordBean.ContentBean> contentBeans) {
-        initsearch(contentBeans);
-    }
+
 
     @Override
     public void successMore(List<ResultLotteryRecordBean.PageBean.ListBean> listBeans, boolean ismore) {
@@ -235,7 +234,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this);
             }
         });
         recyclerView.setAdapter(recordAdapter);
@@ -288,7 +287,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        lotteryRecordPresenter.query(LotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
+        lotteryRecordPresenter.query(LHCLotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
 
     }
 
@@ -298,7 +297,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     public void showDateDialog(TextView textView) {
         String data = textView.getText().toString();
         if (TextUtils.isEmpty(data)) {
-            DatePickerDialog dp = new DatePickerDialog(LotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(LHCLotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -308,7 +307,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             dp.show();
         } else {
             String[] strs = data.split("-");
-            DatePickerDialog dp = new DatePickerDialog(LotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(LHCLotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -333,7 +332,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             lotteryRecordPresenter.curpage = 1;
             smartRefreshLayout.setNoMoreData(false);
             smartRefreshLayout.setEnableLoadMore(true);
-            lotteryRecordPresenter.query(LotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
+            lotteryRecordPresenter.query(LHCLotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
         }
     }
 
@@ -342,7 +341,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
      * @param
      */
 
-    public void initsearch(List<LotteryRecordBean.ContentBean> contentBeans) {
+    public void initsearch() {
         // PopupWindow浮动下拉框布局
 
         //查询
@@ -370,35 +369,6 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             @Override
             public void onClick(View v) {
                 showDateDialog((TextView) v);
-            }
-        });
-        List<String> list1 = new ArrayList<>();
-        list1.add("全部");
-        for (LotteryRecordBean.ContentBean contentBean : contentBeans) {
-            list1.add(contentBean.getName());
-        }
-        lotteryType.setAdapter(new ArrayAdapter<String>(this,R.layout.spinner_layout_item, list1));
-        lotteryType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    lotteryRecordPresenter.curlotteryType = "";
-                } else {
-                    String name = list1.get(position);
-                    for (LotteryRecordBean.ContentBean contentBean : contentBeans) {
-                        if (name.equals(contentBean.getName())) {
-                            lotteryRecordPresenter.curlotteryType = contentBean.getCode();
-                            break;
-                        }
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 

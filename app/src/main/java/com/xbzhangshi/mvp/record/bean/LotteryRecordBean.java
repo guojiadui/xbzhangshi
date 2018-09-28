@@ -1,4 +1,4 @@
-package com.xbzhangshi.mvp.record;
+package com.xbzhangshi.mvp.record.bean;
 
 import java.util.List;
 

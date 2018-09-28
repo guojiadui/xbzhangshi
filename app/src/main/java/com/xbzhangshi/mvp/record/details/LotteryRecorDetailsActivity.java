@@ -1,4 +1,4 @@
-package com.xbzhangshi.mvp.record;
+package com.xbzhangshi.mvp.record.details;
 
 import android.content.Context;
 import android.content.Intent;

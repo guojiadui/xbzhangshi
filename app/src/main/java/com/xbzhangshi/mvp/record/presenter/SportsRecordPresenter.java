@@ -10,11 +10,9 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
-import com.xbzhangshi.mvp.record.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.baseview.ISportsBaseView;
 import com.xbzhangshi.mvp.record.bean.BSSportsRecordBean;
 import com.xbzhangshi.mvp.record.bean.HGSportsRecordBean;
-import com.xbzhangshi.mvp.usercenter.bean.ResultBean;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;

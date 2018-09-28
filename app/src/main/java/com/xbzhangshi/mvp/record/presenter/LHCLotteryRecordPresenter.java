@@ -10,8 +10,9 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
-import com.xbzhangshi.mvp.record.bean.LotteryRecordBean;
+import com.xbzhangshi.mvp.record.baseview.ILHCLotteryBaseView;
 import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
+import com.xbzhangshi.mvp.record.bean.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
 import com.xbzhangshi.mvp.usercenter.bean.ResultBean;
 
@@ -19,57 +20,28 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class LotteryRecordPresenter extends BasePresenter {
+public class LHCLotteryRecordPresenter extends BasePresenter {
 
-    public static LotteryRecordPresenter newInstance(ILotteryBaseView contentView) {
-        return new LotteryRecordPresenter(contentView);
+    public static LHCLotteryRecordPresenter newInstance(ILHCLotteryBaseView contentView) {
+        return new LHCLotteryRecordPresenter(contentView);
     }
 
-    ILotteryBaseView contentView;
-    public String curlotteryType;
+    ILHCLotteryBaseView contentView;
+
     public String curlotterystate;
     public int curpage = 1;
     SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
     DecimalFormat df = new DecimalFormat("#0.00");
 
-    public LotteryRecordPresenter(ILotteryBaseView contentView) {
+    public LHCLotteryRecordPresenter(ILHCLotteryBaseView contentView) {
         this.contentView = contentView;
     }
 
 
     public void initData(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.Loctterys, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LotteryRecordBean lotteryRecordBean = JSON.parseObject(response.body(), LotteryRecordBean.class);
-                if (lotteryRecordBean.isSuccess()) {
-                    //移除六合彩
-                    for (int i = -0; i < lotteryRecordBean.getContent().size(); i++) {
-                        LotteryRecordBean.ContentBean contentBean = lotteryRecordBean.getContent().get(i);
-                        if ("LHC".equals(contentBean.getCode())) {
-                            lotteryRecordBean.getContent().remove(i);
-                            break;
-                        }
-                    }
-                    contentView.successType(lotteryRecordBean.getContent());
-                    //获取默认的查询
-                    Date curDate = new Date(System.currentTimeMillis());
-                    String str = dFormat.format(curDate);
-                    query(context, str, str);
-                } else {
-                    if (TextUtils.isEmpty(lotteryRecordBean.getMsg())) {
-                        contentView.error(lotteryRecordBean.getMsg());
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.error("请求出错");
-            }
-        });
-        addNet(tag);
+        Date curDate = new Date(System.currentTimeMillis());
+        String str = dFormat.format(curDate);
+        query(context, str, str);
     }
 
     public void query(Context context, String start, String end) {
@@ -81,11 +53,7 @@ public class LotteryRecordPresenter extends BasePresenter {
         if (!TextUtils.isEmpty(end)) {
             httpParams.put("endTime", end + " 23:59:59");
         }
-        if (!TextUtils.isEmpty(curlotteryType)) {
-            httpParams.put("code", curlotteryType);
-        } else {
-            httpParams.put("code", "");
-        }
+        httpParams.put("code", "LHC");
         if (!TextUtils.isEmpty(curlotterystate)) {
             //status 1 未开奖 2 已中奖 3 未中奖 4撤单
             if (curlotterystate.equals("未开奖")) {

@@ -1,11 +1,9 @@
 package com.xbzhangshi.mvp.record;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,20 +21,15 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
-import com.xbzhangshi.mvp.record.adapter.LotterytRecordAdapter;
 import com.xbzhangshi.mvp.record.adapter.SportsRecordAdapter;
 import com.xbzhangshi.mvp.record.baseview.ISportsBaseView;
 import com.xbzhangshi.mvp.record.bean.BSSportsRecordBean;
 import com.xbzhangshi.mvp.record.bean.HGSportsRecordBean;
-import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
+import com.xbzhangshi.mvp.record.details.LotteryRecorDetailsActivity;
 import com.xbzhangshi.mvp.record.presenter.SportsRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
-import com.xbzhangshi.view.dialog.TipDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +37,6 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 彩票投注记录

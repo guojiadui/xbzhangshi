@@ -22,6 +22,7 @@ import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.record.AcountChangeActivity;
+import com.xbzhangshi.mvp.record.LHCLotteryRecordActivity;
 import com.xbzhangshi.mvp.record.LotteryRecordActivity;
 import com.xbzhangshi.mvp.record.SportsRecordActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
@@ -118,7 +119,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             @Override
             public void onClick(View v) {
                // AcountChangeActivity.start(mActivity);
-                SportsRecordActivity.start(mActivity);
+               // SportsRecordActivity.start(mActivity);
+                LHCLotteryRecordActivity.start(mActivity);
             }
         });
         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
