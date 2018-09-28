@@ -39,6 +39,7 @@
         <activity android:name=".mvp.record.LotteryRecordActivity" />
         <activity android:name=".mvp.record.AcountChangeActivity" />
         <activity android:name=".mvp.record.LotteryRecorDetailsActivity" />
+        <activity android:name=".mvp.record.SportsRecordActivity" />
 
     </application>
 

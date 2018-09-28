@@ -40,6 +40,8 @@ public class Url {
     public  final  static String getMnyrecordType ="/getMnyrecordType"+BASE_END;//获取账变记录的类型
     public  final  static String get_lottery_order ="http://xbzhanshi.com/mobile/v3/get_lottery_order.do";// 	彩票投注记录查询
     public  final  static String cancelOrder ="http://xbzhanshi.com/mobile/v3/cancelOrder.do";// 	取消彩票订单
+    public  final  static String betrecord ="http://xbzhanshi.com/center/record/betrecord/sportsrecord.do";// 体育投注记录 （沙巴体育）
+    public  final  static String hg_sport ="http://xbzhanshi.com/mobile/v3/sport/hg/getOrderData.do";// 1)	体育投注记录 （皇冠体育
 
      /**
       * 获取登录的验证码

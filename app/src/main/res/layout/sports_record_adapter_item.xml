@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:padding="@dimen/dp_10">
 
     <TextView
         android:id="@+id/competition_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="#3d4145"
         android:textSize="@dimen/font_size_xlarge" />
 
     <TextView
@@ -16,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:textSize="@dimen/font_size_xlarge"
+        android:textColor="#5f646e"
         android:layout_marginEnd="@dimen/dp_20"/>
     <LinearLayout
         android:id="@+id/team_layout"
@@ -23,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/competition_name"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dp_5"
         android:layout_centerHorizontal="true">
        <TextView
            android:id="@+id/team_name1"
@@ -47,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/team_layout"
-        android:layout_marginTop="@dimen/dp_3"
+        android:layout_marginTop="@dimen/dp_4"
         android:textSize="@dimen/font_size_large"
         android:textColor="#f0809e"/>
     <TextView
@@ -61,10 +65,10 @@
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/odds"
+        android:layout_below="@+id/way"
         android:layout_marginTop="@dimen/dp_3"
        android:textSize="@dimen/font_size_large"
-        android:textColor="#6495ed"/>
+        />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -78,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/dp_20"
         android:textSize="@dimen/font_size_large"
         />
 </RelativeLayout>

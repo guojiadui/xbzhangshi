@@ -11,7 +11,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,9 +29,12 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.record.adapter.LotterytRecordAdapter;
-import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
+import com.xbzhangshi.mvp.record.adapter.SportsRecordAdapter;
+import com.xbzhangshi.mvp.record.baseview.ISportsBaseView;
+import com.xbzhangshi.mvp.record.bean.BSSportsRecordBean;
+import com.xbzhangshi.mvp.record.bean.HGSportsRecordBean;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
-import com.xbzhangshi.mvp.record.presenter.LotteryRecordPresenter;
+import com.xbzhangshi.mvp.record.presenter.SportsRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.TipDialog;
 
@@ -47,8 +49,21 @@ import butterknife.ButterKnife;
 /**
  * 彩票投注记录
  */
-public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseView, OnLoadMoreListener {
+public class SportsRecordActivity extends BaseActivity implements ISportsBaseView {
 
+    @BindView(R.id.type_layout_line)
+    View typeLayoutLine;
+    @BindView(R.id.type_layout)
+    RelativeLayout typeLayout;
+    @BindView(R.id.state_layout_line)
+    View stateLayoutLine;
+    @BindView(R.id.state_layout)
+    RelativeLayout stateLayout;
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, SportsRecordActivity.class);
+        context.startActivity(intent);
+    }
 
     @BindView(R.id.lt_main_title_left)
     TextView ltMainTitleLeft;
@@ -58,8 +73,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     TextView ltMainTitleRight;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.smartRefreshLayout)
-    SmartRefreshLayout smartRefreshLayout;
+
     @BindView(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
     @BindView(R.id.customtoolbar)
@@ -78,33 +92,30 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     TextView startTime;
     @BindView(R.id.end_time)
     TextView endTime;
-    @BindView(R.id.lottery_type)
-    AppCompatSpinner lotteryType;
+    @BindView(R.id.type)
+    AppCompatSpinner type;
+    @BindView(R.id.platform)
+    AppCompatSpinner platform;
     @BindView(R.id.lottery_state)
     AppCompatSpinner lotteryState;
     @BindView(R.id.query)
     TextView query;
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, LotteryRecordActivity.class);
-        context.startActivity(intent);
-    }
-
 
     //  PopupWindow selectPopupWindow;//查询选中
 
-    LotteryRecordPresenter lotteryRecordPresenter;
-    LotterytRecordAdapter recordAdapter;
+    SportsRecordPresenter lotteryRecordPresenter;
+    //SportsRecordAdapter recordAdapter;
 
     @Override
     protected int getlayout() {
-        return R.layout.note_record_activity;
+        return R.layout.note_sports_record_activity;
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        lotteryRecordPresenter = LotteryRecordPresenter.newInstance(this);
-        ltMainTitle.setText("彩票投注记录");
+        lotteryRecordPresenter = SportsRecordPresenter.newInstance(this);
+        ltMainTitle.setText("体育投注记录");
         ltMainTitleRight.setText("筛选");
         ltMainTitleLeft.setText("返回");
         ltMainTitleLeft.setOnClickListener(new View.OnClickListener() {
@@ -129,9 +140,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
                 }
             }
         });
-        smartRefreshLayout.setEnableLoadMore(true);
-        smartRefreshLayout.setEnableRefresh(false);
-        smartRefreshLayout.setOnLoadMoreListener(this);
+
         multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,25 +148,8 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recordAdapter = new LotterytRecordAdapter(new ArrayList<>());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(recordAdapter);
-        recordAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
-                String id = recordAdapter.getData().get(position).getOrderId();
-                if (view.getId() == R.id.cancel) {
-                    cancelId(id);
-                }
-            }
-        });
-        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
-            }
-        });
+        initsearch();
     }
 
     @Override
@@ -174,75 +166,22 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         lotteryRecordPresenter.initData(this);
     }
 
-    private void cancelId(String id) {
-        TipDialog tipDialog = new TipDialog(LotteryRecordActivity.this, "您确定要撤单？", "", "", new TipDialog.ClickListener() {
-            @Override
-            public void but1(Dialog dialog, View v) {
-                dialog.dismiss();
-            }
-
-            @Override
-            public void but2(Dialog dialog, View v) {
-                dialog.dismiss();
-                lotteryRecordPresenter.cancelOrder(LotteryRecordActivity.this, id);
-            }
-        });
-        tipDialog.show();
-    }
-
-
     @Override
-    public void successType(List<LotteryRecordBean.ContentBean> contentBeans) {
-        initsearch(contentBeans);
-    }
-
-    @Override
-    public void successMore(List<ResultLotteryRecordBean.PageBean.ListBean> listBeans, boolean ismore) {
-        smartRefreshLayout.finishLoadMore();
-        recordAdapter.addData(listBeans);
-        recordAdapter.notifyDataSetChanged();
-        if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
-        }
-    }
-
-    @Override
-    public void errorMore(String msg) {
-        smartRefreshLayout.finishLoadMore();
-    }
-
-    @Override
-    public void emptyMore(boolean ismore) {
-        smartRefreshLayout.finishLoadMore();
-        if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
-        }
-    }
-
-    @Override
-    public void successData(List<ResultLotteryRecordBean.PageBean.ListBean> listBeans, boolean ismore) {
+    public void HGsuccess(List<HGSportsRecordBean.RowsBean> listBeans) {
         multipleStatusView.showContent();
-        recordAdapter = new LotterytRecordAdapter(listBeans);
-        recordAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
-                String id = recordAdapter.getData().get(position).getOrderId();
-                if (view.getId() == R.id.cancel) {
-                    cancelId(id);
-                }
-            }
-        });
+        SportsRecordAdapter recordAdapter = new SportsRecordAdapter(listBeans);
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+                LotteryRecorDetailsActivity.start(SportsRecordActivity.this);
             }
         });
         recyclerView.setAdapter(recordAdapter);
-        if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
-        }
+    }
+
+    @Override
+    public void BSsuccess(List<BSSportsRecordBean.AggsDataBean> listBeans) {
+        multipleStatusView.showContent();
     }
 
 
@@ -267,31 +206,6 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         profit.setText(sprofit + "");
     }
 
-    @Override
-    public void cancalSuccess(String id) {
-        if (recyclerView != null && recyclerView.getAdapter() != null) {
-            LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) recyclerView.getAdapter();
-            if (recordAdapter.getData() != null && recordAdapter.getData().size() > 0) {
-                for (int i = 0; i < recordAdapter.getData().size(); i++) {
-                    if (id.equals(recordAdapter.getData().get(i).getOrderId())) {
-                        recordAdapter.getData().get(i).setStatus(4);
-                        recordAdapter.notifyItemChanged(i);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void cancalError(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        lotteryRecordPresenter.query(LotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
-
-    }
 
     /**
      * 显示日期选择
@@ -299,7 +213,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     public void showDateDialog(TextView textView) {
         String data = textView.getText().toString();
         if (TextUtils.isEmpty(data)) {
-            DatePickerDialog dp = new DatePickerDialog(LotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(SportsRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -309,7 +223,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             dp.show();
         } else {
             String[] strs = data.split("-");
-            DatePickerDialog dp = new DatePickerDialog(LotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(SportsRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -326,15 +240,9 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         //点击查询
         if (lotteryRecordPresenter != null) {
             multipleStatusView.showLoading();
-            if (recordAdapter != null) {
-                recordAdapter.getData().clear();
-                recordAdapter.notifyDataSetChanged();
-            }
             queryLayout.setVisibility(View.GONE);
             lotteryRecordPresenter.curpage = 1;
-            smartRefreshLayout.setNoMoreData(false);
-            smartRefreshLayout.setEnableLoadMore(true);
-            lotteryRecordPresenter.query(LotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
+            lotteryRecordPresenter.query(SportsRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
         }
     }
 
@@ -343,9 +251,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
      * @param
      */
 
-    public void initsearch(List<LotteryRecordBean.ContentBean> contentBeans) {
-        // PopupWindow浮动下拉框布局
-
+    public void initsearch() {
         //查询
         query.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,26 +280,42 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             }
         });
         List<String> list1 = new ArrayList<>();
-        list1.add("全部");
-        for (LotteryRecordBean.ContentBean contentBean : contentBeans) {
-            list1.add(contentBean.getName());
-        }
-        lotteryType.setAdapter(new ArrayAdapter<String>(this,R.layout.spinner_layout_item, list1));
-        lotteryType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        list1.add("皇冠体育");
+        list1.add("芭莎体育");
+        lotteryRecordPresenter.curplatform = list1.get(0);
+        platform.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list1));
+        platform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                lotteryRecordPresenter.curplatform = list1.get(position);
                 if (position == 0) {
-                    lotteryRecordPresenter.curlotteryType = "";
+                    typeLayout.setVisibility(View.VISIBLE);
+                    typeLayoutLine.setVisibility(View.VISIBLE);
+                    stateLayout.setVisibility(View.VISIBLE);
+                    stateLayoutLine.setVisibility(View.VISIBLE);
                 } else {
-                    String name = list1.get(position);
-                    for (LotteryRecordBean.ContentBean contentBean : contentBeans) {
-                        if (name.equals(contentBean.getName())) {
-                            lotteryRecordPresenter.curlotteryType = contentBean.getCode();
-                            break;
-                        }
-                    }
-
+                    typeLayout.setVisibility(View.GONE);
+                    typeLayoutLine.setVisibility(View.GONE);
+                    stateLayout.setVisibility(View.GONE);
+                    stateLayoutLine.setVisibility(View.GONE);
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        List<String> list2 = new ArrayList<>();
+        list2.add("所以球种");
+        list2.add("足球");
+        list2.add("篮球");
+        lotteryRecordPresenter.curtype = list2.get(0);
+        type.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list2));
+        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                lotteryRecordPresenter.curtype = list2.get(position);
 
             }
 
@@ -403,21 +325,18 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
             }
         });
 
-        List<String> list2 = new ArrayList<>();
-        list2.add("全部");
-        list2.add("未开奖");
-        list2.add("已中奖");
-        list2.add("未中奖");
-        list2.add("撤单");
-        lotteryState.setAdapter(new ArrayAdapter<String>(this,R.layout.spinner_layout_item, list2));
+        List<String> list3 = new ArrayList<>();
+        list3.add("全部");
+        list3.add("未开奖");
+        list3.add("已中奖");
+        list3.add("未开奖");
+        list3.add("未成功");
+        lotteryRecordPresenter.curstate = list3.get(0);
+        lotteryState.setAdapter(new ArrayAdapter<String>(this,R.layout.spinner_layout_item, list3));
         lotteryState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    lotteryRecordPresenter.curlotterystate = "";
-                } else {
-                    lotteryRecordPresenter.curlotterystate = list2.get(position);
-                }
+                lotteryRecordPresenter.curstate = list3.get(position);
             }
 
             @Override
