@@ -42,6 +42,8 @@ public class Url {
     public  final  static String cancelOrder ="http://xbzhanshi.com/mobile/v3/cancelOrder.do";// 	取消彩票订单
     public  final  static String betrecord ="http://xbzhanshi.com/center/record/betrecord/sportsrecord.do";// 体育投注记录 （沙巴体育）
     public  final  static String hg_sport ="http://xbzhanshi.com/mobile/v3/sport/hg/getOrderData.do";// 1)	体育投注记录 （皇冠体育
+    public  final  static String mnyrecord_list="http://xbzhanshi.com/center/record/mnyrecord/list.do";// 账变记录
+
 
      /**
       * 获取登录的验证码

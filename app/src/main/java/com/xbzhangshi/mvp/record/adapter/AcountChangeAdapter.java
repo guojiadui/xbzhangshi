@@ -8,37 +8,46 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.xbzhangshi.R;
+import com.xbzhangshi.mvp.record.bean.AcountChangeRecordBean;
 
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
-public class AcountChangeAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+public class AcountChangeAdapter extends BaseQuickAdapter<AcountChangeRecordBean.ListBean, BaseViewHolder> {
 
-    public AcountChangeAdapter( @Nullable List<String> data) {
+    HashMap<Integer, String> keys;
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public AcountChangeAdapter(@Nullable List<AcountChangeRecordBean.ListBean> data, HashMap<Integer, String> keys) {
         super(R.layout.acount_change_adapter_item, data);
+        this.keys = keys;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String item) {
-        String s = "s";
-        helper.setText(R.id.lottery_type, "类型:" + s);
+    protected void convert(BaseViewHolder helper, AcountChangeRecordBean.ListBean item) {
+        if (keys.containsKey(item.getType())) {
+            String s = keys.get(item.getType());
+            helper.setText(R.id.lottery_type, "类型:  " + s);
+        }
 
         TextView number = helper.getView(R.id.lottery_order_number);
-        s = "订单号:" + "< color=\"black\">" + s + "</font>";
-        number.setText(Html.fromHtml(s));
+        String num = "订单号:&nbsp;  " + "<font color=\"black\">" + item.getOrderId() + "</font>";
+        number.setText(Html.fromHtml(num));
         TextView before = helper.getView(R.id.sum_change_before);
-        s = "变动前金额:" + "< color=\"blue\">" + s + "</font>元";
-        before.setText(Html.fromHtml(s));
+        String BeforeMoney = "变动前金额: &nbsp; " + "<font color=#0894ec>" + item.getBeforeMoney() + "</font>元";
+        before.setText(Html.fromHtml(BeforeMoney));
         TextView change = helper.getView(R.id.change_sum);
-        s = "变动金额:" + "< color=\"red\">" + s + "</font>元";
-        change.setText(Html.fromHtml(s));
+        String money = "变动金额:&nbsp;  " + "<font color=\"red\">" + item.getMoney() + "</font>元";
+        change.setText(Html.fromHtml(money));
         TextView late = helper.getView(R.id.sum_chage_late);
-        s = "变动后金额:" + "< color=\"green\">" + s + "</font>元";
-        late.setText(Html.fromHtml(s));
-        TextView time = helper.getView(R.id.change_time);
-        s = "变动时间:" + "< color=\"0xff3d4145\">" + s + "</font>元";
-        time.setText(Html.fromHtml(s));
+        String AfterMoney = "变动后金额:&nbsp;  " + "<font color=#4cd964>" + item.getAfterMoney() + "</font>元";
+        late.setText(Html.fromHtml(AfterMoney));
 
-        helper.setText(R.id.remarks, s);
+        String dateString = formatter.format(item.getBizDatetime());
+
+         helper.setText(R.id.change_time,"变动时间:  "+dateString);
+        helper.setText(R.id.remarks, "备注:  "+item.getRemark());
 
     }
 }

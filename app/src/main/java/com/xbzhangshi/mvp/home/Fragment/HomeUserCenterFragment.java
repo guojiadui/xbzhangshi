@@ -120,7 +120,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             public void onClick(View v) {
                // AcountChangeActivity.start(mActivity);
                // SportsRecordActivity.start(mActivity);
-                LHCLotteryRecordActivity.start(mActivity);
+              //  LHCLotteryRecordActivity.start(mActivity);
+                 AcountChangeActivity.start(mActivity);
             }
         });
         withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {

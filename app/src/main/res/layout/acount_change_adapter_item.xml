@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dp_10"
-    android:paddingEnd="@dimen/dp_10"
-    android:paddingStart="@dimen/dp_10"
-    android:paddingTop="@dimen/dp_10">
+    android:paddingBottom="@dimen/dp_12"
+    android:paddingEnd="@dimen/dp_12"
+    android:paddingStart="@dimen/dp_12"
+    android:paddingTop="@dimen/dp_12">
 
     <TextView
         android:id="@+id/lottery_type"
@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="订单号:L151151661616"
+        android:layout_marginTop="@dimen/dp_3"
         android:textColor="#3d4145"
         android:textSize="@dimen/font_size_large" />
 
@@ -29,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="变动前金额:54646元"
+        android:layout_marginTop="@dimen/dp_2"
         android:textColor="#3d4145"
         android:textSize="@dimen/font_size_large" />
 
@@ -37,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="变动金额:54646元"
+        android:layout_marginTop="@dimen/dp_2"
         android:textColor="#3d4145"
         android:textSize="@dimen/font_size_large" />
 
@@ -45,6 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="变动后金额:54646元"
+        android:layout_marginTop="@dimen/dp_2"
         android:textColor="#3d4145"
         android:textSize="@dimen/font_size_large" />
 
@@ -53,6 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="变动时间:54646元"
+        android:layout_marginTop="@dimen/dp_2"
         android:textColor="#3d4145"
         android:textSize="@dimen/font_size_large" />
 
@@ -60,6 +65,7 @@
         android:id="@+id/remarks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_2"
         android:text="备注"
         android:textColor="#3d4145"
         android:textSize="@dimen/font_size_large" />
