@@ -9,6 +9,9 @@ import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.usercenter.BaseView.IDrawingMoneyBaseView;
 import com.xbzhangshi.mvp.usercenter.presenter.DrawingMoneyPresenter;
 
+/**
+ * 提款
+ */
 public class DrawingMoneyActivity extends BaseActivity implements IDrawingMoneyBaseView {
 
     public static void start(Context context) {

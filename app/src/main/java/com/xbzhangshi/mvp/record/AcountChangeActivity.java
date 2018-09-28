@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
@@ -180,7 +181,7 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
     }
 
     @Override
-    public void successData(List<AcountChangeRecordBean.ListBean> listBeans, HashMap<Integer,String> keys, boolean ismore) {
+    public void successData(List<AcountChangeRecordBean.ListBean> listBeans, Map<String,String> keys, boolean ismore) {
         multipleStatusView.showContent();
         AcountChangeAdapter recordAdapter = new AcountChangeAdapter(listBeans,keys);
         recyclerView.setAdapter(recordAdapter);

@@ -2,8 +2,10 @@ package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.SPUtils;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
@@ -15,6 +17,7 @@ import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.home.bean.LogOutBean;
 import com.xbzhangshi.mvp.home.bean.MsgCountBean;
+import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
 import com.xbzhangshi.mvp.home.bean.VIPBean;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
@@ -25,6 +28,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class UserCenterPresenter extends BasePresenter {
 
@@ -74,9 +83,74 @@ public class UserCenterPresenter extends BasePresenter {
             @Override
             public void onSuccess(Response<String> response) {
 
+                JSONObject jsonObject = JSON.parseObject(response.body());
+                Set<String> keys = jsonObject.keySet();
+                Iterator iterator = keys.iterator();
+                List<USerCenterOnOffBean> strings = new ArrayList<>();
+                while (iterator.hasNext()) {
+                    String key = (String) iterator.next();
+                    USerCenterOnOffBean uSerCenterOnOffBean = setbean(key, jsonObject.getString(key));
+                    if(uSerCenterOnOffBean!=null)
+                    strings.add(uSerCenterOnOffBean);
+
+                }
+                if (strings.size() > 0) {
+                    contentView.setConfig(strings);
+                }
             }
         });
     }
+    public USerCenterOnOffBean setbean(String key, String value) {
+        USerCenterOnOffBean onOffBean = new USerCenterOnOffBean();
+        switch (key) {
+          /*  case "isSsOnOff"://积分显示
+                break;*/
+            case "isEsOnOff"://积分兑换
+                onOffBean.setKey("isEsOnOff");
+                onOffBean.setName("积分兑换");
+                break;
+            case "isRealOnOff"://真人娱乐开关
+                onOffBean.setKey("isRealOnOff");
+                onOffBean.setName("真人投注记录");
+                break;
+            case "isLhcOnOff"://六合彩
+                onOffBean.setKey("isRealOnOff");
+                onOffBean.setName("六合投注记录");
+                break;
+            case "isTsOnOff"://第三方体育开关
+                onOffBean.setKey("isRealOnOff");
+                onOffBean.setName("体育投注记录");
+                break;
+          /*  case "isTyOnOff"://皇冠体育开关
+                break;*/
+            case "isDzOnOff"://电子游艺开关
+                onOffBean.setKey("isDzOnOff");
+                onOffBean.setName("电子游戏记录");
+                break;
+            case "isChangeMoney"://帐变记录开关
+                onOffBean.setKey("isChangeMoney");
+                onOffBean.setName("用户账变记录");
+                break;
+            case "isChessOnOff"://棋牌开关
+                onOffBean.setKey("isChessOnOff");
+                onOffBean.setName("棋牌游戏记录");
+                break;
+            case "isTlOnOff"://第三方彩票开关
+                onOffBean.setKey("isTlOnOff");
+                onOffBean.setName("三方彩票记录");
+                break;
+             case "isCpOnOff"://彩票游戏开关
+                 onOffBean.setKey("isCpOnOff");
+                 onOffBean.setName("彩票投注记录");
+                break;
+        }
+        if(TextUtils.isEmpty(onOffBean.key)){
+            return  null;
+        }
+        return onOffBean;
+    }
+   //登录密码修改
+   //账号明细记录
 
     /**
      * 登出

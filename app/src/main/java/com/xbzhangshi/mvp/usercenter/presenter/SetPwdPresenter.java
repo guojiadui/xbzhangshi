@@ -14,6 +14,7 @@ import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.ISetPwdBaseView;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUpPwdBaseView;
 import com.xbzhangshi.mvp.usercenter.bean.ResultBean;
+import com.xbzhangshi.single.UserInfo;
 
 public class SetPwdPresenter extends BasePresenter {
     public static SetPwdPresenter newInstance(ISetPwdBaseView contentView) {
@@ -49,11 +50,12 @@ public class SetPwdPresenter extends BasePresenter {
         HttpManager.post(context, Url.drawing_money_pwd, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                ResultBean resultBean  = JSON.parseObject(response.body(),ResultBean.class);
-                if(resultBean.isSuccess()){
+                ResultBean resultBean = JSON.parseObject(response.body(), ResultBean.class);
+                if (resultBean.isSuccess()) {
+                    UserInfo.getInstance().getLoginUserInfoBean().getContent().setReceiptPwd("********");//用假密码代替
                     contentView.success();
-                }else {
-                    if(!TextUtils.isEmpty(resultBean.getMsg())){
+                } else {
+                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
                         contentView.error(resultBean.getMsg());
                     }
                 }

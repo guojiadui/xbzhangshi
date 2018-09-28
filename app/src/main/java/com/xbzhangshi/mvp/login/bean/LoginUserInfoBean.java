@@ -77,6 +77,16 @@ public class LoginUserInfoBean {
         private String userName;
         private String wechat;
 
+        public String getReceiptPwd() {
+            return receiptPwd;
+        }
+
+        public void setReceiptPwd(String receiptPwd) {
+            this.receiptPwd = receiptPwd;
+        }
+
+        private  String receiptPwd;
+
         public String getAccount() {
             return account;
         }

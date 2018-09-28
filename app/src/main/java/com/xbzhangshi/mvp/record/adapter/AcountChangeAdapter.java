@@ -13,13 +13,14 @@ import com.xbzhangshi.mvp.record.bean.AcountChangeRecordBean;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AcountChangeAdapter extends BaseQuickAdapter<AcountChangeRecordBean.ListBean, BaseViewHolder> {
 
-    HashMap<Integer, String> keys;
+    Map<String, String> keys;
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public AcountChangeAdapter(@Nullable List<AcountChangeRecordBean.ListBean> data, HashMap<Integer, String> keys) {
+    public AcountChangeAdapter(@Nullable List<AcountChangeRecordBean.ListBean> data, Map<String, String> keys) {
         super(R.layout.acount_change_adapter_item, data);
         this.keys = keys;
     }
@@ -46,8 +47,8 @@ public class AcountChangeAdapter extends BaseQuickAdapter<AcountChangeRecordBean
 
         String dateString = formatter.format(item.getBizDatetime());
 
-         helper.setText(R.id.change_time,"变动时间:  "+dateString);
-        helper.setText(R.id.remarks, "备注:  "+item.getRemark());
+        helper.setText(R.id.change_time, "变动时间:  " + dateString);
+        helper.setText(R.id.remarks, "备注:  " + item.getRemark());
 
     }
 }

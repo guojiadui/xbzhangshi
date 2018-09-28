@@ -41,6 +41,8 @@
         <activity android:name=".mvp.record.SportsRecordActivity" />
         <activity android:name=".mvp.record.LHCLotteryRecordActivity" />
         <activity android:name=".mvp.record.AcountChangeActivity" />
+        <activity android:name=".mvp.usercenter.SetPasswordActivity" />
+        <activity android:name=".mvp.usercenter.DrawingMoneyActivity" />
 
     </application>
 

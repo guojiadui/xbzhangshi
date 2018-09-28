@@ -46,8 +46,8 @@ public class UpdatePasswordActivity extends BaseActivity implements IUpPwdBaseVi
         context.startActivity(intent);
     }
 
-    public final int type1 = 1;//登录密码
-    public final int type2 = 2;//登录密码
+    public static  final int type1 = 1;//登录密码
+    public static final int type2 = 2;//取款密码
 
     int curType;
     UpPwdPresenter upPwdPresenter;

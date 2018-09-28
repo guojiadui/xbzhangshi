@@ -188,6 +188,7 @@ public class LogInPresenter extends BasePresenter {
     /**
      * 获取免费账号
      *
+
      * @param
      */
     public void getFreeUser(Context context) {

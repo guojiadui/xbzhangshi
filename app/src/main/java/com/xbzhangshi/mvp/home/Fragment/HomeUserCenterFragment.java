@@ -2,36 +2,38 @@ package com.xbzhangshi.mvp.home.Fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xbzhangshi.R;
-import com.xbzhangshi.app.Url;
-import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.home.adapter.UserCenterAdapter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
+import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
 import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
-import com.xbzhangshi.mvp.record.AcountChangeActivity;
-import com.xbzhangshi.mvp.record.LHCLotteryRecordActivity;
-import com.xbzhangshi.mvp.record.LotteryRecordActivity;
-import com.xbzhangshi.mvp.record.SportsRecordActivity;
+import com.xbzhangshi.mvp.usercenter.BindingBankCardActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
-import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
 import com.xbzhangshi.mvp.usercenter.SetPasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
+import com.xbzhangshi.single.UserInfo;
+import com.xbzhangshi.view.DividerGridItemDecoration;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.dialog.TipDialog;
 
@@ -39,8 +41,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * 用户中心
@@ -49,38 +55,6 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     @BindView(R.id.user_name)
     TextView userName;
-    @BindView(R.id.tv_title1)
-    TextView tvTitle1;
-    @BindView(R.id.tv_title2)
-    TextView tvTitle2;
-    @BindView(R.id.tv_title3)
-    TextView tvTitle3;
-    @BindView(R.id.icon1)
-    ImageView icon1;
-    @BindView(R.id.icon2)
-    ImageView icon2;
-    @BindView(R.id.icon3)
-    ImageView icon3;
-    @BindView(R.id.icon4)
-    ImageView icon4;
-    @BindView(R.id.icon5)
-    ImageView icon5;
-    @BindView(R.id.icon6)
-    ImageView icon6;
-    @BindView(R.id.icon7)
-    ImageView icon7;
-    @BindView(R.id.icon8)
-    ImageView icon8;
-    @BindView(R.id.icon9)
-    ImageView icon9;
-    @BindView(R.id.icon10)
-    ImageView icon10;
-    @BindView(R.id.withdrawal_password_modify)
-    RelativeLayout withdrawalPasswordModify;
-    @BindView(R.id.icon11)
-    ImageView icon11;
-    @BindView(R.id.fl_control)
-    NestedScrollView flControl;
     @BindView(R.id.balance)
     TextView balance;
     @BindView(R.id.user_icon)
@@ -89,8 +63,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     TextView vip;
     @BindView(R.id.msg_count)
     TextView msgCount;
-    @BindView(R.id.record)
-    RelativeLayout record;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -112,36 +86,47 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     }
 
+    @OnClick({R.id.tv_title1, R.id.tv_title2, R.id.tv_title3})
+    public void view(View v) {
+        switch (v.getId()) {
+            case R.id.tv_title1:
+                break;
+            case R.id.tv_title2:
+                //提款
+                if (UserInfo.getInstance().getLoginUserInfoBean() != null) {
+                    String p = UserInfo.getInstance().getLoginUserInfoBean().getContent().getReceiptPwd();
+                    if (TextUtils.isEmpty(p)) {
+                        //设置取款密码
+                        SetPasswordActivity.start(mActivity);
+                        return;
+                    }
+                    //判断真是姓名，银行，卡号绑定银行卡
+                    if (TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getUserName()) ||
+                            TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getBankName()) ||
+                            TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getCardNo())) {
+                        BindingBankCardActivity.start(mActivity);
+                        return;
+                    }
+                    //提款
+                    DrawingMoneyActivity.start(mActivity);
+                }
+                break;
+            case R.id.tv_title3:
+                break;
+        }
+    }
+
     @Override
     protected void initView(View view) {
         userCenterPresenter = UserCenterPresenter.newInstance(this);
-        record.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // AcountChangeActivity.start(mActivity);
-               // SportsRecordActivity.start(mActivity);
-              //  LHCLotteryRecordActivity.start(mActivity);
-                 AcountChangeActivity.start(mActivity);
-            }
-        });
-        withdrawalPasswordModify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //  ExchangeActivity.start(mActivity);
-                //   UpdatePasswordActivity.start(mActivity,1);
-               // SetPasswordActivity.start(mActivity);
-             //   DrawingMoneyActivity.start(mActivity);
-               // LotteryRecordActivity.start(mActivity);
-                AcountChangeActivity.start(mActivity);
-                SportsRecordActivity.start(mActivity);
-            }
-        });
         userIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserInfoActivity.start(mActivity);
             }
         });
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        recyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
         EventBus.getDefault().post(new ClearHomeMsgEvent());
     }
 
@@ -254,6 +239,28 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             msgCount.setVisibility(View.VISIBLE);
             msgCount.setText(msg);
         }
+    }
+
+    @Override
+    public void setConfig(List<USerCenterOnOffBean> list) {
+        UserCenterAdapter userCenterAdapter = new UserCenterAdapter(list);
+        recyclerView.setAdapter(userCenterAdapter);
+        userCenterAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                //修改取款密码
+                if (UserInfo.getInstance().getLoginUserInfoBean() != null) {
+                    String pwd = UserInfo.getInstance().getLoginUserInfoBean().getContent().getReceiptPwd();//取款密码
+                    if (TextUtils.isEmpty(pwd)) {
+                        //没有取款密码
+                        SetPasswordActivity.start(mActivity);
+                    } else {
+                        //有取款密码
+                        UpdatePasswordActivity.start(mActivity, UpdatePasswordActivity.type2);
+                    }
+                }
+            }
+        });
     }
 
 

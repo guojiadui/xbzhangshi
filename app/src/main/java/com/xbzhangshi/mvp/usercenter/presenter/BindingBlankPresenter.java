@@ -75,6 +75,8 @@ public class BindingBlankPresenter extends BasePresenter {
                     if (loadingDialog != null && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
+                    contentView.error("绑定失败");
+                    return;
                 }
                 if (resultBean == null) {
                     if (loadingDialog != null && loadingDialog.isShowing()) {
