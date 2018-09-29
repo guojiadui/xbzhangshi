@@ -8,9 +8,13 @@ import java.util.List;
 public interface IMesssageListBaseView {
 
 
-    public  void success(MessageListPresenter presenter,List<MsgBean.ContentBean.DatasBean> contentBeans);
-    public  void empty( );
+    public  void success(MessageListPresenter presenter,List<MsgBean.ListBean> contentBeans,boolean isMore);
+    public  void empty(boolean isMore );
     public  void Error(String msg);
+    public  void successMore(MessageListPresenter presenter,List<MsgBean.ListBean> contentBeans,boolean isMore);
+    public  void emptyMore( boolean isMore);
+    public  void ErrorMore(String msg);
+
     public  void ishowEditLayout(boolean isShow);
     public  void readSuccess(String s);
     public  void readError(String  msg);

@@ -3,6 +3,7 @@ package com.xbzhangshi.mvp.usercenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,9 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.usercenter.BaseView.IMesssageListBaseView;
@@ -31,7 +35,7 @@ import butterknife.OnClick;
 /**
  * 站内信息
  */
-public class MessageListActivity extends BaseActivity implements IMesssageListBaseView {
+public class MessageListActivity extends BaseActivity implements IMesssageListBaseView, OnLoadMoreListener {
 
     @BindView(R.id.lt_main_title)
     TextView ltMainTitle;
@@ -51,6 +55,8 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     MultipleStatusView multipleStatusView;
     @BindView(R.id.edit_layout)
     RelativeLayout editLayout;
+    @BindView(R.id.smartRefreshLayout)
+    SmartRefreshLayout smartRefreshLayout;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MessageListActivity.class);
@@ -73,6 +79,18 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        smartRefreshLayout.setEnableRefresh(false);//是否启用下拉刷新功能
+        smartRefreshLayout.setEnableLoadMore(true);//是否启用上拉加载功能
+        smartRefreshLayout.setOnLoadMoreListener(this);
+        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multipleStatusView.showLoading();
+                listPresenter.loadData(MessageListActivity.this);
             }
         });
     }
@@ -102,7 +120,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
             case R.id.select_all:
                 if (recyclerView != null && recyclerView.getAdapter() != null) {
                     MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
-                    for (MsgBean.ContentBean.DatasBean datasBean : msgAdapter.getData()) {
+                    for (MsgBean.ListBean datasBean : msgAdapter.getData()) {
                         datasBean.setIscheck(true);
                     }
                     msgAdapter.notifyDataSetChanged();
@@ -125,10 +143,11 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     }
 
     @Override
-    public void success(MessageListPresenter presenter, List<MsgBean.ContentBean.DatasBean> contentBeans) {
+    public void success(MessageListPresenter presenter, List<MsgBean.ListBean> contentBeans,boolean isMore) {
         multipleStatusView.showContent();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        if(!isMore){
+            smartRefreshLayout.setNoMoreData(true);
+        }
         MsgAdapter msgAdapter = new MsgAdapter(this, presenter, contentBeans);
         msgAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -139,14 +158,14 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
                 if (listPresenter.isEdit) {
                     //编辑的选中
                     MsgAdapter adapter1 = (MsgAdapter) adapter;
-                    MsgBean.ContentBean.DatasBean datasBean = adapter1.getData().get(position);
+                    MsgBean.ListBean datasBean = adapter1.getData().get(position);
                     datasBean.setIscheck(!datasBean.isIscheck());
                     RadioButton radioButton = view.findViewById(R.id.radio);
                     radioButton.setChecked(datasBean.ischeck);
                 } else {
                     //查看
                     MsgAdapter adapter1 = (MsgAdapter) adapter;
-                    MsgBean.ContentBean.DatasBean datasBean = adapter1.getData().get(position);
+                    MsgBean.ListBean datasBean = adapter1.getData().get(position);
                     MsgActivity.start(MessageListActivity.this, datasBean.getTitle(), datasBean.getMessage());
                     //把信息设置为已读状态
                     listPresenter.readitem(MessageListActivity.this,datasBean);
@@ -159,13 +178,42 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
 
 
     @Override
-    public void empty() {
+    public void empty(boolean isMore) {
         multipleStatusView.showEmpty();
+        if(!isMore){
+            smartRefreshLayout.setNoMoreData(true);
+        }
     }
 
     @Override
     public void Error(String msg) {
         multipleStatusView.showError();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void successMore(MessageListPresenter presenter, List<MsgBean.ListBean> contentBeans,boolean isMore) {
+        if(!isMore){
+            smartRefreshLayout.setNoMoreData(true);
+        }
+        if(recyclerView!=null&&recyclerView.getAdapter()!=null){
+            MsgAdapter adapter = (MsgAdapter) recyclerView.getAdapter();
+            adapter.addData(contentBeans);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void emptyMore(boolean isMore) {
+        smartRefreshLayout.finishLoadMore();
+        if(!isMore){
+            smartRefreshLayout.setNoMoreData(true);
+        }
+    }
+
+    @Override
+    public void ErrorMore(String msg) {
+        smartRefreshLayout.finishLoadMore();
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
@@ -176,7 +224,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
             ltMainTitleRight.setText("取消");
             if (recyclerView != null && recyclerView.getAdapter() != null) {
                 MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
-                for (MsgBean.ContentBean.DatasBean datasBean : msgAdapter.getData()) {
+                for (MsgBean.ListBean datasBean : msgAdapter.getData()) {
                     datasBean.setIscheck(false);
                 }
                 msgAdapter.notifyDataSetChanged();
@@ -202,8 +250,8 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
                 return;
             }
             MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
-            List<MsgBean.ContentBean.DatasBean> datasBeans = msgAdapter.getData();
-            for (MsgBean.ContentBean.DatasBean datasBean : datasBeans) {
+            List<MsgBean.ListBean> datasBeans = msgAdapter.getData();
+            for (MsgBean.ListBean datasBean : datasBeans) {
                 if (strings.contains(datasBean.getId() + "")) {
                     datasBean.setStatus(2);
                 }
@@ -230,10 +278,10 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
                 return;
             }
             MsgAdapter msgAdapter = (MsgAdapter) recyclerView.getAdapter();
-            List<MsgBean.ContentBean.DatasBean> datasBeans = msgAdapter.getData();
-            Iterator<MsgBean.ContentBean.DatasBean> it = datasBeans.iterator();
+            List<MsgBean.ListBean> datasBeans = msgAdapter.getData();
+            Iterator<MsgBean.ListBean> it = datasBeans.iterator();
             while (it.hasNext()) {
-                MsgBean.ContentBean.DatasBean x = it.next();
+                MsgBean.ListBean x = it.next();
                 if (strings.contains(x.getId() + "")) {
                     it.remove();
                     continue;
@@ -247,5 +295,10 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     @Override
     public void delError(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
     }
 }

@@ -37,22 +37,26 @@
               <TextView
                   android:id="@+id/text_tip1"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/font_size_large"/>
 
               <TextView
                   android:id="@+id/text_tip2"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/font_size_large"/>
 
               <TextView
                   android:id="@+id/text_tip3"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/font_size_large"/>
 
               <TextView
                   android:id="@+id/text_tip4"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/font_size_large"/>
           </LinearLayout>
 
           <TextView
@@ -77,12 +81,14 @@
               <TextView
                   android:id="@+id/consumption_tip1"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/font_size_large"/>
 
               <TextView
                   android:id="@+id/consumption_tip2"
                   android:layout_width="wrap_content"
-                  android:layout_height="wrap_content" />
+                  android:layout_height="wrap_content"
+                  android:textSize="@dimen/font_size_large"/>
           </LinearLayout>
 
           <TextView
@@ -96,9 +102,11 @@
               android:textSize="@dimen/font_size_large" />
 
           <LinearLayout
+              android:id="@+id/commit_layout"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@color/white"
+              android:visibility="gone"
               android:orientation="vertical">
 
               <RelativeLayout
@@ -218,7 +226,9 @@
               </RelativeLayout>
               <RelativeLayout
                   android:layout_width="match_parent"
-                  android:layout_height="@dimen/dp_42">
+                  android:layout_height="@dimen/dp_42"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true">
 
                   <ImageView
                       android:id="@+id/icon4"
@@ -263,7 +273,9 @@
               </RelativeLayout>
               <RelativeLayout
                   android:layout_width="match_parent"
-                  android:layout_height="@dimen/dp_42">
+                  android:layout_height="@dimen/dp_42"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true">
 
                   <ImageView
                       android:id="@+id/icon5"
@@ -303,7 +315,7 @@
 
           </LinearLayout>
           <TextView
-              android:id="@+id/login"
+              android:id="@+id/commit"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginEnd="@dimen/dp_15"

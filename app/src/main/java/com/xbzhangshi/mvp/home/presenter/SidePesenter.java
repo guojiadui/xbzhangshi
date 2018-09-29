@@ -1,6 +1,7 @@
 package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,7 +82,8 @@ public class SidePesenter extends BasePresenter {
             l.setVisibility(View.VISIBLE);
             TextView name = l.findViewById(R.id.sideslip_user_name);
             TextView balance = l.findViewById(R.id.sideslip_balance);
-            name.setText(UserInfo.getInstance().mUsername);
+            if(!TextUtils.isEmpty(UserInfo.getInstance().mUsername))
+            name.setText(UserInfo.getInstance().mUsername.replace("\n","").replace(" ",""));
             getBalance(context,balance);
         }
 

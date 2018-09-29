@@ -23,9 +23,10 @@ public class Url {
      public  final  static String exchangeConfig ="/exchangeConfig"+BASE_END;//兑换配置
      public  final  static String exchange ="/exchange"+BASE_END;//兑换交换
      public  final  static String getMsgCount ="/getMsgCount"+BASE_END;//获取站内没读信息昨天
-     public  final  static String message_list ="/message_list"+BASE_END;//获取站内信
+     public  final  static String message_list ="http://xbzhanshi.com/center/news/message/list.do";//获取站内信
     // public  final  static String user_config ="/getUniversalSwitch"+BASE_END;//3)	获取通用开关接口
      public  final  static String withDrawData ="/withDrawData"+BASE_END;//获取提款信息
+     public  final  static String drawcommit ="/center/banktrans/draw/drawcommit.do" ;//申请提款
      public  final  static String geRecordSwitch ="/geRecordSwitch"+BASE_END;//用户中心的几状态
      public  final  static String read ="http://xbzhanshi.com/center/news/message/batchRead.do";//设置站内信已读
      public  final  static String del_msg ="http://xbzhanshi.com/center/news/message/batchDelete.do";//删除内信

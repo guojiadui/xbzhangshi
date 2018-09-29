@@ -15,13 +15,32 @@
         app:emptyView="@layout/layout_empty"
         app:errorView="@layout/layout_error"
         app:loadingView="@layout/layout_loading">
+      <com.scwang.smartrefresh.layout.SmartRefreshLayout
+          android:id="@+id/smartRefreshLayout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+          <android.support.v7.widget.RecyclerView
+              android:id="@+id/recyclerView"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingEnd="@dimen/dp_10"
+              android:paddingStart="@dimen/dp_10"></android.support.v7.widget.RecyclerView>
+          <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              app:srlClassicsSpinnerStyle="Translate"
+              app:srlDrawableArrow="@mipmap/loading_throbber"
+              app:srlDrawableArrowSize="20dp"
+              app:srlDrawableMarginRight="20dp"
+              app:srlDrawableProgressSize="20dp"
+              app:srlDrawableSize="20dp"
+              app:srlEnableLastTime="true"
+              app:srlFinishDuration="500"
+              app:srlTextSizeTime="10dp"
+              app:srlTextSizeTitle="16sp"
+              app:srlTextTimeMarginTop="2dp" />
+      </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/dp_10"
-            android:paddingStart="@dimen/dp_10"></android.support.v7.widget.RecyclerView>
     </com.classic.common.MultipleStatusView>
 
     <RelativeLayout

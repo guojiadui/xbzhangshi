@@ -41,11 +41,13 @@ import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.TipDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 
@@ -137,7 +139,7 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        initsearch();
+
     }
 
     @Override
@@ -151,9 +153,14 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
     @Override
     protected void initdata() {
         multipleStatusView.showLoading();
-        recordPresenter.query(this,"","");
+        recordPresenter.query(this, "", "");
     }
 
+
+    @Override
+    public void setInitSearch(List<String> keys) {
+        initsearch(keys);
+    }
 
     @Override
     public void successMore(List<AcountChangeRecordBean.ListBean> listBeans, boolean ismore) {
@@ -181,9 +188,9 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
     }
 
     @Override
-    public void successData(List<AcountChangeRecordBean.ListBean> listBeans, Map<String,String> keys, boolean ismore) {
+    public void successData(List<AcountChangeRecordBean.ListBean> listBeans, Map<String, String> keys, boolean ismore) {
         multipleStatusView.showContent();
-        AcountChangeAdapter recordAdapter = new AcountChangeAdapter(listBeans,keys);
+        AcountChangeAdapter recordAdapter = new AcountChangeAdapter(listBeans, keys);
         recyclerView.setAdapter(recordAdapter);
         if (!ismore) {
             smartRefreshLayout.setNoMoreData(true);
@@ -256,7 +263,7 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
      * @param
      */
 
-    public void initsearch() {
+    public void initsearch(List<String> keys) {
         // PopupWindow浮动下拉框布局
 
         //查询
@@ -287,18 +294,13 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
             }
         });
 
-        List<String> list2 = new ArrayList<>();
-        list2.add("全部");
-        list2.add("人工加款");
-        list2.add("人工扣款");
-        list2.add("在线取款失败");
-        list2.add("在线取款");
-        recordPresenter.curtype = list2.get(0);
-        lotteryState.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list2));
+        keys.add(0, "全部");
+        recordPresenter.curtype = keys.get(0);
+        lotteryState.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, keys));
         lotteryState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recordPresenter.curtype = list2.get(position);
+                recordPresenter.curtype = keys.get(position);
             }
 
             @Override

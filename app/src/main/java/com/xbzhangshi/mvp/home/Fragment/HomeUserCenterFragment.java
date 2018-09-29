@@ -25,6 +25,7 @@ import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
 import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.record.AcountChangeActivity;
 import com.xbzhangshi.mvp.usercenter.BindingBankCardActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
@@ -53,7 +54,7 @@ import butterknife.Unbinder;
  */
 public class HomeUserCenterFragment extends BaseFragment implements IUserCenterBaseView {
 
-    @BindView(R.id.user_name)
+    @BindView(R.id.name)
     TextView userName;
     @BindView(R.id.balance)
     TextView balance;
@@ -205,7 +206,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     @Override
     public void setUserinfo(String name) {
-        userName.setText(name);
+        if(!TextUtils.isEmpty(name))
+        userName.setText(name.replace(" ","").replace("\n",""));
         RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
         Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
     }
@@ -249,7 +251,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //修改取款密码
-                if (UserInfo.getInstance().getLoginUserInfoBean() != null) {
+               /* if (UserInfo.getInstance().getLoginUserInfoBean() != null) {
                     String pwd = UserInfo.getInstance().getLoginUserInfoBean().getContent().getReceiptPwd();//取款密码
                     if (TextUtils.isEmpty(pwd)) {
                         //没有取款密码
@@ -258,7 +260,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                         //有取款密码
                         UpdatePasswordActivity.start(mActivity, UpdatePasswordActivity.type2);
                     }
-                }
+                }*/
+                AcountChangeActivity.start(mActivity);
             }
         });
     }

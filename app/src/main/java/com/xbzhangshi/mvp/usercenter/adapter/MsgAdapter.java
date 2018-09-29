@@ -12,19 +12,22 @@ import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
 import com.xbzhangshi.mvp.usercenter.presenter.MessageListPresenter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class MsgAdapter extends BaseQuickAdapter<MsgBean.ContentBean.DatasBean, BaseViewHolder> {
+public class MsgAdapter extends BaseQuickAdapter<MsgBean.ListBean, BaseViewHolder> {
     Context context;
     MessageListPresenter messageListPresenter;
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public MsgAdapter(Context context, MessageListPresenter messageListPresenter, @Nullable List<MsgBean.ContentBean.DatasBean> data) {
+    public MsgAdapter(Context context, MessageListPresenter messageListPresenter, @Nullable List<MsgBean.ListBean> data) {
         super(R.layout.msg_adapter_item, data);
+        this.context = context;
         this.messageListPresenter = messageListPresenter;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MsgBean.ContentBean.DatasBean item) {
+    protected void convert(BaseViewHolder helper, MsgBean.ListBean item) {
         if (!TextUtils.isEmpty(item.getTitle())) {
             helper.setText(R.id.title, item.getTitle());
         }
@@ -41,5 +44,7 @@ public class MsgAdapter extends BaseQuickAdapter<MsgBean.ContentBean.DatasBean, 
         } else {
             helper.setTextColor(R.id.title, 0xff888888);
         }
+        String t = formatter.format(item.getCreateDatetime());
+        helper.setText(R.id.time, t);
     }
 }

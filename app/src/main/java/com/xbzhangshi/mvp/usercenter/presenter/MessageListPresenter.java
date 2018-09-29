@@ -39,7 +39,7 @@ public class MessageListPresenter extends BasePresenter {
     }
 
     public boolean isEdit = false;
-
+    public int curpage = 1;
 
     public MessageListPresenter(IMesssageListBaseView contentView) {
         this.contentView = contentView;
@@ -47,20 +47,33 @@ public class MessageListPresenter extends BasePresenter {
 
 
     public void loadData(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.message_list, null, new StringCallback() {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("pageNumber", curpage);
+        httpParams.put("status", 0);
+        httpParams.put("pageSize", 100);
+        Object tag = HttpManager.get(context, Url.message_list, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 MsgBean msgBean = JSON.parseObject(response.body(), MsgBean.class);
-                if (msgBean.isSuccess()) {
-                    if (msgBean.getContent().getDatas().size() > 0) {
-                        contentView.success(MessageListPresenter.this, msgBean.getContent().getDatas());
+                if (msgBean.getCurrentPageNo() > 0) {
+                    if (msgBean.getList().size() > 0) {
+                        if (curpage == 1) {
+                            contentView.success(MessageListPresenter.this, msgBean.getList(), msgBean.isHasNext());
+                        } else {
+                            contentView.successMore(MessageListPresenter.this, msgBean.getList(), msgBean.isHasNext());
+                        }
+
                     } else {
-                        contentView.empty();
+                        if (curpage == 1) {
+                            contentView.empty(msgBean.isHasNext());
+                        } else {
+                            contentView.emptyMore(msgBean.isHasNext());
+                        }
+
                     }
+                    curpage = msgBean.getCurrentPageNo();
                 } else {
-                    if (!TextUtils.isEmpty(msgBean.getMsg())) {
-                        contentView.Error(msgBean.getMsg());
-                    }
+                    contentView.Error("请求出错");
                 }
             }
 
@@ -75,10 +88,10 @@ public class MessageListPresenter extends BasePresenter {
 
     MsgTipDialog tipDialog;
 
-    public void setdel(Context context, List<MsgBean.ContentBean.DatasBean> datasBeans) {
+    public void setdel(Context context, List<MsgBean.ListBean> datasBeans) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (MsgBean.ContentBean.DatasBean datasBean : datasBeans) {
+        for (MsgBean.ListBean datasBean : datasBeans) {
             if (datasBean.ischeck) {
                 stringBuilder.append(datasBean.getId() + ",");
 
@@ -101,10 +114,10 @@ public class MessageListPresenter extends BasePresenter {
 
     }
 
-    public void setRead(Context context, List<MsgBean.ContentBean.DatasBean> datasBeans) {
+    public void setRead(Context context, List<MsgBean.ListBean> datasBeans) {
         StringBuilder stringBuilder = new StringBuilder();
-        List<MsgBean.ContentBean.DatasBean> list = new ArrayList<>();
-        for (MsgBean.ContentBean.DatasBean datasBean : datasBeans) {
+        List<MsgBean.ListBean> list = new ArrayList<>();
+        for (MsgBean.ListBean datasBean : datasBeans) {
             if (datasBean.ischeck) {
                 stringBuilder.append(datasBean.getId() + ",");
                 list.add(datasBean);
@@ -117,7 +130,7 @@ public class MessageListPresenter extends BasePresenter {
         }
         boolean isAllReaded = true;//是否是全是已读
 
-        for (MsgBean.ContentBean.DatasBean d : list) {
+        for (MsgBean.ListBean d : list) {
             if (d.getStatus() == 1) {//未读
                 isAllReaded = false;
                 break;
@@ -139,7 +152,7 @@ public class MessageListPresenter extends BasePresenter {
 
     }
 
-    public void readitem(Context context, MsgBean.ContentBean.DatasBean datasBean) {
+    public void readitem(Context context, MsgBean.ListBean datasBean) {
         if (datasBean.getStatus() != 1) {
             return;
         }
@@ -197,10 +210,17 @@ public class MessageListPresenter extends BasePresenter {
     public void del(Context context, String value) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("id", value);
-        Object tag = HttpManager.post(context, Url.del_msg, httpParams, new StringCallback() {
+        Object tag = HttpManager.get(context, Url.del_msg, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                ReadBean readBean = JSON.parseObject(response.body(), ReadBean.class);
+                ReadBean readBean = null;
+                try {
+                    readBean = JSON.parseObject(response.body(), ReadBean.class);
+                } catch (Exception e) {
+                    contentView.delError("请求出错");
+                    return;
+                }
+
                 if (readBean.isSuccess()) {
                     contentView.delSuccess(value);
                     EventBus.getDefault().post(new UpdateMsgCount());

@@ -21,10 +21,12 @@ import com.xbzhangshi.mvp.usercenter.bean.ResultBean;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,29 +47,33 @@ public class AcountChangeRecordPresenter extends BasePresenter {
         this.contentView = contentView;
     }
 
-    Map<String,String> MYkeys = new HashMap<>();
+    Map<String, String> MYkeys = new HashMap<>();
+
     private void initData(Context context) {
         Object tag = HttpManager.get(context, Url.BASE_URL + Url.getMnyrecordType, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
 
-               try {
-                   JSONObject jsonObject = JSON.parseObject(response.body());
-                   Set<String> keys = jsonObject.keySet();
-                   Iterator iterator = keys.iterator();
-                   while(iterator.hasNext()){
-                       String key = (String) iterator.next();
-                       Log.e("tag","key: "+key);
-                       MYkeys.put(key,jsonObject.getString(key));
-                   }
-                   if(MYkeys.size()>0){
-                       query(context,"","");
-                   }else {
-                       contentView.error("请求出错");
-                   }
-               }catch (Exception e){
-                   contentView.error("请求出错");
-               }
+                try {
+                    JSONObject jsonObject = JSON.parseObject(response.body());
+                    Set<String> keys = jsonObject.keySet();
+                    Iterator iterator = keys.iterator();
+                    List<String> strings = new ArrayList<>();
+                    while (iterator.hasNext()) {
+                        String key = (String) iterator.next();
+                        Log.e("tag", "key: " + key);
+                        MYkeys.put(key, jsonObject.getString(key));
+                        strings.add(jsonObject.getString(key));
+                    }
+                    if (MYkeys.size() > 0) {
+                        contentView.setInitSearch(strings);
+                        query(context, "", "");
+                    } else {
+                        contentView.error("请求出错");
+                    }
+                } catch (Exception e) {
+                    contentView.error("请求出错");
+                }
 
             }
 
@@ -84,17 +90,17 @@ public class AcountChangeRecordPresenter extends BasePresenter {
 
     public void query(Context context, String start, String end) {
 
-        if(MYkeys.size()<=0){
+        if (MYkeys.size() <= 0) {
             initData(context);
+            return;
         }
-
-        if(TextUtils.isEmpty(start)){
+        if (TextUtils.isEmpty(start)) {
             Date curDate = new Date(System.currentTimeMillis());
             start = dFormat.format(curDate);
         }
-        if(TextUtils.isEmpty(end)){
+        if (TextUtils.isEmpty(end)) {
             Date curDate = new Date(System.currentTimeMillis());
-            end= dFormat.format(curDate);
+            end = dFormat.format(curDate);
         }
 
         HttpParams httpParams = new HttpParams();
@@ -104,72 +110,70 @@ public class AcountChangeRecordPresenter extends BasePresenter {
         if (!TextUtils.isEmpty(end)) {
             httpParams.put("endTime", end + " 23:59:59");
         }
-
-        if (!TextUtils.isEmpty(curtype)) {
-            if (curtype.equals("全部")) {
-                httpParams.put("type", "");
-            } else if (curtype.equals("人工扣款")) {
-                if (curtype.equals("人工加款")) {
-                    httpParams.put("type", 1);
-                } else if (curtype.equals("人工扣款")) {
-                    httpParams.put("type", 2);
-                } else if (curtype.equals("在线取款失败")) {
-                    httpParams.put("type", 3);
-                } else if (curtype.equals("在线取款")) {
-                    httpParams.put("type", 4);
-                }
-            } else {
-                httpParams.put("type", "");
+        String curkey = null;
+        Iterator<Map.Entry<String, String>> entries = MYkeys.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<String, String> entry = entries.next();
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            if (curtype.equals(entry.getValue())) {
+                curkey = entry.getKey();
+                break;
             }
-            httpParams.put("page", curpage);
-            httpParams.put("rows", 10);
-
-            Object tag = HttpManager.post(context, Url.mnyrecord_list, httpParams, new StringCallback() {
-                @Override
-                public void onSuccess(Response<String> response) {
-                    AcountChangeRecordBean bean = null;
-                    try {
-                        bean = JSON.parseObject(response.body(), AcountChangeRecordBean.class);
-                    } catch (Exception e) {
-                        contentView.error("请求出错");
-                        return;
-                    }
-
-                    if (bean != null) {
-                        if (bean.getList() != null && bean.getList().size() > 0) {
-                            if (curpage == 1) {
-                                contentView.successData(bean.getList(),MYkeys, bean.isHasNext());
-                            } else {
-                                contentView.successMore(bean.getList(), bean.isHasNext());
-                            }
-
-                        } else {
-                            if (curpage == 1) {
-                                contentView.empty();
-                            } else {
-                                contentView.emptyMore(bean.isHasNext());
-                            }
-
-                        }
-                        if (bean.isHasNext()) {
-                            curpage = bean.getNextPage();
-                        }
-                    } else {
-                        contentView.error("请求出错");
-                    }
-
-
-                }
-
-                @Override
-                public void onError(Response<String> response) {
-                    super.onError(response);
-                    contentView.error("请求出错");
-                }
-            });
-            addNet(tag);
+        }
+        if (TextUtils.isEmpty(curkey)) {
+            httpParams.put("type", "");
+        } else {
+            httpParams.put("type", curkey);
         }
 
+        httpParams.put("page", curpage);
+        httpParams.put("rows", 10);
 
+        Object tag = HttpManager.post(context, Url.mnyrecord_list, httpParams, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                AcountChangeRecordBean bean = null;
+                try {
+                    bean = JSON.parseObject(response.body(), AcountChangeRecordBean.class);
+                } catch (Exception e) {
+                    contentView.error("请求出错");
+                    return;
+                }
+
+                if (bean != null) {
+                    if (bean.getList() != null && bean.getList().size() > 0) {
+                        if (curpage == 1) {
+                            contentView.successData(bean.getList(), MYkeys, bean.isHasNext());
+                        } else {
+                            contentView.successMore(bean.getList(), bean.isHasNext());
+                        }
+
+                    } else {
+                        if (curpage == 1) {
+                            contentView.empty();
+                        } else {
+                            contentView.emptyMore(bean.isHasNext());
+                        }
+
+                    }
+                    if (bean.isHasNext()) {
+                        curpage = bean.getNextPage();
+                    }
+                } else {
+                    contentView.error("请求出错");
+                }
+
+
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                contentView.error("请求出错");
+            }
+        });
+        addNet(tag);
     }
+
+
 }
