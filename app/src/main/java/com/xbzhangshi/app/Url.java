@@ -33,6 +33,8 @@ public class Url {
      public  final  static String up_login_pwd ="http://xbzhanshi.com/center/member/meminfo/newpwd.do";//更新登录密码
      public  final  static String drawing_money_pwd ="http://xbzhanshi.com/center/member/meminfo/repwd.do";//设置取款密码
      public  final  static String bindingBlank ="http://xbzhanshi.com/center/banktrans/draw/cmitbkinfo.do";//绑定银行卡
+     public  final  static String chogzhijilu ="http://xbzhanshi.com/center/record/hisrecord/comrd.do";//充值记录
+     public  final  static String qukjilu ="http://xbzhanshi.com/center/record/hisrecord/drawrd.do";//取款记录
 
     /**
      * 投注记录

@@ -134,7 +134,7 @@ public class ExchangeActivity extends BaseActivity implements IExchangeBaseView 
 
     @Override
     public void upDateAcount(String msg) {
-        acount.setText(msg);
+        acount.setText(msg.replace(" ","").replace("\n",""));
     }
 
     @Override

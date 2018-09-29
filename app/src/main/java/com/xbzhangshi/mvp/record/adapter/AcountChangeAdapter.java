@@ -3,6 +3,7 @@ package com.xbzhangshi.mvp.record.adapter;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -33,8 +34,12 @@ public class AcountChangeAdapter extends BaseQuickAdapter<AcountChangeRecordBean
         }
 
         TextView number = helper.getView(R.id.lottery_order_number);
-        String num = "订单号:&nbsp;  " + "<font color=\"black\">" + item.getOrderId() + "</font>";
-        number.setText(Html.fromHtml(num));
+        if (!TextUtils.isEmpty(item.getOrderId())) {
+            String num = "订单号:&nbsp;  " + "<font color=\"black\">" + item.getOrderId() + "</font>";
+            number.setText(Html.fromHtml(num));
+        } else {
+            number.setText(Html.fromHtml("订单号:"));
+        }
         TextView before = helper.getView(R.id.sum_change_before);
         String BeforeMoney = "变动前金额: &nbsp; " + "<font color=#0894ec>" + item.getBeforeMoney() + "</font>元";
         before.setText(Html.fromHtml(BeforeMoney));

@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,15 +28,14 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.record.adapter.AcountDetailsAdapter;
 import com.xbzhangshi.mvp.record.adapter.LotterytRecordAdapter;
-import com.xbzhangshi.mvp.record.baseview.ILHCLotteryBaseView;
-import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
+import com.xbzhangshi.mvp.record.baseview.IAcountDetailsBaseView;
+import com.xbzhangshi.mvp.record.bean.AcountDetailsRecordBean;
 import com.xbzhangshi.mvp.record.bean.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
 import com.xbzhangshi.mvp.record.details.LotteryRecorDetailsActivity;
-import com.xbzhangshi.mvp.record.presenter.LHCLotteryRecordPresenter;
-import com.xbzhangshi.mvp.record.presenter.LotteryRecordPresenter;
-import com.xbzhangshi.view.CustomToolbar;
+import com.xbzhangshi.mvp.record.presenter.AcountDetailsRecordPresenter;
 import com.xbzhangshi.view.dialog.TipDialog;
 
 import java.util.ArrayList;
@@ -44,11 +44,12 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
- * 六合彩投注记录
+ * 账户明细
  */
-public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotteryBaseView, OnLoadMoreListener {
+public class AcountDetailsRecordActivity extends BaseActivity implements IAcountDetailsBaseView, OnLoadMoreListener {
 
 
     @BindView(R.id.lt_main_title_left)
@@ -63,8 +64,6 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
     SmartRefreshLayout smartRefreshLayout;
     @BindView(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
-    @BindView(R.id.customtoolbar)
-    CustomToolbar customtoolbar;
     @BindView(R.id.query_layout)
     LinearLayout queryLayout;
     @BindView(R.id.kong)
@@ -80,31 +79,39 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
     @BindView(R.id.end_time)
     TextView endTime;
 
-    @BindView(R.id.lottery_state)
-    AppCompatSpinner lotteryState;
     @BindView(R.id.query)
     TextView query;
+    @BindView(R.id.acount_type)
+    AppCompatSpinner acountType;
+    @BindView(R.id.transaction_type)
+    AppCompatSpinner transactionType;
+    @BindView(R.id.processor_state)
+    AppCompatSpinner processorState;
+    @BindView(R.id.transaction_layout)
+    RelativeLayout transactionLayout;
+    @BindView(R.id.transaction_line)
+    View transactionLine;
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, LHCLotteryRecordActivity.class);
+        Intent intent = new Intent(context, AcountDetailsRecordActivity.class);
         context.startActivity(intent);
     }
 
 
     //  PopupWindow selectPopupWindow;//查询选中
 
-    LHCLotteryRecordPresenter lotteryRecordPresenter;
-    LotterytRecordAdapter recordAdapter;
+    AcountDetailsRecordPresenter recordPresenter;
+
 
     @Override
     protected int getlayout() {
-        return R.layout.note_lhcrecord_activity;
+        return R.layout.note_acount_details_record_activity;
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        lotteryRecordPresenter = LHCLotteryRecordPresenter.newInstance(this);
-        ltMainTitle.setText("六合彩投注记录");
+        recordPresenter = AcountDetailsRecordPresenter.newInstance(this);
+        ltMainTitle.setText("账户明细");
         ltMainTitleRight.setText("筛选");
         ltMainTitleLeft.setText("返回");
         ltMainTitleLeft.setOnClickListener(new View.OnClickListener() {
@@ -139,44 +146,26 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recordAdapter = new LotterytRecordAdapter(new ArrayList<>());
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(recordAdapter);
-        recordAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
-                String id = recordAdapter.getData().get(position).getOrderId();
-                if (view.getId() == R.id.cancel) {
-                    cancelId(id);
-                }
-            }
-        });
-        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this);
-            }
-        });
         initsearch();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (lotteryRecordPresenter != null) {
-            lotteryRecordPresenter.onDestory();
+        if (recordPresenter != null) {
+            recordPresenter.onDestory();
         }
     }
 
     @Override
     protected void initdata() {
         multipleStatusView.showLoading();
-        lotteryRecordPresenter.initData(this);
+        recordPresenter.initData(this);
     }
 
-    private void cancelId(String id) {
-        TipDialog tipDialog = new TipDialog(LHCLotteryRecordActivity.this, "您确定要撤单？", "", "", new TipDialog.ClickListener() {
+   /* private void cancelId(String id) {
+        TipDialog tipDialog = new TipDialog(AcountDetailsRecordActivity.this, "您确定要撤单？", "", "", new TipDialog.ClickListener() {
             @Override
             public void but1(Dialog dialog, View v) {
                 dialog.dismiss();
@@ -185,20 +174,21 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
             @Override
             public void but2(Dialog dialog, View v) {
                 dialog.dismiss();
-                lotteryRecordPresenter.cancelOrder(LHCLotteryRecordActivity.this, id);
+                recordPresenter.cancelOrder(AcountDetailsRecordActivity.this, id);
             }
         });
         tipDialog.show();
-    }
-
-
+    }*/
 
 
     @Override
-    public void successMore(List<ResultLotteryRecordBean.PageBean.ListBean> listBeans, boolean ismore) {
+    public void successMore(List<AcountDetailsRecordBean.ListBean> listBeans, boolean ismore) {
         smartRefreshLayout.finishLoadMore();
-        recordAdapter.addData(listBeans);
-        recordAdapter.notifyDataSetChanged();
+       if(recyclerView!=null&&recyclerView.getAdapter()!=null){
+           AcountDetailsAdapter acountDetailsAdapter  = (AcountDetailsAdapter) recyclerView.getAdapter();
+           acountDetailsAdapter.addData(listBeans);
+           acountDetailsAdapter.notifyDataSetChanged();
+       }
         if (!ismore) {
             smartRefreshLayout.setNoMoreData(true);
         }
@@ -218,26 +208,10 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
     }
 
     @Override
-    public void successData(List<ResultLotteryRecordBean.PageBean.ListBean> listBeans, boolean ismore) {
+    public void successData(List<AcountDetailsRecordBean.ListBean> listBeans, boolean ismore) {
         multipleStatusView.showContent();
-        recordAdapter = new LotterytRecordAdapter(listBeans);
-        recordAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
-                String id = recordAdapter.getData().get(position).getOrderId();
-                if (view.getId() == R.id.cancel) {
-                    cancelId(id);
-                }
-            }
-        });
-        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this);
-            }
-        });
-        recyclerView.setAdapter(recordAdapter);
+        AcountDetailsAdapter acountDetailsAdapter = new AcountDetailsAdapter(listBeans);
+        recyclerView.setAdapter(acountDetailsAdapter);
         if (!ismore) {
             smartRefreshLayout.setNoMoreData(true);
         }
@@ -258,14 +232,9 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
     }
 
 
-    @Override
-    public void setprofit(double sbetting, double sprize, double sprofit) {
-        betting.setText(sbetting + "");
-        prize.setText(sprize + "");
-        profit.setText(sprofit + "");
-    }
 
-    @Override
+
+    /*@Override
     public void cancalSuccess(String id) {
         if (recyclerView != null && recyclerView.getAdapter() != null) {
             LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) recyclerView.getAdapter();
@@ -283,11 +252,11 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
     @Override
     public void cancalError(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }
+    }*/
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        lotteryRecordPresenter.query(LHCLotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
+        recordPresenter.query(AcountDetailsRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
 
     }
 
@@ -297,7 +266,7 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
     public void showDateDialog(TextView textView) {
         String data = textView.getText().toString();
         if (TextUtils.isEmpty(data)) {
-            DatePickerDialog dp = new DatePickerDialog(LHCLotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(AcountDetailsRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -307,7 +276,7 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
             dp.show();
         } else {
             String[] strs = data.split("-");
-            DatePickerDialog dp = new DatePickerDialog(LHCLotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(AcountDetailsRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -322,17 +291,13 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
 
     public void query() {
         //点击查询
-        if (lotteryRecordPresenter != null) {
+        if (recordPresenter != null) {
             multipleStatusView.showLoading();
-            if (recordAdapter != null) {
-                recordAdapter.getData().clear();
-                recordAdapter.notifyDataSetChanged();
-            }
             queryLayout.setVisibility(View.GONE);
-            lotteryRecordPresenter.curpage = 1;
+            recordPresenter.curpage = 1;
             smartRefreshLayout.setNoMoreData(false);
             smartRefreshLayout.setEnableLoadMore(true);
-            lotteryRecordPresenter.query(LHCLotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
+            recordPresenter.query(AcountDetailsRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
         }
     }
 
@@ -371,22 +336,60 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
                 showDateDialog((TextView) v);
             }
         });
+        List<String> list1 = new ArrayList<>();
+        list1.add("充值记录");
+        list1.add("取款记录");
+        recordPresenter.curacountType = list1.get(0);
+        acountType.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list1));
+        acountType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                recordPresenter.curacountType = list1.get(position);
+                if (position == 1) {
+                    transactionLayout.setVisibility(View.GONE);
+                    transactionLine.setVisibility(View.GONE);
+                } else {
+                    transactionLayout.setVisibility(View.VISIBLE);
+                    transactionLine.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         List<String> list2 = new ArrayList<>();
         list2.add("全部");
-        list2.add("未开奖");
-        list2.add("已中奖");
-        list2.add("未中奖");
-        list2.add("撤单");
-        lotteryState.setAdapter(new ArrayAdapter<String>(this,R.layout.spinner_layout_item, list2));
-        lotteryState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        list2.add("在线存款");
+        list2.add("快速入款");
+        list2.add("一般存款");
+        recordPresenter.curtransactionType = list2.get(0);
+        transactionType.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list2));
+        transactionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    lotteryRecordPresenter.curlotterystate = "";
-                } else {
-                    lotteryRecordPresenter.curlotterystate = list2.get(position);
-                }
+                recordPresenter.curtransactionType = list2.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        List<String> list3 = new ArrayList<>();//  2处理成功  其他
+        list3.add("全部");
+        list3.add("处理中");
+        list3.add("处理成功");
+        list3.add("处理失败");
+        recordPresenter.curprocessorState = list3.get(0);
+        processorState.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list3));
+        processorState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                recordPresenter.curprocessorState = list3.get(position);
             }
 
             @Override

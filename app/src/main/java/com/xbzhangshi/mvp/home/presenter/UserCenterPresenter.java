@@ -68,7 +68,7 @@ public class UserCenterPresenter extends BasePresenter {
                 if (vipBean == null)
                     return;
                 if (!TextUtils.isEmpty(vipBean.getCurrent())) {
-                    contentView.upVip(vipBean.getCurrent());
+                    contentView.upVip(vipBean);
                 }
             }
         });

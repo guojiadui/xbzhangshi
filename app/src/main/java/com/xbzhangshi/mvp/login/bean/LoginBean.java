@@ -3,6 +3,14 @@ package com.xbzhangshi.mvp.login.bean;
 public class LoginBean {
 
     /**
+     * 1 会员平台账号
+     2 租户超级管理员
+     3 租户管理员
+     4 代理平台账号
+     5 总代理平台账号
+     6 平台试玩账号
+     */
+    /**
      * success : true
      * accessToken : 93631014-b0b1-4cec-84f1-cde4f28438e8
      * content : {"cpVersion":"2","accountType":4,"account":"zhang"}

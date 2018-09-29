@@ -5,7 +5,8 @@ public class LoginUserInfoBean {
     /**
      * success : true
      * accessToken : 5dd7793b-2d0e-4850-ac5b-dfb2185e503b
-     * content : {"account":"zhang","bankAddress":"","bankName":"","betNum":0,"cardNo":"","city":"","email":"","phone":"","province":"","qq":"","sex":0,"userName":"","wechat":""}
+     * content : {"account":"zhang","bankAddress":"","bankName":"","betNum":0,"cardNo":"","city":"",
+     * "email":"","phone":"","province":"","qq":"","sex":0,"userName":"","wechat":""}
      */
 
     private boolean success;

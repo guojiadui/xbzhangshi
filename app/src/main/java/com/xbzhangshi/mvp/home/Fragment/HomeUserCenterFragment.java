@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +23,18 @@ import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.UserCenterAdapter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
+import com.xbzhangshi.mvp.home.bean.VIPBean;
 import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.presenter.UserCenterPresenter;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.record.AcountChangeActivity;
+import com.xbzhangshi.mvp.record.AcountDetailsRecordActivity;
+import com.xbzhangshi.mvp.record.LHCLotteryRecordActivity;
+import com.xbzhangshi.mvp.record.LotteryRecordActivity;
+import com.xbzhangshi.mvp.record.SportsRecordActivity;
 import com.xbzhangshi.mvp.usercenter.BindingBankCardActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
+import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
 import com.xbzhangshi.mvp.usercenter.SetPasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
@@ -43,6 +50,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,8 +72,18 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     TextView vip;
     @BindView(R.id.msg_count)
     TextView msgCount;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    @BindView(R.id.vip_grade)
+    TextView vipGrade;
+    @BindView(R.id.vip_give)
+    TextView vipGive;
+    @BindView(R.id.vip_info_layout)
+    LinearLayout vipInfoLayout;
+    @BindView(R.id.vip_line)
+    View vipLine;
+    @BindView(R.id.vip_next)
+    TextView vipNext;
+    @BindView(R.id.up_vip_need)
+    TextView upVipNeed;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -87,9 +105,20 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     }
 
-    @OnClick({R.id.tv_title1, R.id.tv_title2, R.id.tv_title3})
+    @OnClick({R.id.tv_title1, R.id.tv_title2, R.id.tv_title3, R.id.layout1, R.id.vip,
+            R.id.layout2, R.id.layout3, R.id.layout4, R.id.layout5, R.id.layout6, R.id.layout7,
+            R.id.layout8, R.id.layout9, R.id.layout10, R.id.layout11, R.id.layout12, R.id.msg_count_layout, R.id.logout})
     public void view(View v) {
         switch (v.getId()) {
+            case R.id.vip:
+                if (vipInfoLayout.getVisibility() == View.VISIBLE) {
+                    vipInfoLayout.setVisibility(View.GONE);
+                    vipLine.setVisibility(View.GONE);
+                } else {
+                    vipInfoLayout.setVisibility(View.VISIBLE);
+                    vipLine.setVisibility(View.VISIBLE);
+                }
+                break;
             case R.id.tv_title1:
                 break;
             case R.id.tv_title2:
@@ -114,6 +143,70 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 break;
             case R.id.tv_title3:
                 break;
+            case R.id.layout1://彩票投注记录
+                LotteryRecordActivity.start(mActivity);
+                break;
+            case R.id.layout2://三方彩票记录
+                break;
+            case R.id.layout3://六合投注记录
+                LHCLotteryRecordActivity.start(mActivity);
+                break;
+            case R.id.layout4://体育投注记录
+                SportsRecordActivity.start(mActivity);
+                break;
+            case R.id.layout5://真人投注记录
+                break;
+            case R.id.layout6://棋牌游戏记录
+                break;
+            case R.id.layout7://电子游戏记录
+                break;
+            case R.id.layout8://用户账变记录
+                AcountChangeActivity.start(mActivity);
+                break;
+            case R.id.layout9://用户明细记录
+                AcountDetailsRecordActivity.start(mActivity);
+                break;
+            case R.id.layout10://登录密码修改
+                UpdatePasswordActivity.start(mActivity, UpdatePasswordActivity.type1);
+                break;
+            case R.id.layout11://取款密码修改
+                if (UserInfo.getInstance().getLoginUserInfoBean() != null) {
+                    String pwd = UserInfo.getInstance().getLoginUserInfoBean().getContent().getReceiptPwd();//取款密码
+                    if (TextUtils.isEmpty(pwd)) {
+                        //没有取款密码
+                        SetPasswordActivity.start(mActivity);
+                    } else {
+                        //有取款密码
+                        UpdatePasswordActivity.start(mActivity, UpdatePasswordActivity.type2);
+                    }
+                }
+                break;
+            case R.id.layout12://积分兑换
+                ExchangeActivity.start(mActivity);
+                break;
+            case R.id.msg_count_layout://我的站内信息
+                if (userCenterPresenter != null) {
+                    MessageListActivity.start(mActivity);
+                }
+                break;
+            case R.id.logout://登出
+                TipDialog tipDialog = new TipDialog(mActivity, "确定要退出吗?", "", "", new TipDialog.ClickListener() {
+                    @Override
+                    public void but1(Dialog dialog, View v) {
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void but2(Dialog dialog, View v) {
+                        dialog.dismiss();
+                        if (userCenterPresenter != null) {
+                            userCenterPresenter.Logout(mActivity);
+                        }
+                    }
+                });
+                tipDialog.show();
+                break;
+
         }
     }
 
@@ -126,8 +219,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 UserInfoActivity.start(mActivity);
             }
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        recyclerView.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
+
         EventBus.getDefault().post(new ClearHomeMsgEvent());
     }
 
@@ -160,33 +252,6 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         LogUtils.d("TAG", "setUserVisibleHint" + toString() + ";   isVisibleToUser:" + hidden);
     }
 
-    @OnClick({R.id.logout, R.id.msg_count_layout})
-    public void click(View v) {
-        switch (v.getId()) {
-            case R.id.logout:
-                TipDialog tipDialog = new TipDialog(mActivity, "确定要退出吗?", "", "", new TipDialog.ClickListener() {
-                    @Override
-                    public void but1(Dialog dialog, View v) {
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public void but2(Dialog dialog, View v) {
-                        dialog.dismiss();
-                        if (userCenterPresenter != null) {
-                            userCenterPresenter.Logout(mActivity);
-                        }
-                    }
-                });
-                tipDialog.show();
-                break;
-            case R.id.msg_count_layout:
-                if (userCenterPresenter != null) {
-                    MessageListActivity.start(mActivity);
-                }
-                break;
-        }
-    }
 
     //成功
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -206,8 +271,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     @Override
     public void setUserinfo(String name) {
-        if(!TextUtils.isEmpty(name))
-        userName.setText(name.replace(" ","").replace("\n",""));
+        if (!TextUtils.isEmpty(name))
+            userName.setText(name.replace(" ", "").replace("\n", ""));
         RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
         Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
     }
@@ -229,8 +294,17 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     }
 
     @Override
-    public void upVip(String meg) {
-        vip.setText(meg);
+    public void upVip(VIPBean bean) {
+        if (!TextUtils.isEmpty(bean.getCurrent())) {
+            vip.setText(bean.getCurrent().toUpperCase());
+            vipGrade.setText(bean.getCurrent().toUpperCase());
+        }
+        if (!TextUtils.isEmpty(bean.getNext())) {
+            vipNext.setText(bean.getNext().toUpperCase());
+        }
+        vipGive.setText(bean.getGifMoney() + "");
+        upVipNeed.setText(bean.getNeed() + "");
+
     }
 
     @Override
@@ -245,25 +319,16 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     @Override
     public void setConfig(List<USerCenterOnOffBean> list) {
-        UserCenterAdapter userCenterAdapter = new UserCenterAdapter(list);
+       /* UserCenterAdapter userCenterAdapter = new UserCenterAdapter(list);
         recyclerView.setAdapter(userCenterAdapter);
         userCenterAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //修改取款密码
-               /* if (UserInfo.getInstance().getLoginUserInfoBean() != null) {
-                    String pwd = UserInfo.getInstance().getLoginUserInfoBean().getContent().getReceiptPwd();//取款密码
-                    if (TextUtils.isEmpty(pwd)) {
-                        //没有取款密码
-                        SetPasswordActivity.start(mActivity);
-                    } else {
-                        //有取款密码
-                        UpdatePasswordActivity.start(mActivity, UpdatePasswordActivity.type2);
-                    }
-                }*/
-                AcountChangeActivity.start(mActivity);
+
+
             }
-        });
+        });*/
     }
 
 

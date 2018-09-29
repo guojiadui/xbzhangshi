@@ -61,7 +61,6 @@ public class AcountChangeRecordPresenter extends BasePresenter {
                     List<String> strings = new ArrayList<>();
                     while (iterator.hasNext()) {
                         String key = (String) iterator.next();
-                        Log.e("tag", "key: " + key);
                         MYkeys.put(key, jsonObject.getString(key));
                         strings.add(jsonObject.getString(key));
                     }
@@ -114,7 +113,6 @@ public class AcountChangeRecordPresenter extends BasePresenter {
         Iterator<Map.Entry<String, String>> entries = MYkeys.entrySet().iterator();
         while (entries.hasNext()) {
             Map.Entry<String, String> entry = entries.next();
-            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
             if (curtype.equals(entry.getValue())) {
                 curkey = entry.getKey();
                 break;
