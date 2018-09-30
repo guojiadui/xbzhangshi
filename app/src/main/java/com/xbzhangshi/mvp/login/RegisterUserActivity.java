@@ -139,12 +139,12 @@ public class RegisterUserActivity extends BaseActivity implements IRegisterView 
     }
 
     @Override
-    public void registerSuccess() {
+    public void registerSuccess(String name,String  pwd) {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
         if (registerPresenter != null) {
-            registerPresenter.getUserInfo(this);
+            registerPresenter.login(this,name,pwd);
         }
     }
 

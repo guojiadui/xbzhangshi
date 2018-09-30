@@ -35,8 +35,7 @@ public class RegisterPresenter extends BasePresenter {
     }
 
     IRegisterView contentView;
-    String name;
-    String pwd;
+
   LoadingDailog loadingDialog;
     public RegisterPresenter(IRegisterView contentView) {
         this.contentView = contentView;
@@ -148,9 +147,7 @@ public class RegisterPresenter extends BasePresenter {
                 }
                 RegisterBean registerBean = JSON.parseObject(response.body(), RegisterBean.class);
                 if (registerBean.isSuccess()) {
-                    name = name1;
-                    pwd = pwd1;
-                    contentView.registerSuccess();
+                    contentView.registerSuccess(name1,pwd1);
                 } else {
                     if (!TextUtils.isEmpty(registerBean.getMsg())) {
                         showDialog(context, registerBean.getMsg());
@@ -190,14 +187,41 @@ public class RegisterPresenter extends BasePresenter {
         localBuilder.show();
 
     }
+    public void login(Context context, String name, String pwd  ) {
 
+        Object tag = UserInfo.getInstance().login(context, name, pwd,"" , new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
+                UserInfo.getInstance().setLoginBean(loginBean);
+                if (loginBean.isSuccess()) {
+                    //获取用户信息
+                   getUserInfo(context, name, pwd);
+                } else {
+                    if (!TextUtils.isEmpty(loginBean.getMsg())) {
+                        contentView.LoginonError(loginBean.getMsg());
+                    } else {
+                        contentView.LoginonError("登录失败");
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                contentView.LoginonError("请求出错");
+            }
+        });
+        addNet(tag);
+
+    }
     /**
      * 获取用户信息
      *
      * @param context
      * @param
      */
-    public void getUserInfo(Context context) {
+    private void getUserInfo(Context context,String name,String  pwd) {
         //获取用户信息
         Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
             @Override
@@ -251,6 +275,7 @@ public class RegisterPresenter extends BasePresenter {
             @Override
             public void onSuccess(Response<String> response) {
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
+                UserInfo.getInstance().setLoginBean(loginBean);
                 if (loginBean.isSuccess()) {
                     //获取用户信息
                     getFreeUserInfo(context, loginBean.getContent().getAccount());

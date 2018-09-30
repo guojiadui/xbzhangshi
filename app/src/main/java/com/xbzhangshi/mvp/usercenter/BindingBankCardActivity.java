@@ -110,8 +110,9 @@ public class BindingBankCardActivity extends BaseActivity implements IBindingBla
                 }
             }
         });
-        if (UserInfo.getInstance().loginUserInfoBean != null && !TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getUserName())) {
-            name.setText(UserInfo.getInstance().loginUserInfoBean.getContent().getUserName());
+        if (UserInfo.getInstance().getLoginUserInfoBean() != null &&
+                !TextUtils.isEmpty(UserInfo.getInstance().getLoginUserInfoBean().getContent().getUserName())) {
+            name.setText(UserInfo.getInstance().getLoginUserInfoBean().getContent().getUserName());
             return;
         }
         //初始化

@@ -17,7 +17,7 @@ public interface IRegisterView {
     /**
      * 注册成功
      */
-    public void registerSuccess();
+    public void registerSuccess(String name,String  pwd);
 
     /**
      * 注册失败

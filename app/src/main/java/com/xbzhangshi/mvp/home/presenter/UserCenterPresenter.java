@@ -89,66 +89,17 @@ public class UserCenterPresenter extends BasePresenter {
                 List<USerCenterOnOffBean> strings = new ArrayList<>();
                 while (iterator.hasNext()) {
                     String key = (String) iterator.next();
-                    USerCenterOnOffBean uSerCenterOnOffBean = setbean(key, jsonObject.getString(key));
-                    if(uSerCenterOnOffBean!=null)
+                    String  value = jsonObject.getString(key);
+                    USerCenterOnOffBean uSerCenterOnOffBean = new USerCenterOnOffBean();
+                    uSerCenterOnOffBean.setKey(key);
+                    uSerCenterOnOffBean.setName(value);
                     strings.add(uSerCenterOnOffBean);
-
                 }
-                if (strings.size() > 0) {
-                    contentView.setConfig(strings);
-                }
+                contentView.setConfig(strings);
             }
         });
     }
-    public USerCenterOnOffBean setbean(String key, String value) {
-        USerCenterOnOffBean onOffBean = new USerCenterOnOffBean();
-        switch (key) {
-          /*  case "isSsOnOff"://积分显示
-                break;*/
-            case "isEsOnOff"://积分兑换
-                onOffBean.setKey("isEsOnOff");
-                onOffBean.setName("积分兑换");
-                break;
-            case "isRealOnOff"://真人娱乐开关
-                onOffBean.setKey("isRealOnOff");
-                onOffBean.setName("真人投注记录");
-                break;
-            case "isLhcOnOff"://六合彩
-                onOffBean.setKey("isRealOnOff");
-                onOffBean.setName("六合投注记录");
-                break;
-            case "isTsOnOff"://第三方体育开关
-                onOffBean.setKey("isRealOnOff");
-                onOffBean.setName("体育投注记录");
-                break;
-          /*  case "isTyOnOff"://皇冠体育开关
-                break;*/
-            case "isDzOnOff"://电子游艺开关
-                onOffBean.setKey("isDzOnOff");
-                onOffBean.setName("电子游戏记录");
-                break;
-            case "isChangeMoney"://帐变记录开关
-                onOffBean.setKey("isChangeMoney");
-                onOffBean.setName("用户账变记录");
-                break;
-            case "isChessOnOff"://棋牌开关
-                onOffBean.setKey("isChessOnOff");
-                onOffBean.setName("棋牌游戏记录");
-                break;
-            case "isTlOnOff"://第三方彩票开关
-                onOffBean.setKey("isTlOnOff");
-                onOffBean.setName("三方彩票记录");
-                break;
-             case "isCpOnOff"://彩票游戏开关
-                 onOffBean.setKey("isCpOnOff");
-                 onOffBean.setName("彩票投注记录");
-                break;
-        }
-        if(TextUtils.isEmpty(onOffBean.key)){
-            return  null;
-        }
-        return onOffBean;
-    }
+
    //登录密码修改
    //账号明细记录
 

@@ -101,6 +101,7 @@ public class BettingPresenter extends BasePresenter {
             @Override
             public void onSuccess(Response<String> response) {
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
+                UserInfo.getInstance().setLoginBean(loginBean);
                 if (loginBean.isSuccess()) {
                     //获取用户信息
                     getUserInfo(context, name, pwd);

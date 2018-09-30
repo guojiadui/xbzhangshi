@@ -223,6 +223,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/transaction_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_44"
             android:background="@color/deep_red"

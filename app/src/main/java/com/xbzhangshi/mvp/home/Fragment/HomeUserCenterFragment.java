@@ -2,26 +2,21 @@ package com.xbzhangshi.mvp.home.Fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
-import com.xbzhangshi.mvp.betting.ElectronicGameActivity;
-import com.xbzhangshi.mvp.home.adapter.UserCenterAdapter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
 import com.xbzhangshi.mvp.home.bean.VIPBean;
@@ -44,7 +39,6 @@ import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
 import com.xbzhangshi.single.UserInfo;
-import com.xbzhangshi.view.DividerGridItemDecoration;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.dialog.TipDialog;
 
@@ -53,7 +47,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,6 +80,32 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     TextView vipNext;
     @BindView(R.id.up_vip_need)
     TextView upVipNeed;
+    @BindView(R.id.layout1)
+    RelativeLayout layout1;
+    @BindView(R.id.layout2)
+    RelativeLayout layout2;
+    @BindView(R.id.layout3)
+    RelativeLayout layout3;
+    @BindView(R.id.layout4)
+    RelativeLayout layout4;
+    @BindView(R.id.layout5)
+    RelativeLayout layout5;
+    @BindView(R.id.layout6)
+    RelativeLayout layout6;
+    @BindView(R.id.layout7)
+    RelativeLayout layout7;
+    @BindView(R.id.layout8)
+    RelativeLayout layout8;
+    @BindView(R.id.layout9)
+    RelativeLayout layout9;
+    @BindView(R.id.layout10)
+    RelativeLayout layout10;
+    @BindView(R.id.layout11)
+    RelativeLayout layout11;
+    @BindView(R.id.layout12)
+    RelativeLayout layout12;
+    @BindView(R.id.transaction_layout)
+    LinearLayout transactionLayout;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -134,9 +153,9 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                         return;
                     }
                     //判断真是姓名，银行，卡号绑定银行卡
-                    if (TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getUserName()) ||
-                            TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getBankName()) ||
-                            TextUtils.isEmpty(UserInfo.getInstance().loginUserInfoBean.getContent().getCardNo())) {
+                    if (TextUtils.isEmpty(UserInfo.getInstance().getLoginUserInfoBean().getContent().getUserName()) ||
+                            TextUtils.isEmpty(UserInfo.getInstance().getLoginUserInfoBean().getContent().getBankName()) ||
+                            TextUtils.isEmpty(UserInfo.getInstance().getLoginUserInfoBean().getContent().getCardNo())) {
                         BindingBankCardActivity.start(mActivity);
                         return;
                     }
@@ -150,7 +169,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 LotteryRecordActivity.start(mActivity);
                 break;
             case R.id.layout2://三方彩票记录
-                ThreeLotteryRecordActivity.start(mActivity,"三方彩票记录",ThreeLotteryRecordActivity.type1);
+                ThreeLotteryRecordActivity.start(mActivity, "三方彩票记录", ThreeLotteryRecordActivity.type1);
                 break;
             case R.id.layout3://六合投注记录
                 LHCLotteryRecordActivity.start(mActivity);
@@ -159,10 +178,10 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 SportsRecordActivity.start(mActivity);
                 break;
             case R.id.layout5://真人投注记录
-                ThreeLotteryRecordActivity.start(mActivity,"真人投注记录",ThreeLotteryRecordActivity.type2);
+                ThreeLotteryRecordActivity.start(mActivity, "真人投注记录", ThreeLotteryRecordActivity.type2);
                 break;
             case R.id.layout6://棋牌游戏记录
-                ThreeLotteryRecordActivity.start(mActivity,"棋牌游戏记录",ThreeLotteryRecordActivity.type3);
+                ThreeLotteryRecordActivity.start(mActivity, "棋牌游戏记录", ThreeLotteryRecordActivity.type3);
                 break;
             case R.id.layout7://电子游戏记录
                 ElectronicsLotteryRecordActivity.start(mActivity);
@@ -226,7 +245,19 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 UserInfoActivity.start(mActivity);
             }
         });
-
+        layout1.setVisibility(View.GONE);
+        layout2.setVisibility(View.GONE);
+        layout3.setVisibility(View.GONE);
+        layout4.setVisibility(View.GONE);
+        layout5.setVisibility(View.GONE);
+        layout6.setVisibility(View.GONE);
+        layout7.setVisibility(View.GONE);
+        layout8.setVisibility(View.GONE);
+        layout9.setVisibility(View.GONE);
+        layout10.setVisibility(View.GONE);
+        layout11.setVisibility(View.GONE);
+        layout12.setVisibility(View.GONE);
+        transactionLayout.setVisibility(View.GONE);
         EventBus.getDefault().post(new ClearHomeMsgEvent());
     }
 
@@ -326,16 +357,110 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     @Override
     public void setConfig(List<USerCenterOnOffBean> list) {
-       /* UserCenterAdapter userCenterAdapter = new UserCenterAdapter(list);
-        recyclerView.setAdapter(userCenterAdapter);
-        userCenterAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                //修改取款密码
+        layout1.setVisibility(View.GONE);
+        layout2.setVisibility(View.GONE);
+        layout3.setVisibility(View.GONE);
+        layout4.setVisibility(View.GONE);
+        layout5.setVisibility(View.GONE);
+        layout6.setVisibility(View.GONE);
+        layout7.setVisibility(View.GONE);
+        layout8.setVisibility(View.GONE);
+        layout9.setVisibility(View.GONE);
+        layout10.setVisibility(View.GONE);
+        layout11.setVisibility(View.GONE);
+        layout12.setVisibility(View.GONE);
+        transactionLayout.setVisibility(View.GONE);
 
-
+        if (UserInfo.getInstance().getLoginBean() != null) {
+            layout9.setVisibility(View.VISIBLE);
+            layout10.setVisibility(View.VISIBLE);
+            if(UserInfo.getInstance().getLoginBean().getContent().getAccountType()==6){
+                //试玩账号
+                transactionLayout.setVisibility(View.GONE);
+            }else {
+                //非试玩账号
+                transactionLayout.setVisibility(View.VISIBLE);
+                layout12.setVisibility(View.VISIBLE);
+                layout11.setVisibility(View.VISIBLE);
             }
-        });*/
+        }
+        for(USerCenterOnOffBean user:list){
+            setbean(user.getKey(),user.getName());
+        }
+    }
+
+    public void setbean(String key, String value) {
+        switch (key) {
+          /*  case "isSsOnOff"://积分显示
+                break;*/
+            case "isEsOnOff"://积分兑换
+               if(value.equals("on")){
+                layout12.setVisibility(View.VISIBLE);
+               }else {
+                   layout12.setVisibility(View.GONE);
+               }
+                break;
+            case "isRealOnOff"://真人娱乐开关
+                if(value.equals("on")){
+                    layout5.setVisibility(View.VISIBLE);
+                }else {
+                    layout5.setVisibility(View.GONE);
+                }
+                break;
+            case "isLhcOnOff"://六合彩
+                if(value.equals("on")){
+                    layout3.setVisibility(View.VISIBLE);
+                }else {
+                    layout3.setVisibility(View.GONE);
+                }
+                break;
+            case "isTsOnOff"://第三方体育开关
+                if(value.equals("on")){
+                    layout4.setVisibility(View.VISIBLE);
+                }else {
+                    layout4.setVisibility(View.GONE);
+                }
+                break;
+          /*  case "isTyOnOff"://皇冠体育开关
+                break;*/
+            case "isDzOnOff"://电子游艺开关
+                if(value.equals("on")){
+                    layout7.setVisibility(View.VISIBLE);
+                }else {
+                    layout7.setVisibility(View.GONE);
+                }
+                break;
+            case "isChangeMoney"://帐变记录开关
+                if(value.equals("on")){
+                    layout8.setVisibility(View.VISIBLE);
+                }else {
+                    layout8.setVisibility(View.GONE);
+                }
+                break;
+            case "isChessOnOff"://棋牌开关
+                if(value.equals("on")){
+                    layout6.setVisibility(View.VISIBLE);
+                }else {
+                    layout6.setVisibility(View.GONE);
+                }
+                break;
+            case "isTlOnOff"://第三方彩票开关
+                if(value.equals("on")){
+                    layout2.setVisibility(View.VISIBLE);
+                }else {
+                    layout2.setVisibility(View.GONE);
+                }
+                break;
+            case "isCpOnOff"://彩票游戏开关
+                if(value.equals("on")){
+                    layout1.setVisibility(View.VISIBLE);
+                }else {
+                    layout1.setVisibility(View.GONE);
+                }
+                break;
+        }
+
+
     }
 
 

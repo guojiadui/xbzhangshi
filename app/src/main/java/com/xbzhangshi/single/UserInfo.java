@@ -7,6 +7,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.mvp.login.bean.LoginBean;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
 
 public class UserInfo {
@@ -26,7 +27,17 @@ public class UserInfo {
     public boolean isLogin = false;
     public String mUsername;
     public String mPassword;
-    public LoginUserInfoBean loginUserInfoBean;
+    private LoginUserInfoBean loginUserInfoBean;
+
+    public LoginBean getLoginBean() {
+        return loginBean;
+    }
+
+    public void setLoginBean(LoginBean loginBean) {
+        this.loginBean = loginBean;
+    }
+
+    private LoginBean loginBean;
 
 
     public boolean isLogin() {

@@ -34,7 +34,7 @@ public class UserInfoPresener extends BasePresenter {
     }
 
     public void initData() {
-        LoginUserInfoBean loginBean = UserInfo.getInstance().loginUserInfoBean;
+        LoginUserInfoBean loginBean = UserInfo.getInstance().getLoginUserInfoBean();
         if (loginBean == null) {
             return;
         }
