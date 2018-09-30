@@ -55,8 +55,10 @@ public class AcountDetailsRecordPresenter extends BasePresenter {
         }
 
         String url = null;
+        int type;
         if ("充值记录".equals(curacountType)) {
             url = Url.chogzhijilu;
+            type = 1;
             //5 在线存款 6快速入款 7一般存款
             if ("全部".equals(curtransactionType)) {
                 httpParams.put("type", "");
@@ -69,6 +71,7 @@ public class AcountDetailsRecordPresenter extends BasePresenter {
             }
 
         } else {
+            type = 2;
             url = Url.qukjilu;
         }
 
@@ -96,11 +99,15 @@ public class AcountDetailsRecordPresenter extends BasePresenter {
                     return;
                 }
 
-                if (bean != null ) {
-                    ;
+                if (bean != null) {
+                    if (type == 1) {
+                        contentView.setTotalMpney(type, bean.getAggsData().getTotalMoney());
+                    } else if (type == 2) {
+                        contentView.setTotalMpney(type, bean.getAggsData().getDrawMoney());
+                    }
                     if (bean.getList() != null && bean.getList().size() > 0) {
                         if (curpage == 1) {
-                            contentView.successData(bean.getList(), bean.isHasNext());
+                            contentView.successData(bean.getList(), type, bean.isHasNext());
                         } else {
                             contentView.successMore(bean.getList(), bean.isHasNext());
                         }
@@ -133,34 +140,4 @@ public class AcountDetailsRecordPresenter extends BasePresenter {
     }
 
 
-   /* public void cancelOrder(Context context, String orderId) {
-        HttpParams httpParams = new HttpParams();
-        httpParams.put("orderId", orderId);
-        Object tag = HttpManager.post(context, Url.cancelOrder, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                ResultBean resultBean = null;
-                try {
-                    resultBean = JSON.parseObject(response.body(), ResultBean.class);
-                } catch (Exception e) {
-                    contentView.cancalError("撤单失败");
-                    return;
-                }
-                if (resultBean.isSuccess()) {
-                    contentView.cancalSuccess(orderId);
-                } else {
-                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
-                        contentView.cancalError(resultBean.getMsg());
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.cancalError("请求出错");
-            }
-        });
-        addNet(tag);
-    }*/
 }

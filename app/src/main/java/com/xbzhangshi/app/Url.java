@@ -35,6 +35,10 @@ public class Url {
      public  final  static String bindingBlank ="http://xbzhanshi.com/center/banktrans/draw/cmitbkinfo.do";//绑定银行卡
      public  final  static String chogzhijilu ="http://xbzhanshi.com/center/record/hisrecord/comrd.do";//充值记录
      public  final  static String qukjilu ="http://xbzhanshi.com/center/record/hisrecord/drawrd.do";//取款记录
+     public  final  static String thirdlotteryrecord ="http://xbzhanshi.com/center/record/betrecord/thirdlotteryrecord.do";//三方彩票记录
+     public  final  static String liveBetRecord ="http://xbzhanshi.com/mobile/v3/third/liveBetRecord.do";//真人投注记录
+     public  final  static String chessrecord ="http://xbzhanshi.com/center/record/betrecord/chessrecord.do";//棋牌游戏记录
+     public  final  static String egamerecord ="http://xbzhanshi.com/center/record/betrecord/egamerecord.do";//电子投注记录
 
     /**
      * 投注记录

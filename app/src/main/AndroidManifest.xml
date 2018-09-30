@@ -44,6 +44,8 @@
         <activity android:name=".mvp.usercenter.SetPasswordActivity" />
         <activity android:name=".mvp.usercenter.DrawingMoneyActivity" />
         <activity android:name=".mvp.record.AcountDetailsRecordActivity" />
+        <activity android:name=".mvp.record.ThreeLotteryRecordActivity" />
+        <activity android:name=".mvp.record.adapter.ElectronicsLotteryRecordActivity" />
 
     </application>
 

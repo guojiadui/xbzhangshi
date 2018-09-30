@@ -16,21 +16,14 @@
         android:textColor="@color/record_title_black"/>
 
     <TextView
-        android:id="@+id/money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/font_size_large"
-        android:layout_marginTop="@dimen/dp_2"
-        android:layout_below="@+id/lottery_type"/>
-    <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_large"
-        android:layout_marginTop="@dimen/dp_2"
-        android:layout_below="@+id/money"/>
+        android:layout_marginTop="@dimen/dp_4"
+        android:layout_below="@+id/lottery_type"/>
     <TextView
-        android:id="@+id/result"
+        android:id="@+id/sum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -45,5 +38,12 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_chevron_right_black_24dp"/>
 
-
+    <TextView
+        android:id="@+id/state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:textSize="@dimen/font_size_large"
+        android:layout_alignBottom="@+id/time"/>
 </RelativeLayout>

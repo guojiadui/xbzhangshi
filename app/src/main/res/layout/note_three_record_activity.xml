@@ -39,6 +39,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="#ececec"
                         android:orientation="horizontal">
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -48,14 +49,36 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/total_money_tip"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="投注"
+                                android:textSize="@dimen/font_size_large" />
+
+                            <TextView
+                                android:id="@+id/betting"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_2"
+                                android:textColor="@color/red"
+                                android:textSize="@dimen/font_size_large" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="中奖"
                                 android:textSize="@dimen/font_size_large" />
 
                             <TextView
-                                android:id="@+id/total_money"
+                                android:id="@+id/prize"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dp_2"
@@ -63,15 +86,36 @@
                                 android:textSize="@dimen/font_size_large" />
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="盈利"
+                                android:textSize="@dimen/font_size_large" />
+
+                            <TextView
+                                android:id="@+id/profit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_2"
+                                android:textColor="@color/red"
+                                android:textSize="@dimen/font_size_large" />
+                        </LinearLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
-                <com.scwang.smartrefresh.layout.SmartRefreshLayout
+              <!--  <com.scwang.smartrefresh.layout.SmartRefreshLayout
                     android:id="@+id/smartRefreshLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/dp_3">
+                    android:layout_marginTop="@dimen/dp_3">-->
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerView"
@@ -83,7 +127,7 @@
                         android:layout_marginTop="@dimen/dp_3"
                         android:background="@drawable/bg_rectangle_white"></android.support.v7.widget.RecyclerView>
 
-                    <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                 <!--   <com.scwang.smartrefresh.layout.footer.ClassicsFooter
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:srlClassicsSpinnerStyle="Translate"
@@ -96,8 +140,8 @@
                         app:srlFinishDuration="500"
                         app:srlTextSizeTime="10dp"
                         app:srlTextSizeTitle="16sp"
-                        app:srlTextTimeMarginTop="2dp" />
-                </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                        app:srlTextTimeMarginTop="2dp" />-->
+              <!--  </com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
             </LinearLayout>
 
         </com.classic.common.MultipleStatusView>
@@ -128,7 +172,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp_12"
                         android:layout_marginTop="@dimen/dp_12"
-                        android:text="开始时间"
+                        android:text="开始"
                         android:textSize="@dimen/font_size_large" />
 
                     <TextView
@@ -156,7 +200,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp_12"
                         android:layout_marginTop="@dimen/dp_12"
-                        android:text="截止时间"
+                        android:text="截止"
                         android:textSize="@dimen/font_size_large" />
 
                     <TextView
@@ -170,62 +214,7 @@
                         android:textSize="@dimen/font_size_large" />
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_1"
-                    android:background="@color/line_gray" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_12"
-                        android:layout_marginTop="@dimen/dp_12"
-                        android:text="账户类型"
-                        android:textSize="@dimen/font_size_large" />
-
-                    <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/acount_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:paddingEnd="@dimen/dp_30"
-                        android:paddingStart="@dimen/dp_30"
-                        android:textSize="@dimen/font_size_large" />
-                </RelativeLayout>
-                <View
-                    android:id="@+id/transaction_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_1"
-                    android:background="@color/line_gray" />
-
-                <RelativeLayout
-                    android:id="@+id/transaction_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/dp_12"
-                        android:layout_marginTop="@dimen/dp_12"
-                        android:text="交易类型"
-                        android:textSize="@dimen/font_size_large" />
-
-                    <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/transaction_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:paddingEnd="@dimen/dp_30"
-                        android:paddingStart="@dimen/dp_30"
-                        android:textSize="@dimen/font_size_large" />
-                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -241,11 +230,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp_12"
                         android:layout_marginTop="@dimen/dp_12"
-                        android:text="处理状态"
+                        android:text="平台类型"
                         android:textSize="@dimen/font_size_large" />
 
                     <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/processor_state"
+                        android:id="@+id/type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"

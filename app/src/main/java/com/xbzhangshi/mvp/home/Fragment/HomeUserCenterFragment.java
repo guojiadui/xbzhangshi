@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.betting.ElectronicGameActivity;
 import com.xbzhangshi.mvp.home.adapter.UserCenterAdapter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
@@ -32,6 +33,8 @@ import com.xbzhangshi.mvp.record.AcountDetailsRecordActivity;
 import com.xbzhangshi.mvp.record.LHCLotteryRecordActivity;
 import com.xbzhangshi.mvp.record.LotteryRecordActivity;
 import com.xbzhangshi.mvp.record.SportsRecordActivity;
+import com.xbzhangshi.mvp.record.ThreeLotteryRecordActivity;
+import com.xbzhangshi.mvp.record.adapter.ElectronicsLotteryRecordActivity;
 import com.xbzhangshi.mvp.usercenter.BindingBankCardActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
@@ -147,6 +150,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 LotteryRecordActivity.start(mActivity);
                 break;
             case R.id.layout2://三方彩票记录
+                ThreeLotteryRecordActivity.start(mActivity,"三方彩票记录",ThreeLotteryRecordActivity.type1);
                 break;
             case R.id.layout3://六合投注记录
                 LHCLotteryRecordActivity.start(mActivity);
@@ -155,10 +159,13 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 SportsRecordActivity.start(mActivity);
                 break;
             case R.id.layout5://真人投注记录
+                ThreeLotteryRecordActivity.start(mActivity,"真人投注记录",ThreeLotteryRecordActivity.type2);
                 break;
             case R.id.layout6://棋牌游戏记录
+                ThreeLotteryRecordActivity.start(mActivity,"棋牌游戏记录",ThreeLotteryRecordActivity.type3);
                 break;
             case R.id.layout7://电子游戏记录
+                ElectronicsLotteryRecordActivity.start(mActivity);
                 break;
             case R.id.layout8://用户账变记录
                 AcountChangeActivity.start(mActivity);

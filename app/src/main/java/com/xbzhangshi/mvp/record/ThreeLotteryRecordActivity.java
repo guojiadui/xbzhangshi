@@ -17,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,14 +27,17 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
-import com.xbzhangshi.mvp.record.adapter.AcountDetailsAdapter;
 import com.xbzhangshi.mvp.record.adapter.LotterytRecordAdapter;
-import com.xbzhangshi.mvp.record.baseview.IAcountDetailsBaseView;
-import com.xbzhangshi.mvp.record.bean.AcountDetailsRecordBean;
+import com.xbzhangshi.mvp.record.adapter.ThreeRecordAdapter;
+import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
+import com.xbzhangshi.mvp.record.baseview.IThreeLotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
+import com.xbzhangshi.mvp.record.bean.ThreeLotteryRecordBean;
 import com.xbzhangshi.mvp.record.details.LotteryRecorDetailsActivity;
-import com.xbzhangshi.mvp.record.presenter.AcountDetailsRecordPresenter;
+import com.xbzhangshi.mvp.record.presenter.LotteryRecordPresenter;
+import com.xbzhangshi.mvp.record.presenter.ThreeLotteryRecordPresenter;
+import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.dialog.TipDialog;
 
 import java.util.ArrayList;
@@ -44,13 +46,22 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
- * 账户明细
+ * 三方彩票，真人，棋牌
  */
-public class AcountDetailsRecordActivity extends BaseActivity implements IAcountDetailsBaseView, OnLoadMoreListener {
+public class ThreeLotteryRecordActivity extends BaseActivity implements IThreeLotteryBaseView {
 
+    public static final  int type1 =1;//三方彩票
+    public static final  int type2 =2;//真人
+    public static final  int type3 =3;//棋牌
+
+    public static void start(Context context, String title,int type) {
+        Intent intent = new Intent(context, ThreeLotteryRecordActivity.class);
+        intent.putExtra("title", title);
+        intent.putExtra("type", type);
+        context.startActivity(intent);
+    }
 
     @BindView(R.id.lt_main_title_left)
     TextView ltMainTitleLeft;
@@ -60,58 +71,47 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
     TextView ltMainTitleRight;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.smartRefreshLayout)
-    SmartRefreshLayout smartRefreshLayout;
     @BindView(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
+    @BindView(R.id.customtoolbar)
+    CustomToolbar customtoolbar;
     @BindView(R.id.query_layout)
     LinearLayout queryLayout;
     @BindView(R.id.kong)
     FrameLayout kong;
-
+    @BindView(R.id.betting)
+    TextView betting;
+    @BindView(R.id.prize)
+    TextView prize;
+    @BindView(R.id.profit)
+    TextView profit;
     @BindView(R.id.start_time)
     TextView startTime;
     @BindView(R.id.end_time)
     TextView endTime;
-
+    @BindView(R.id.type)
+    AppCompatSpinner type;
     @BindView(R.id.query)
     TextView query;
-    @BindView(R.id.acount_type)
-    AppCompatSpinner acountType;
-    @BindView(R.id.transaction_type)
-    AppCompatSpinner transactionType;
-    @BindView(R.id.processor_state)
-    AppCompatSpinner processorState;
-    @BindView(R.id.transaction_layout)
-    RelativeLayout transactionLayout;
-    @BindView(R.id.transaction_line)
-    View transactionLine;
-    @BindView(R.id.total_money_tip)
-    TextView moneyTip;
-    @BindView(R.id.total_money)
-    TextView totalMoney;
 
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, AcountDetailsRecordActivity.class);
-        context.startActivity(intent);
-    }
-
-
-    //  PopupWindow selectPopupWindow;//查询选中
-
-    AcountDetailsRecordPresenter recordPresenter;
+    ThreeLotteryRecordPresenter recordPresenter;
 
 
     @Override
     protected int getlayout() {
-        return R.layout.note_acount_details_record_activity;
+        return R.layout.note_three_record_activity;
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        recordPresenter = AcountDetailsRecordPresenter.newInstance(this);
-        ltMainTitle.setText("账户明细");
+        int type = getIntent().getIntExtra("type",1);
+        String title = getIntent().getStringExtra("title");
+        recordPresenter = ThreeLotteryRecordPresenter.newInstance(this,type);
+
+        if (!TextUtils.isEmpty(title)) {
+            ltMainTitle.setText(title);
+        }
         ltMainTitleRight.setText("筛选");
         ltMainTitleLeft.setText("返回");
         ltMainTitleLeft.setOnClickListener(new View.OnClickListener() {
@@ -136,12 +136,11 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
                 }
             }
         });
-        smartRefreshLayout.setEnableLoadMore(true);
-        smartRefreshLayout.setEnableRefresh(false);
-        smartRefreshLayout.setOnLoadMoreListener(this);
+
         multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 query();
             }
         });
@@ -166,56 +165,15 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
 
 
     @Override
-    public void successMore(List<AcountDetailsRecordBean.ListBean> listBeans, boolean ismore) {
-        smartRefreshLayout.finishLoadMore();
-        if (recyclerView != null && recyclerView.getAdapter() != null) {
-            AcountDetailsAdapter acountDetailsAdapter = (AcountDetailsAdapter) recyclerView.getAdapter();
-            acountDetailsAdapter.addData(listBeans);
-            acountDetailsAdapter.notifyDataSetChanged();
-        }
-        if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
-        }
-    }
-
-    @Override
-    public void errorMore(String msg) {
-        smartRefreshLayout.finishLoadMore();
-    }
-
-    @Override
-    public void emptyMore(boolean ismore) {
-        smartRefreshLayout.finishLoadMore();
-        if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
-        }
-    }
-
-    @Override
-    public void successData(List<AcountDetailsRecordBean.ListBean> listBeans, int type, boolean ismore) {
-        multipleStatusView.showContent();
-        AcountDetailsAdapter acountDetailsAdapter = new AcountDetailsAdapter(listBeans, type);
-        recyclerView.setAdapter(acountDetailsAdapter);
-        if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
-        }
-    }
-
-
-    @Override
     public void empty() {
         multipleStatusView.showEmpty();
     }
 
     @Override
-    public void setTotalMpney(int type, int sum) {
-        if (type == 1) {
-            moneyTip.setText("总充值");
-             totalMoney.setText(sum+"");
-        } else if (type == 2) {
-            moneyTip.setText("总取款");
-             totalMoney.setText(sum+"");
-        }
+    public void successData(List<ThreeLotteryRecordBean.RowsBean> listBeans) {
+        multipleStatusView.showContent();
+        ThreeRecordAdapter recordAdapter = new ThreeRecordAdapter(listBeans);
+        recyclerView.setAdapter(recordAdapter);
     }
 
     @Override
@@ -227,33 +185,13 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
     }
 
 
-
-
-    /*@Override
-    public void cancalSuccess(String id) {
-        if (recyclerView != null && recyclerView.getAdapter() != null) {
-            LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) recyclerView.getAdapter();
-            if (recordAdapter.getData() != null && recordAdapter.getData().size() > 0) {
-                for (int i = 0; i < recordAdapter.getData().size(); i++) {
-                    if (id.equals(recordAdapter.getData().get(i).getOrderId())) {
-                        recordAdapter.getData().get(i).setStatus(4);
-                        recordAdapter.notifyItemChanged(i);
-                    }
-                }
-            }
-        }
+    @Override
+    public void setprofit(double sbetting, double sprize, double sprofit) {
+        betting.setText(sbetting + "");
+        prize.setText(sprize + "");
+        profit.setText(sprofit + "");
     }
 
-    @Override
-    public void cancalError(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-    }*/
-
-    @Override
-    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        recordPresenter.query(AcountDetailsRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
-
-    }
 
     /**
      * 显示日期选择
@@ -261,7 +199,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
     public void showDateDialog(TextView textView) {
         String data = textView.getText().toString();
         if (TextUtils.isEmpty(data)) {
-            DatePickerDialog dp = new DatePickerDialog(AcountDetailsRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(ThreeLotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -271,7 +209,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
             dp.show();
         } else {
             String[] strs = data.split("-");
-            DatePickerDialog dp = new DatePickerDialog(AcountDetailsRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dp = new DatePickerDialog(ThreeLotteryRecordActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     textView.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
@@ -290,9 +228,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
             multipleStatusView.showLoading();
             queryLayout.setVisibility(View.GONE);
             recordPresenter.curpage = 1;
-            smartRefreshLayout.setNoMoreData(false);
-            smartRefreshLayout.setEnableLoadMore(true);
-            recordPresenter.query(AcountDetailsRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
+            recordPresenter.query(ThreeLotteryRecordActivity.this, startTime.getText().toString(), endTime.getText().toString());
         }
     }
 
@@ -332,21 +268,23 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
             }
         });
         List<String> list1 = new ArrayList<>();
-        list1.add("充值记录");
-        list1.add("取款记录");
-        recordPresenter.curacountType = list1.get(0);
-        acountType.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list1));
-        acountType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        list1.add("所以记录");
+        list1.add("AG");
+        list1.add("BBIN");
+        list1.add("MG");
+        list1.add("ALLBET");
+        list1.add("OG");
+        list1.add("DS");
+        list1.add("KY");
+        list1.add("BG");
+        list1.add("VR");
+
+        recordPresenter.curPlatformType = list1.get(0);
+        type.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list1));
+        type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recordPresenter.curacountType = list1.get(position);
-                if (position == 1) {
-                    transactionLayout.setVisibility(View.GONE);
-                    transactionLine.setVisibility(View.GONE);
-                } else {
-                    transactionLayout.setVisibility(View.VISIBLE);
-                    transactionLine.setVisibility(View.VISIBLE);
-                }
+                recordPresenter.curPlatformType = list1.get(position);
             }
 
             @Override
@@ -355,43 +293,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
             }
         });
 
-        List<String> list2 = new ArrayList<>();
-        list2.add("全部");
-        list2.add("在线存款");
-        list2.add("快速入款");
-        list2.add("一般存款");
-        recordPresenter.curtransactionType = list2.get(0);
-        transactionType.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list2));
-        transactionType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recordPresenter.curtransactionType = list2.get(position);
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        List<String> list3 = new ArrayList<>();//  2处理成功  其他
-        list3.add("全部");
-        list3.add("处理中");
-        list3.add("处理成功");
-        list3.add("处理失败");
-        recordPresenter.curprocessorState = list3.get(0);
-        processorState.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list3));
-        processorState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recordPresenter.curprocessorState = list3.get(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
 
