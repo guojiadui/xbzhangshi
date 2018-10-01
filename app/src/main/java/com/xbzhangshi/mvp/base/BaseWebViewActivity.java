@@ -7,6 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -15,7 +17,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cookie.store.CookieStore;
 import com.xbzhangshi.R;
+
+import java.util.List;
+
+import okhttp3.Cookie;
 
 
 /**
@@ -35,6 +43,15 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         progressBar= (ProgressBar)findViewById(getProgressBarId());//进度条
         webView = (WebView) findViewById(getWebViewId());
 //        webView.loadUrl("file:///android_asset/test.html");//加载asset文件夹下html
+        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+        List<Cookie> allCookie = cookieStore.getAllCookie();
+        String cookieString = allCookie.get(0).name()+"="+allCookie.get(0).value()+
+                ";domain="+allCookie.get(0).domain();
+
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.setCookie(getUrl(),cookieString);
+        CookieSyncManager.getInstance().sync();
         webView.loadUrl(getUrl());//加载url
 
         //使用webview显示html代码

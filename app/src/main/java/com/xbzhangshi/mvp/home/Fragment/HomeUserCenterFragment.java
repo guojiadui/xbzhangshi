@@ -34,6 +34,7 @@ import com.xbzhangshi.mvp.usercenter.BindingBankCardActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.MessageListActivity;
+import com.xbzhangshi.mvp.usercenter.RealPersonExchangeActivity;
 import com.xbzhangshi.mvp.usercenter.SetPasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
@@ -163,7 +164,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                     DrawingMoneyActivity.start(mActivity);
                 }
                 break;
-            case R.id.tv_title3:
+            case R.id.tv_title3://真人转换
+                RealPersonExchangeActivity.start(mActivity);
                 break;
             case R.id.layout1://彩票投注记录
                 LotteryRecordActivity.start(mActivity);

@@ -36,8 +36,8 @@
 
             <ImageView
                 android:id="@+id/user_icon"
-                android:layout_width="@dimen/dp_45"
-                android:layout_height="@dimen/dp_45"
+                android:layout_width="@dimen/dp_33"
+                android:layout_height="@dimen/dp_33"
                 android:src="@mipmap/user_icon" />
 
             <LinearLayout
@@ -328,15 +328,19 @@
                 android:layout_marginTop="@dimen/dp_10" />
     </LinearLayout>
             <com.xbzhangshi.view.ResizableImageView
+                android:id="@+id/qd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_25"
+                android:visibility="gone"
                 android:scaleType="centerInside"
                 android:src="@drawable/sign_in" />
 
             <com.xbzhangshi.view.ResizableImageView
+                android:id="@+id/dzp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp_16"
                 android:src="@drawable/lucky_disk" />

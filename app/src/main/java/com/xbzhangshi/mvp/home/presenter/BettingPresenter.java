@@ -15,6 +15,7 @@ import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
+import com.xbzhangshi.mvp.home.bean.HomeSwithBean;
 import com.xbzhangshi.mvp.home.bean.NoticeBean;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
@@ -23,6 +24,8 @@ import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.util.DES;
 
 import org.greenrobot.eventbus.EventBus;
+
+import io.reactivex.internal.operators.parallel.ParallelDoOnNextTry;
 
 
 public class BettingPresenter extends BasePresenter {
@@ -58,15 +61,41 @@ public class BettingPresenter extends BasePresenter {
                 LogUtils.e("TAG", response.body());
                 NoticeBean noticeBean = JSON.parseObject(response.body(), NoticeBean.class);
                 if (noticeBean.isSuccess()) {
-                    if (!TextUtils.isEmpty(noticeBean.getContent())){
+                    if (!TextUtils.isEmpty(noticeBean.getContent())) {
                         //是否登出提窗口
-                        boolean ishow  =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP);
-                        contentView.setNotice(noticeBean.getContent(),ishow);
+                        boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP);
+                        contentView.setNotice(noticeBean.getContent(), ishow);
                     }
                 }
             }
         });
         addNet(tag);
+        Object tag2 = HttpManager.get(context, Url.BASE_URL + Url.getUniversalSwitch, null, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                LogUtils.e("TAG", response.body());
+                try {
+                    HomeSwithBean swithBean = JSON.parseObject(response.body(), HomeSwithBean.class);
+                    boolean dzp, qd;
+                    if (!TextUtils.isEmpty(swithBean.getIsDzpOnOff()) && swithBean.getIsDzpOnOff().equals("on")) {
+                        dzp = true;
+                    } else {
+                        dzp = false;
+                    }
+                    if (!TextUtils.isEmpty(swithBean.getIsQdOnOff()) && swithBean.getIsQdOnOff().equals("on")) {
+                        qd = true;
+                    } else {
+                        qd = false;
+                    }
+                    contentView.setSwith(dzp, qd);
+                } catch (Exception e) {
+                    contentView.setSwith(true, true);
+                }
+
+
+            }
+        });
+        addNet(tag2);
     }
 
     /**
@@ -97,7 +126,7 @@ public class BettingPresenter extends BasePresenter {
      */
 
     private void login(Context context, String name, String pwd) {
-        Object tag = UserInfo.getInstance().login(context, name, pwd,"" ,new StringCallback() {
+        Object tag = UserInfo.getInstance().login(context, name, pwd, "", new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);

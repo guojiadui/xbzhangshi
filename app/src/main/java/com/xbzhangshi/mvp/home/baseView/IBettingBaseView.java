@@ -22,4 +22,8 @@ public interface IBettingBaseView   {
      * @param msg
      */
     public void  updateBalance(String msg);
+    /**
+     * 签到大转盘
+     */
+    public  void  setSwith(boolean dzp,boolean qd);
 }

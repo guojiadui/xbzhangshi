@@ -16,6 +16,7 @@ public class Url {
      public  final  static String meminfo ="/meminfo"+BASE_END;//余额
      public  final  static String logout ="/logout"+BASE_END;//登出
      public  final  static String register ="/register"+BASE_END;//注册
+     public  final  static String getUniversalSwitch ="/getUniversalSwitch"+BASE_END;//首页的签到转盘开关
      public  final  static String regVerifycode ="/regVerifycode"+BASE_END;//验  证  码
      public  final  static String regconfig ="/regconfig"+BASE_END;//2.	获取注册界面配置信息
      public  final  static String getVip ="http://xbzhanshi.com/center/member/meminfo/mobieLevel.do";//2.	vip
@@ -39,6 +40,11 @@ public class Url {
      public  final  static String liveBetRecord ="http://xbzhanshi.com/mobile/v3/third/liveBetRecord.do";//真人投注记录
      public  final  static String chessrecord ="http://xbzhanshi.com/center/record/betrecord/chessrecord.do";//棋牌游戏记录
      public  final  static String egamerecord ="http://xbzhanshi.com/center/record/betrecord/egamerecord.do";//电子投注记录
+     public  final  static String getRealNameType ="http://xbzhanshi.com/native/getRealNameType.do";//真人额度转换
+     public  final  static String realpng ="http://xbzhanshi.com/mobile/v3/images/real/";//真人额度转换
+     public  final  static String thirdRealTransMoney ="http://xbzhanshi.com/rc4m/thirdRealTransMoney.do";//转出转入第三方额度
+     public  final  static String getBalanceitem ="http://xbzhanshi.com/rc4m/getBalance.do";//获得某真人余额
+
 
     /**
      * 投注记录

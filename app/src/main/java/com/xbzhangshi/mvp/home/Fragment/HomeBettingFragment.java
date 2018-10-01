@@ -40,6 +40,7 @@ import com.xbzhangshi.mvp.login.RegisterUserActivity;
 import com.xbzhangshi.view.CustomViewPager;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.MarqueeTextView;
+import com.xbzhangshi.view.ResizableImageView;
 import com.xbzhangshi.view.dialog.HomeTipDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -82,7 +83,10 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     View anim1;
     @BindView(R.id.anim2)
     View anim2;
-
+    @BindView(R.id.dzp)
+    ResizableImageView mdzp;
+    @BindView(R.id.qd)
+    ResizableImageView mqd;
 
     public static HomeBettingFragment newInstance() {
         HomeBettingFragment fragment = new HomeBettingFragment();
@@ -317,5 +321,17 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         }
     }
 
-
+    @Override
+    public void setSwith(boolean dzp, boolean qd) {
+        if(dzp){
+            mdzp.setVisibility(View.VISIBLE);
+        }else {
+            mdzp.setVisibility(View.GONE);
+        }
+        if(qd){
+            mqd.setVisibility(View.VISIBLE);
+        }else {
+            mqd.setVisibility(View.GONE);
+        }
+    }
 }
