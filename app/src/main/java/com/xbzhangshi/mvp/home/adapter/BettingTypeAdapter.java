@@ -24,9 +24,9 @@ public class BettingTypeAdapter extends BaseQuickAdapter<BesidesLotteryBean.Cont
 
     @Override
     protected void convert(BaseViewHolder helper, BesidesLotteryBean.ContentBean item) {
-        LogUtils.e("TAG", Url.BASE_PNG_URL + item.getImgUrl());
+
         Glide.with(context)
-                .load(Url.BASE_PNG_URL + item.getImgUrl())
+                .load(Url.APP_URL_HEAD + item.getImgUrl())
                 .into((ImageView) helper.getView(R.id.icon));
         helper.setText(R.id.name, item.getTitle());
     }

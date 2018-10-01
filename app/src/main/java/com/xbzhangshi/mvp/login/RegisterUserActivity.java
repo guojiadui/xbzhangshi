@@ -62,7 +62,13 @@ public class RegisterUserActivity extends BaseActivity implements IRegisterView 
     protected void initView(Bundle savedInstanceState) {
         customtoolbar.setMainTitle("快速注册");
         registerPresenter = RegisterPresenter.newInstance(this);
-
+        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multipleStatusView.showLoading();
+                registerPresenter.getRegconfig(RegisterUserActivity.this);
+            }
+        });
     }
 
     @Override

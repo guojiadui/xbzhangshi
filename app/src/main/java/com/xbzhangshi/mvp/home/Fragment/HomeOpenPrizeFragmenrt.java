@@ -72,6 +72,13 @@ public class HomeOpenPrizeFragmenrt extends BaseFragment implements IOpenPrizeBa
                 openPrizePresenter.getLoadData(mActivity);
             }
         });
+        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multipleStatusView.showLoading();
+                openPrizePresenter.getLoadData(mActivity);
+            }
+        });
         openPrizePresenter = OpenPrizePresenter.newInstance(this);
     }
 

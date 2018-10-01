@@ -41,6 +41,6 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
 
     @Override
     public String getUrl() {
-        return "https://blog.csdn.net/lowprofile_coding/article/details/77928614";
+        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode=BJSC";
     }
 }

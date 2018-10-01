@@ -116,21 +116,6 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(mActivity, BettingDetailsActivity.class);
                 mActivity.startActivity(intent);
-                RxPermissions rxPermissions = new RxPermissions((FragmentActivity) mActivity);
-                rxPermissions
-                        .requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        .subscribe(permission -> { // will emit 2 Permission objects
-                            if (permission.granted) {
-                                // `permission.name` is granted !
-                            } else if (permission.shouldShowRequestPermissionRationale) {
-                                // Denied permission without ask never again
-                            } else {
-                                // Denied permission with ask never again
-                                // Need to go to the settings
-                                PermissionsSetDialog permissionsSetDialog = new PermissionsSetDialog(mActivity, null, "d");
-                                permissionsSetDialog.show();
-                            }
-                        });
             }
         });
         recyclerView.setAdapter(bettingTypeAdapter);

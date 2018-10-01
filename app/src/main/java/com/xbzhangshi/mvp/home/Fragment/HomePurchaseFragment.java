@@ -95,13 +95,6 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
         });
         purchasePesenter = PurchasePesenter.newInstance(this);
         purchasePesenter.init();
-        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                multipleStatusView.showLoading();
-                purchasePesenter.getLoadData(mActivity);
-            }
-        });
     }
 
     @Override

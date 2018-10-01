@@ -121,7 +121,6 @@ public class ElectronicsLotteryRecordActivity extends BaseActivity implements IT
         multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 query();
             }
         });

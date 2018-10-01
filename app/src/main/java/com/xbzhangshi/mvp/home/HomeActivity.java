@@ -1,8 +1,10 @@
 package com.xbzhangshi.mvp.home;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.MyApplication;
 import com.xbzhangshi.mvp.base.BaseActivity;
@@ -32,6 +35,7 @@ import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.view.BottomBar;
 import com.xbzhangshi.view.BottomBarTab;
+import com.xbzhangshi.view.PermissionsSetDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,6 +112,21 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
             }
         });
         initMenu();
+        RxPermissions rxPermissions = new RxPermissions((FragmentActivity) this);
+        rxPermissions
+                .requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(permission -> { // will emit 2 Permission objects
+                    if (permission.granted) {
+                        // `permission.name` is granted !
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        // Denied permission without ask never again
+                    } else {
+                        // Denied permission with ask never again
+                        // Need to go to the settings
+                        PermissionsSetDialog permissionsSetDialog = new PermissionsSetDialog(this, null, "d");
+                        permissionsSetDialog.show();
+                    }
+                });
     }
 
     @Override

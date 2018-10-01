@@ -151,12 +151,12 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
                 }
             }
         });
-        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        /*recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+               // LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
             }
-        });
+        });*/
     }
 
     @Override
