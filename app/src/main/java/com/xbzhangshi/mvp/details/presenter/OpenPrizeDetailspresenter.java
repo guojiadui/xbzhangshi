@@ -41,7 +41,7 @@ public class OpenPrizeDetailspresenter extends BasePresenter {
                         if (curPage == 1) {
                             contentView.onSuccess(listBean.getData().getList(), listBean.getData().isHasNext());
                         } else {
-                            contentView.onMOre(listBean.getData().getList(), listBean.getData().isHasNext());
+                            contentView.onMore(listBean.getData().getList(), listBean.getData().isHasNext());
                         }
                         curPage = listBean.getData().getNextPage();
                     } else {

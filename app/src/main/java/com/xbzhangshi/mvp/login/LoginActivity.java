@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+       // EventBus.getDefault().register(this);
         logInPresenter = LogInPresenter.newInstance(this);
         logInPresenter.init();
         customToolbar.setMainTitle("登录");
@@ -182,14 +182,14 @@ public class LoginActivity extends BaseActivity implements ILoginView {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+   /* @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoginSuccessEvent event) {
         finish();
-    }
+    }*/
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+       // EventBus.getDefault().unregister(this);
         super.onDestroy();
         if (logInPresenter != null) {
             logInPresenter.onDestory();

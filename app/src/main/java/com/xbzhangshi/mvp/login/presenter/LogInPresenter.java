@@ -14,6 +14,7 @@ import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
+import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
@@ -168,6 +169,7 @@ public class LogInPresenter extends BasePresenter {
                     UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
+                    HomeActivity.start(context);
                 } else {
                     if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
                         contentView.LoginonError(loginUserInfoBean.getMsg());
@@ -236,6 +238,7 @@ public class LogInPresenter extends BasePresenter {
                     UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
+                    HomeActivity.start(context);
                 } else {
                     if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
                         contentView.LoginonError(loginUserInfoBean.getMsg());

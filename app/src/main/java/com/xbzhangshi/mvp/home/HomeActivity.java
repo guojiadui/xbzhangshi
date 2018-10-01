@@ -1,5 +1,7 @@
 package com.xbzhangshi.mvp.home;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -39,6 +41,12 @@ import butterknife.BindView;
 
 
 public class HomeActivity extends BaseActivity implements IHomeBaseView {
+
+
+    public  static void start(Context context){
+        Intent intent = new Intent(context,HomeActivity.class);
+        context.startActivity(intent);
+    }
 
     @BindView(R.id.bottomBar)
     BottomBar mBottomBar;

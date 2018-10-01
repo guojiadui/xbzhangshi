@@ -49,6 +49,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
     public static void start(Context context, OpenPrizeBean.DataBean dataBean) {
         Intent intent = new Intent(context, OpenPrizedetailsActivity.class);
         intent.putExtra("name", dataBean.getLotName());
+        intent.putExtra("lotType", dataBean.getLotType());
         intent.putExtra("code", dataBean.getLotCode());
         context.startActivity(intent);
     }
@@ -59,6 +60,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
     }
 
     String name;
+    int lotType;
     String code;
     OpenPrizeDetailspresenter openPrizeDetailspresenter;
     OPenPrizeDetailsAdapter penPrizeDetailsAdapter;
@@ -66,6 +68,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
     @Override
     protected void initView(Bundle savedInstanceState) {
         name = getIntent().getStringExtra("name");
+        lotType = getIntent().getIntExtra("lotType", 0);
         code = getIntent().getStringExtra("code");
         customtoolbar.setMainTitle(name);
         customtoolbar.mTvMainTitleLeft.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +87,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
             @Override
             public void onClick(View v) {
                 multipleStatusView.showLoading();
+                refreshLayout.setNoMoreData(false);
                 openPrizeDetailspresenter.LoadDaata(OpenPrizedetailsActivity.this);
             }
         });
@@ -96,7 +100,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(openPrizeDetailspresenter!=null){
+        if (openPrizeDetailspresenter != null) {
             openPrizeDetailspresenter.onDestory();
         }
     }
@@ -122,10 +126,10 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
         multipleStatusView.showContent();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        penPrizeDetailsAdapter = new OPenPrizeDetailsAdapter(this, contentBeans,code);
+        penPrizeDetailsAdapter = new OPenPrizeDetailsAdapter(this, contentBeans, lotType);
         recyclerView.setAdapter(penPrizeDetailsAdapter);
         if (!hasNext) {
-            refreshLayout.setEnableLoadMore(hasNext);
+            refreshLayout.setNoMoreData(true);
         }
     }
 
@@ -140,24 +144,26 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
     }
 
     @Override
-    public void onMOre(List<OpenPrizeListBean.DataBean.ListBean> contentBeans, boolean hasNext) {
+    public void onMore(List<OpenPrizeListBean.DataBean.ListBean> contentBeans, boolean hasNext) {
         refreshLayout.finishLoadMore();
         if (penPrizeDetailsAdapter == null) {
             return;
         }
         penPrizeDetailsAdapter.addData(contentBeans);
         if (!hasNext) {
-            refreshLayout.setEnableLoadMore(hasNext);
+            refreshLayout.setNoMoreData(true);
         }
     }
 
     @Override
     public void onMoreEmpty() {
+        refreshLayout.finishLoadMore();
         Toast.makeText(this, "数据为空", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMoreError() {
+        refreshLayout.finishLoadMore();
         Toast.makeText(this, "请求出错", Toast.LENGTH_SHORT).show();
     }
 }

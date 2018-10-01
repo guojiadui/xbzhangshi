@@ -20,12 +20,13 @@ import java.util.List;
 
 public class OPenPrizeDetailsAdapter extends BaseQuickAdapter<OpenPrizeListBean.DataBean.ListBean, BaseViewHolder> {
     Context context;
-    String code;
 
-    public OPenPrizeDetailsAdapter(Context context, @Nullable List<OpenPrizeListBean.DataBean.ListBean> data, String code) {
+    public int lotType;
+
+    public OPenPrizeDetailsAdapter(Context context, @Nullable List<OpenPrizeListBean.DataBean.ListBean> data, int lotType) {
         super(R.layout.open_prize_details_adapter_item, data);
         this.context = context;
-        this.code = code;
+        this.lotType = lotType;
     }
 
     @Override
@@ -40,12 +41,12 @@ public class OPenPrizeDetailsAdapter extends BaseQuickAdapter<OpenPrizeListBean.
 
         if (item.getHaoMaList() != null) {
             if (item.getHaoMaList().get(0).contains("?")) {
-                if(helper.getAdapterPosition()==0){
+                if (helper.getAdapterPosition() == 0) {
                     helper.setVisible(R.id.content_tip, true);
                     LinearLayout layout = helper.getView(R.id.content);
                     layout.setVisibility(View.INVISIBLE);
                     layout.removeAllViews();
-                }else {
+                } else {
                     helper.setVisible(R.id.content_tip, false);
                     helper.setVisible(R.id.content, false);
                 }
@@ -67,7 +68,178 @@ public class OPenPrizeDetailsAdapter extends BaseQuickAdapter<OpenPrizeListBean.
 
     public void switchCase(LinearLayout layout, BaseViewHolder helper, OpenPrizeListBean.DataBean.ListBean item) {
         List<String> list = new ArrayList<>();
-        switch (code) {
+        switch (lotType) {
+            case 8://北京赛车,幸运飞艇,澳门赛车
+                for (String s : item.getHaoMaList()) {
+                    list.add(s);
+                }
+                list.add("=");
+                try {
+                    int one = Integer.parseInt(item.getHaoMaList().get(0));
+                    int two = Integer.parseInt(item.getHaoMaList().get(1));
+                    int total = one + two;
+                    if (total >= 10) {
+                        list.add(total + "");
+                    } else {
+                        list.add("0" + total);
+                    }
+                    if (total <= 10) {
+                        list.add("小");
+                    } else {
+                        list.add("大");
+                    }
+                    if (total % 2 == 0) {
+                        list.add("双");
+                    } else {
+                        list.add("单");
+                    }
+                } catch (Exception e) {
+
+                }
+
+                break;
+            case 12://重庆幸运农场,湖南快乐十分,广东快乐十分
+            case 66://十分六合彩
+            case 6://六合彩
+            case 15://福彩3D,排列三
+                for (String s : item.getHaoMaList()) {
+                    list.add(s);
+                }
+                break;
+            case  9://重庆时时彩,天津时时彩,新疆时时彩,分分彩,二分彩,五分彩
+                try {
+                    int total = 0;
+                    for (String s : item.getHaoMaList()) {
+                        list.add(s);
+                        total += Integer.parseInt(s);
+                    }
+                    list.add("=");
+                    if (total >= 10) {
+                        list.add(total + "");
+                    } else {
+                        list.add("0" + total);
+                    }
+                    if (total <= 22) {
+                        list.add("小");
+                    } else {
+                        list.add("大");
+                    }
+                    if (total % 2 == 0) {
+                        list.add("双");
+                    } else {
+                        list.add("单");
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+            case 10://江苏骰宝(快3),快三
+                try {
+                    int total = 0;
+                    for (String s : item.getHaoMaList()) {
+                        list.add(s);
+                        total += Integer.parseInt(s);
+                    }
+                    list.add("=");
+                    if (total >= 10) {
+                        list.add(total + "");
+                    } else {
+                        list.add("0" + total);
+                    }
+                    if (total <= 10) {
+                        list.add("小");
+                    } else {
+                        list.add("大");
+                    }
+                    if (total % 2 == 0) {
+                        list.add("双");
+                    } else {
+                        list.add("单");
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+            case 11://PC蛋蛋
+                try {
+
+                    for (String s : item.getHaoMaList()) {
+                        list.add(s);
+                    }
+                    int total = Integer.parseInt(item.getHaoMaList().get(item.getHaoMaList().size() - 1));
+                    if (total <= 13) {
+                        list.add("小");
+                    } else {
+                        list.add("大");
+                    }
+                    if (total % 2 == 0) {
+                        list.add("双");
+                    } else {
+                        list.add("单");
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+            case 14://广东11选5,山东11选5,江西11选5,上海11选5
+                try {
+                    int total = 0;
+                    for (String s : item.getHaoMaList()) {
+                        list.add(s);
+                        total += Integer.parseInt(s);
+                    }
+                    list.add("=");
+                    if (total >= 10) {
+                        list.add(total + "");
+                    } else {
+                        list.add("0" + total);
+                    }
+                    if (total <= 29) {
+                        list.add("小");
+                    } else {
+                        list.add("大");
+                    }
+                    if (total % 2 == 0) {
+                        list.add("双");
+                    } else {
+                        list.add("单");
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+            default:
+                for (String s : item.getHaoMaList()) {
+                    list.add(s);
+                }
+                break;
+        }
+        //添加
+        for (String s : list) {
+            TextView textView = new TextView(context);
+
+            if (!"-".equals(s) && !"+".equals(s) && !"=".equals(s)) {
+                textView.setTextColor(Color.WHITE);
+                textView.setBackgroundResource(R.drawable.bg_msg_bubble);
+                textView.setPadding(12, 4, 12, 4);
+            }
+            if (s.length() == 1) {
+                if (!"小".equals(s) && !"大".equals(s) && !"单".equals(s) && !"双".equals(s) && !"合".equals(s) && !"质".equals(s)) {
+                    textView.setText(" " + s + " ");
+                } else {
+                    textView.setText(s);
+                }
+            } else {
+                textView.setText(s);
+            }
+            layout.addView(textView);
+
+        }
+    }
+/*
+    public void switchCase(LinearLayout layout, BaseViewHolder helper, OpenPrizeListBean.DataBean.ListBean item) {
+        List<String> list = new ArrayList<>();
+        switch (lotType) {
             case "BJSC"://北京赛车
             case "XYFT"://幸运飞艇
             case "SFSC"://澳门赛车
@@ -230,11 +402,11 @@ public class OPenPrizeDetailsAdapter extends BaseQuickAdapter<OpenPrizeListBean.
 
                 }
                 break;
-             default:
-                 for (String s : item.getHaoMaList()) {
-                     list.add(s);
-                 }
-                 break;
+            default:
+                for (String s : item.getHaoMaList()) {
+                    list.add(s);
+                }
+                break;
         }
         //添加
         for (String s : list) {
@@ -258,4 +430,5 @@ public class OPenPrizeDetailsAdapter extends BaseQuickAdapter<OpenPrizeListBean.
 
         }
     }
+*/
 }

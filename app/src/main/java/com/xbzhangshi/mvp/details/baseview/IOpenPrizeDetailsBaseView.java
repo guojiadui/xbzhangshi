@@ -15,7 +15,7 @@ public interface IOpenPrizeDetailsBaseView {
 
     public void onError();
 
-    public void onMOre(List<OpenPrizeListBean.DataBean.ListBean> contentBeans,boolean hasNext);
+    public void onMore(List<OpenPrizeListBean.DataBean.ListBean> contentBeans, boolean hasNext);
 
     public void onMoreEmpty();
 
