@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvp.details.BettingDetailsActivity" />
+        <activity android:name=".mvp.webview.BettingDetailsActivity" />
         <activity android:name=".mvp.login.LoginActivity"
             android:launchMode="singleTask"/>
         <activity android:name=".mvp.login.RegisterUserActivity"

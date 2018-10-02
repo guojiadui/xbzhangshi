@@ -1,10 +1,8 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,9 +10,8 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 
-import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xbzhangshi.R;
-import com.xbzhangshi.mvp.details.BettingDetailsActivity;
+import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
 import com.xbzhangshi.mvp.home.bean.BesidesLotteryBean;
@@ -24,7 +21,6 @@ import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
 import com.xbzhangshi.view.CustomViewPager;
-import com.xbzhangshi.view.PermissionsSetDialog;
 
 import java.util.List;
 
@@ -76,7 +72,7 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(bettingItemPresenter!=null){
+        if (bettingItemPresenter != null) {
             bettingItemPresenter.onDestory();
         }
     }
@@ -110,12 +106,13 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     @Override
     public void onSuccess(List<BesidesLotteryBean.ContentBean> list) {
         loadingProgress.showContent();
-        BettingTypeAdapter bettingTypeAdapter = new BettingTypeAdapter(mActivity,list);
+        BettingTypeAdapter bettingTypeAdapter = new BettingTypeAdapter(mActivity, list);
         bettingTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(mActivity, BettingDetailsActivity.class);
-                mActivity.startActivity(intent);
+                BettingTypeAdapter bettingTypeAdapter1 = (BettingTypeAdapter) adapter;
+                BesidesLotteryBean.ContentBean contentBean = bettingTypeAdapter1.getData().get(position);
+                BettingDetailsActivity.start(mActivity, contentBean.getPlayCode());
             }
         });
         recyclerView.setAdapter(bettingTypeAdapter);

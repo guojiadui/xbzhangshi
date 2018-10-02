@@ -28,9 +28,9 @@ public abstract class BaseActivity extends FragmentActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 锁定竖屏
         mContext = this;
         setContentView(getlayout());
-        LogUtils.e("TAG",findViewById(android.R.id.content).getClass().getName());
+
         ButterKnife.bind(this);
-        TextView textView = new TextView(this);
+       /* TextView textView = new TextView(this);
         textView.setText("ddd");
         textView.setTextColor(0xff000000);
           frameLayout = findViewById(android.R.id.content);
@@ -39,7 +39,7 @@ public abstract class BaseActivity extends FragmentActivity {
             public void run() {
                 frameLayout.addView(textView);
             }
-        });
+        });*/
 
         MyApplication.getInstance().addActivity(this);
         initView(savedInstanceState);

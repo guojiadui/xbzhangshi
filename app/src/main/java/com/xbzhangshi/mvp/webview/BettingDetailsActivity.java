@@ -1,5 +1,7 @@
-package com.xbzhangshi.mvp.details;
+package com.xbzhangshi.mvp.webview;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -21,9 +23,15 @@ import com.xbzhangshi.mvp.base.BaseWebViewActivity;
 
 
 /**
- * 投注的详情页
+ * 彩票投注的详情页
  */
 public class BettingDetailsActivity extends BaseWebViewActivity {
+
+    public  static  void  start(Context context,String code){
+        Intent intent = new Intent(context,BettingDetailsActivity.class);
+        intent.putExtra("code",code);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getlayout() {
@@ -40,7 +48,8 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     }
 
     @Override
-    public String getUrl() {
-        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode=BJSC";
+    public String getUrl(Bundle savedInstanceState) {
+        String code = getIntent().getStringExtra("code");
+        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode="+code;
     }
 }

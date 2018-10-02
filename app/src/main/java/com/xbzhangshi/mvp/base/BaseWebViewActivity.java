@@ -3,6 +3,7 @@ package com.xbzhangshi.mvp.base;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,42 +32,38 @@ import okhttp3.Cookie;
  */
 public abstract class BaseWebViewActivity extends BaseActivity {
     public WebView webView;
-    private ProgressBar progressBar;
+    private ContentLoadingProgressBar progressBar;
 
     public abstract int getWebViewId();
 
     public abstract int getProgressBarId();
 
-    public abstract String getUrl();
+    public abstract String getUrl(Bundle savedInstanceState);
 
     @SuppressLint("JavascriptInterface")
     @Override
     protected void initView(Bundle savedInstanceState) {
-        progressBar = (ProgressBar) findViewById(getProgressBarId());//进度条
+        progressBar = (ContentLoadingProgressBar) findViewById(getProgressBarId());//进度条
         webView = (WebView) findViewById(getWebViewId());
-
-        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
-        List<Cookie> allCookie = cookieStore.getAllCookie();
-        String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() +
-                ";domain=" + allCookie.get(0).domain();
-
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.setAcceptCookie(true);
-        cookieManager.setCookie(getUrl(), cookieString);
-        CookieSyncManager.getInstance().sync();
+        setCookie(savedInstanceState);
         webView.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);//允许使用js
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);//不使用缓存，只从网络获取数据.
-        webSettings.setSupportZoom(true); //支持屏幕缩放
-        webSettings.setBuiltInZoomControls(true);
-        webView.loadUrl(getUrl());//加载url
+        webView.loadUrl(getUrl(savedInstanceState));//加载url
         // webView.loadUrl("file:///android_asset/test.html");//加载asset文件夹下html
 
     }
-
+public  void  setCookie(Bundle savedInstanceState){
+    CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+    List<Cookie> allCookie = cookieStore.getAllCookie();
+    String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
+    CookieManager cookieManager = CookieManager.getInstance();
+    cookieManager.setAcceptCookie(true);
+    cookieManager.setCookie(getUrl(savedInstanceState), cookieString);
+    CookieSyncManager.getInstance().sync();
+}
     @Override
     protected void initdata() {
 
