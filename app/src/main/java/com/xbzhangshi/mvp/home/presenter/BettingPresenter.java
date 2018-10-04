@@ -63,7 +63,7 @@ public class BettingPresenter extends BasePresenter {
                 if (noticeBean.isSuccess()) {
                     if (!TextUtils.isEmpty(noticeBean.getContent())) {
                         //是否登出提窗口
-                        boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP);
+                        boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP,true);
                         contentView.setNotice(noticeBean.getContent(), ishow);
                     }
                 }

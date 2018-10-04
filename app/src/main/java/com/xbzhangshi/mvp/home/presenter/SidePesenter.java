@@ -36,7 +36,7 @@ public class SidePesenter extends BasePresenter {
 
     public  void  init(Context context){
       boolean red =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.RED_ENVELOPPES_STATE);
-      boolean window =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP);
+      boolean window =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP,true);
       boolean animation =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.ANIMATION_STATE);
         SwitchButton switchButton1  = sideView.findViewById(R.id.check1);
         SwitchButton switchButton2  = sideView.findViewById(R.id.check2);
