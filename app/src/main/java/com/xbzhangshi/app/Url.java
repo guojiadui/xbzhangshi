@@ -46,7 +46,13 @@ public class Url {
      public  final  static String getBalanceitem =APP_URL_HEAD+"/rc4m/getBalance.do";//获得某真人余额
 
 
-    /**
+ /**
+  * webview
+  */
+ public  final  static String pay_select_way =APP_URL_HEAD+"/mobile/v3/pay_select_way.do";//充值的页
+ public  final  static String generatePayOrder =APP_URL_HEAD+"/m/ajax/generatePayOrder.do";//用于充值页绑定cookie的链接
+
+ /**
      * 投注记录
      */
     //public  final  static String getLotteryList ="/getLotteryList"+BASE_END;//获取彩票投注的彩票

@@ -17,4 +17,5 @@ public interface IUserCenterBaseView {
     public  void upVip(VIPBean bean);
     public  void upMsgCount(String msg);
     public  void setConfig(List<USerCenterOnOffBean> list);
+    public  void error( );
 }

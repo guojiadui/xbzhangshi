@@ -17,10 +17,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.xbzhangshi.R;
+import com.xbzhangshi.mvp.home.HomeActivity;
+import com.xbzhangshi.mvp.record.AcountDetailsRecordActivity;
 
 import java.util.List;
 
@@ -45,28 +48,53 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     protected void initView(Bundle savedInstanceState) {
         progressBar = (ContentLoadingProgressBar) findViewById(getProgressBarId());//进度条
         webView = (WebView) findViewById(getWebViewId());
-        setCookie(savedInstanceState);
+
         webView.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
         WebSettings webSettings = webView.getSettings();
+        // webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setJavaScriptEnabled(true);//允许使用js
+        setCookie(savedInstanceState);
         webView.loadUrl(getUrl(savedInstanceState));//加载url
         // webView.loadUrl("file:///android_asset/test.html");//加载asset文件夹下html
 
     }
-public  void  setCookie(Bundle savedInstanceState){
-    CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
-    List<Cookie> allCookie = cookieStore.getAllCookie();
-    String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
-    CookieManager cookieManager = CookieManager.getInstance();
-    cookieManager.setAcceptCookie(true);
-    cookieManager.setCookie(getUrl(savedInstanceState), cookieString);
-    CookieSyncManager.getInstance().sync();
-}
+
+    public void setCookie(Bundle savedInstanceState) {
+        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+        List<Cookie> allCookie = cookieStore.getAllCookie();
+        String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.setCookie(getUrl(savedInstanceState), cookieString);
+        CookieSyncManager.getInstance().sync();
+    }
+
+
     @Override
     protected void initdata() {
 
+    }
+
+    /**
+     * JS调用android的方法
+     *
+     * @param
+     * @return
+     */
+    @JavascriptInterface //仍然必不可少
+    public void confirm(String s) {
+        switch (s) {
+            case "back":
+                finish();
+                break;
+        }
+    }
+
+    @JavascriptInterface //仍然必不可少
+    public String isAndroidApp() {
+        return "'2222'";
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件
@@ -127,7 +155,6 @@ public  void  setCookie(Bundle savedInstanceState){
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.i("ansen", "是否有上一个页面:" + webView.canGoBack());
         if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {//点击返回按钮的时候判断有没有上一页
             webView.goBack(); // goBack()表示返回webView的上一页面
             return true;

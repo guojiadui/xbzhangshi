@@ -22,7 +22,8 @@ import com.xbzhangshi.R;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseFragment extends Fragment {
+public abstract class
+BaseFragment extends Fragment {
 
     protected View mView;
 
@@ -79,7 +80,6 @@ public abstract class BaseFragment extends Fragment {
         initView(mView);*/
         return mView;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -106,6 +106,10 @@ public abstract class BaseFragment extends Fragment {
         prepareFetchData();
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
 
     /**
      * @return 获取fragment的布局

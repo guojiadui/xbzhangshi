@@ -15,6 +15,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 
 import com.xbzhangshi.R;
@@ -52,4 +53,17 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
         String code = getIntent().getStringExtra("code");
         return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode="+code;
     }
+
+    /**
+     * JS调用android的方法
+     *
+     * @param
+     * @return
+     */
+    @JavascriptInterface //仍然必不可少
+    public void confirm(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+
 }

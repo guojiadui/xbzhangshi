@@ -54,10 +54,10 @@ public class UserCenterPresenter extends BasePresenter {
             return;
         }
         contentView.setUserinfo(UserInfo.getInstance().mUsername);
-        getBalance(context);
-        getVip(context);
-        getConfigure(context);
-        getMsgCount(context);
+        getBalance(context);//获取余额
+        getVip(context);//vip信息
+        getConfigure(context);//获取配置
+        getMsgCount(context);//获取站内信数量
     }
 
     public void getVip(Context context) {
@@ -95,7 +95,18 @@ public class UserCenterPresenter extends BasePresenter {
                     uSerCenterOnOffBean.setName(value);
                     strings.add(uSerCenterOnOffBean);
                 }
-                contentView.setConfig(strings);
+                if(strings.size()>0){
+                    contentView.setConfig(strings);
+                }else {
+                    contentView.error();
+                }
+
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                contentView.error();
             }
         });
     }

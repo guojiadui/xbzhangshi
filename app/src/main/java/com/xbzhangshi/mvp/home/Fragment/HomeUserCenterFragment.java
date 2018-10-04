@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
@@ -39,6 +40,7 @@ import com.xbzhangshi.mvp.usercenter.SetPasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UpdatePasswordActivity;
 import com.xbzhangshi.mvp.usercenter.UserInfoActivity;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
+import com.xbzhangshi.mvp.webview.RechargeDetailsActivity;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.dialog.TipDialog;
@@ -107,6 +109,8 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
     RelativeLayout layout12;
     @BindView(R.id.transaction_layout)
     LinearLayout transactionLayout;
+    @BindView(R.id.multipleStatusView)
+    MultipleStatusView multipleStatusView;
 
 
     public static HomeUserCenterFragment newInstance() {
@@ -143,6 +147,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 }
                 break;
             case R.id.tv_title1:
+                RechargeDetailsActivity.start(mActivity);
                 break;
             case R.id.tv_title2:
                 //提款
@@ -247,19 +252,20 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
                 UserInfoActivity.start(mActivity);
             }
         });
-        layout1.setVisibility(View.GONE);
-        layout2.setVisibility(View.GONE);
-        layout3.setVisibility(View.GONE);
-        layout4.setVisibility(View.GONE);
-        layout5.setVisibility(View.GONE);
-        layout6.setVisibility(View.GONE);
-        layout7.setVisibility(View.GONE);
-        layout8.setVisibility(View.GONE);
-        layout9.setVisibility(View.GONE);
-        layout10.setVisibility(View.GONE);
-        layout11.setVisibility(View.GONE);
-        layout12.setVisibility(View.GONE);
+
         transactionLayout.setVisibility(View.GONE);
+        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userCenterPresenter != null) {
+                    multipleStatusView.showLoading();
+                    userCenterPresenter.init(mActivity);
+                }
+            }
+        });
+        /**
+         * 清空底部导航栏的信息
+         */
         EventBus.getDefault().post(new ClearHomeMsgEvent());
     }
 
@@ -268,12 +274,16 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         super.onHiddenChanged(hidden);
         if (!hidden) {
             EventBus.getDefault().post(new ClearHomeMsgEvent());
+            if(userCenterPresenter!=null){
+                userCenterPresenter.getBalance(mActivity);
+            }
         }
     }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
+        multipleStatusView.showLoading();
         userCenterPresenter.init(mActivity);
     }
 
@@ -286,17 +296,14 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        LogUtils.d("TAG", "setUserVisibleHint" + toString() + ";   isVisibleToUser:" + hidden);
-    }
+
 
 
     //成功
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(LoginSuccessEvent event) {
         if (userCenterPresenter != null) {
+            multipleStatusView.showLoading();
             userCenterPresenter.init(mActivity);
         }
     }
@@ -359,6 +366,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
 
     @Override
     public void setConfig(List<USerCenterOnOffBean> list) {
+        multipleStatusView.showContent();
         layout1.setVisibility(View.GONE);
         layout2.setVisibility(View.GONE);
         layout3.setVisibility(View.GONE);
@@ -376,19 +384,24 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         if (UserInfo.getInstance().getLoginBean() != null) {
             layout9.setVisibility(View.VISIBLE);
             layout10.setVisibility(View.VISIBLE);
-            if(UserInfo.getInstance().getLoginBean().getContent().getAccountType()==6){
+            if (UserInfo.getInstance().getLoginBean().getContent().getAccountType() == 6) {
                 //试玩账号
                 transactionLayout.setVisibility(View.GONE);
-            }else {
+            } else {
                 //非试玩账号
                 transactionLayout.setVisibility(View.VISIBLE);
                 layout12.setVisibility(View.VISIBLE);
                 layout11.setVisibility(View.VISIBLE);
             }
         }
-        for(USerCenterOnOffBean user:list){
-            setbean(user.getKey(),user.getName());
+        for (USerCenterOnOffBean user : list) {
+            setbean(user.getKey(), user.getName());
         }
+    }
+
+    @Override
+    public void error() {
+        multipleStatusView.showError();
     }
 
     public void setbean(String key, String value) {
@@ -396,67 +409,67 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
           /*  case "isSsOnOff"://积分显示
                 break;*/
             case "isEsOnOff"://积分兑换
-               if(value.equals("on")){
-                layout12.setVisibility(View.VISIBLE);
-               }else {
-                   layout12.setVisibility(View.GONE);
-               }
+                if (value.equals("on")) {
+                    layout12.setVisibility(View.VISIBLE);
+                } else {
+                    layout12.setVisibility(View.GONE);
+                }
                 break;
             case "isRealOnOff"://真人娱乐开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout5.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout5.setVisibility(View.GONE);
                 }
                 break;
             case "isLhcOnOff"://六合彩
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout3.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout3.setVisibility(View.GONE);
                 }
                 break;
             case "isTsOnOff"://第三方体育开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout4.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout4.setVisibility(View.GONE);
                 }
                 break;
           /*  case "isTyOnOff"://皇冠体育开关
                 break;*/
             case "isDzOnOff"://电子游艺开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout7.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout7.setVisibility(View.GONE);
                 }
                 break;
             case "isChangeMoney"://帐变记录开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout8.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout8.setVisibility(View.GONE);
                 }
                 break;
             case "isChessOnOff"://棋牌开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout6.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout6.setVisibility(View.GONE);
                 }
                 break;
             case "isTlOnOff"://第三方彩票开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout2.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout2.setVisibility(View.GONE);
                 }
                 break;
             case "isCpOnOff"://彩票游戏开关
-                if(value.equals("on")){
+                if (value.equals("on")) {
                     layout1.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     layout1.setVisibility(View.GONE);
                 }
                 break;
