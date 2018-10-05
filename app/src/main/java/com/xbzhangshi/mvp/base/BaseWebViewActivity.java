@@ -53,7 +53,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
         WebSettings webSettings = webView.getSettings();
-        // webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setJavaScriptEnabled(true);//允许使用js
         setCookie(savedInstanceState);
         webView.loadUrl(getUrl(savedInstanceState));//加载url

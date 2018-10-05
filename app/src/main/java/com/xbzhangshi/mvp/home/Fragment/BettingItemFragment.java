@@ -1,11 +1,11 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
@@ -45,7 +45,8 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
     RecyclerView recyclerView;
     @BindView(R.id.loading_progress)
     MultipleStatusView loadingProgress;
-
+    @BindView(R.id.tip)
+    TextView tip;
     CustomViewPager vp;
     int fragmentID;
 
@@ -100,6 +101,10 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
                 bettingItemPresenter.loadDataBesidesLotterys(mActivity, p);
             }
         });
+        int postion = getArguments().getInt("postion");
+        if(postion==1){
+            tip.setVisibility(View.VISIBLE);
+        }
     }
 
 

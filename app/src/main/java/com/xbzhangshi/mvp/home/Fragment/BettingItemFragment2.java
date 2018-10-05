@@ -1,7 +1,6 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +10,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
-import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
-import com.xbzhangshi.mvp.home.bean.BesidesLotteryBean;
 import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
 import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter2;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
@@ -43,6 +40,7 @@ public class BettingItemFragment2 extends BaseFragment implements IBettingItemBa
     RecyclerView recyclerView;
     @BindView(R.id.loading_progress)
     MultipleStatusView loadingProgress;
+
 
     CustomViewPager vp;
     int fragmentID;
@@ -94,6 +92,7 @@ public class BettingItemFragment2 extends BaseFragment implements IBettingItemBa
                 bettingItemPresenter.loadDataLotterys(mActivity );
             }
         });
+
     }
 
 

@@ -8,12 +8,28 @@
     app:emptyView="@layout/layout_empty"
     app:errorView="@layout/layout_error"
     android:orientation="vertical">
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/recyclerView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/dp_4"
-    android:layout_marginEnd="@dimen/dp_4"
-    android:layout_marginTop="@dimen/dp_5">
-</android.support.v7.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:layout_marginTop="@dimen/dp_5">
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/red"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_12"
+            android:layout_marginEnd="@dimen/dp_12"
+            android:visibility="gone"
+            android:text="*温馨提示：皇冠体育可直接下注，沙巴体育和BB体育需要在个人中心进行额度转换才能下注"/>
+    </LinearLayout>
+
 </com.classic.common.MultipleStatusView>

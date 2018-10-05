@@ -165,7 +165,7 @@ public class SportsRecordActivity extends BaseActivity implements ISportsBaseVie
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(SportsRecordActivity.this);
+               // LotteryRecorDetailsActivity.start(SportsRecordActivity.this);
             }
         });
         recyclerView.setAdapter(recordAdapter);

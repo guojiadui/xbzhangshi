@@ -2,24 +2,12 @@ package com.xbzhangshi.mvp.webview;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
 import com.xbzhangshi.R;
-import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.base.BaseWebViewActivity;
 
 
@@ -61,8 +49,8 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
      * @return
      */
     @JavascriptInterface //仍然必不可少
-    public void confirm(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    public void confirm(String s,String d){
+        Toast.makeText(this, s+d, Toast.LENGTH_SHORT).show();
     }
 
 

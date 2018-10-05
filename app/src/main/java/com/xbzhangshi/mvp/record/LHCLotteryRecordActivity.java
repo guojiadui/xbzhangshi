@@ -51,6 +51,7 @@ import butterknife.BindView;
 public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotteryBaseView, OnLoadMoreListener {
 
 
+
     @BindView(R.id.lt_main_title_left)
     TextView ltMainTitleLeft;
     @BindView(R.id.lt_main_title)
@@ -155,7 +156,8 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this);
+                LotterytRecordAdapter recordAdapter1 = (LotterytRecordAdapter) adapter;
+                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this,recordAdapter1.getData().get(position));
             }
         });
         initsearch();
@@ -234,7 +236,8 @@ public class LHCLotteryRecordActivity extends BaseActivity implements ILHCLotter
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this);
+                LotterytRecordAdapter recordAdapter1 = (LotterytRecordAdapter) adapter;
+                LotteryRecorDetailsActivity.start(LHCLotteryRecordActivity.this,recordAdapter1.getData().get(position));
             }
         });
         recyclerView.setAdapter(recordAdapter);

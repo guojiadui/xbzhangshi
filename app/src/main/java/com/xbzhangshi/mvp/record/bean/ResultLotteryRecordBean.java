@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.record.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ResultLotteryRecordBean {
@@ -210,7 +211,7 @@ public class ResultLotteryRecordBean {
             }
         }
 
-        public static class ListBean {
+        public static class ListBean implements Serializable {
             /**
              * account : zhang
              * accountId : 2364

@@ -151,12 +151,13 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
                 }
             }
         });
-        /*recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-               // LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
+               LotteryRecorDetailsActivity.start(LotteryRecordActivity.this,recordAdapter.getData().get(position));
             }
-        });*/
+        });
     }
 
     @Override
@@ -235,7 +236,8 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this);
+                LotterytRecordAdapter recordAdapter = (LotterytRecordAdapter) adapter;
+                LotteryRecorDetailsActivity.start(LotteryRecordActivity.this,recordAdapter.getData().get(position));
             }
         });
         recyclerView.setAdapter(recordAdapter);

@@ -3,7 +3,7 @@ package com.xbzhangshi.app;
 public class Key {
 
     /**
-     * 应用状态的设置
+     * 保存应用设置
      */
     public final static String APP_SET_NAME = "app_set_name";//保持应用设置的文件名称
     public final static String GRID_STATE_KEY = "grid_state_key";//采购大厅的查看list的模式;
@@ -14,7 +14,7 @@ public class Key {
 
 
     /**
-     * 用户信息的保持
+     * 保存户信息的
      */
     public final static String APP_USER_INFO_NAME = "app_user_info_name";//保持用户信息
     public final static String REMMBER_USER_NAME = "remmber_user_name";//记住用户名
