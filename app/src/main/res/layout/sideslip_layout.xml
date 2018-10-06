@@ -377,7 +377,6 @@
             android:id="@+id/side_app_exit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_15"
             android:background="@drawable/sideslip_btn_selected">
 
             <ImageView
@@ -403,7 +402,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
-            android:background="#393939" />
+            android:background="#393939"
+            android:launchMode="singleTask"/>
     </LinearLayout>
 </ScrollView>
 </LinearLayout>

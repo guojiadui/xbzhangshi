@@ -62,7 +62,6 @@ public class LotteryRecorDetailsActivity extends BaseActivity {
         });
         listBean = (ResultLotteryRecordBean.PageBean.ListBean) getIntent().getSerializableExtra("obj");
 
-
         if (listBean != null) {
             if(!TextUtils.isEmpty(listBean.getOrderId())){
                 String num = "订单号:  " + "<font color=\"red\">" + listBean.getOrderId() + "</font>";

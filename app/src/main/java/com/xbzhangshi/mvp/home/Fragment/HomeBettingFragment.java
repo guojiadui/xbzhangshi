@@ -37,6 +37,8 @@ import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.RegisterUserActivity;
+import com.xbzhangshi.mvp.webview.SignInActivity;
+import com.xbzhangshi.mvp.webview.WheelActivity;
 import com.xbzhangshi.view.CustomViewPager;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.MarqueeTextView;
@@ -325,11 +327,23 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     public void setSwith(boolean dzp, boolean qd) {
         if(dzp){
             mdzp.setVisibility(View.VISIBLE);
+            mdzp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WheelActivity.start(mActivity);
+                }
+            });
         }else {
             mdzp.setVisibility(View.GONE);
         }
         if(qd){
             mqd.setVisibility(View.VISIBLE);
+            mqd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SignInActivity.start(mActivity);
+                }
+            });
         }else {
             mqd.setVisibility(View.GONE);
         }

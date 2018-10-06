@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/item"
+    android:layout_margin="@dimen/dp_1"
+    android:background="@drawable/bg_rectangle_white">
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dp_7"
+        android:layout_marginBottom="@dimen/dp_7"
+        android:textStyle="bold"
+        android:textColor="#a46626"
+        android:textSize="@dimen/font_size_xlarge"
+        android:text="30"/>
+</FrameLayout>

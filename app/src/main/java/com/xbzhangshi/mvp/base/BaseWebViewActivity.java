@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.base;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
@@ -13,12 +14,16 @@ import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.xbzhangshi.R;
@@ -52,9 +57,32 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         webView.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setJavaScriptEnabled(true);//允许使用js
+        WebSettings settings = webView.getSettings();
+
+// webview启用javascript支持 用于访问页面中的javascript
+        settings.setJavaScriptEnabled(true);
+
+        //设置WebView缓存模式 默认断网情况下不缓存
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+//让WebView支持DOM storage API
+        settings.setDomStorageEnabled(true);
+
+//让WebView支持播放插件
+        settings.setPluginState(WebSettings.PluginState.ON);
+//设置在WebView内部是否允许访问文件
+        settings.setAllowFileAccess(true);
+//设置脚本是否允许自动打开弹窗
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+// 加快HTML网页加载完成速度
+        if (Build.VERSION.SDK_INT >= 19) {
+            settings.setLoadsImagesAutomatically(true);
+        } else {
+            settings.setLoadsImagesAutomatically(false);
+        }
+// 设置编码格式
+        settings.setDefaultTextEncodingName("utf-8");
+
+
         setCookie(savedInstanceState);
         webView.loadUrl(getUrl(savedInstanceState));//加载url
         // webView.loadUrl("file:///android_asset/test.html");//加载asset文件夹下html
@@ -89,6 +117,9 @@ public abstract class BaseWebViewActivity extends BaseActivity {
             case "back":
                 finish();
                 break;
+            case "homePage":
+                HomeActivity.start(this); //返回首页
+                break;
         }
     }
 
@@ -109,15 +140,26 @@ public abstract class BaseWebViewActivity extends BaseActivity {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-       /* @Override
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            Log.i("ansen","拦截url:"+errorResponse);
+            super.onReceivedHttpError(view, request, errorResponse);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            Log.i("ansen","拦截url:"+error);
+            super.onReceivedError(view, request, error);
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.i("ansen","拦截url:"+url);
             if(url.equals("http://www.google.com/")){
-                Toast.makeText(MainActivity.this,"国内不能访问google,拦截该url",Toast.LENGTH_LONG).show();
                 return true;//表示我已经处理过了
             }
             return super.shouldOverrideUrlLoading(view, url);
-        }*/
+        }
 
     };
 
@@ -126,6 +168,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         //不支持js的alert弹窗，需要自己监听然后通过dialog弹窗
         @Override
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
+            Toast.makeText(BaseWebViewActivity.this, "不支持", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder localBuilder = new AlertDialog.Builder(webView.getContext());
             localBuilder.setMessage(message).setPositiveButton("确定", null);
             localBuilder.setCancelable(false);
@@ -175,9 +218,14 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //释放资源
-        webView.destroy();
-        webView = null;
+        if (webView != null) {
+            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            webView.clearHistory();
+            webView.destroy();
+            webView = null;
+        }
+
+
     }
 
 

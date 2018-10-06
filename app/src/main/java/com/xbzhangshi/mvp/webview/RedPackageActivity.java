@@ -6,20 +6,17 @@ import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
-
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseWebViewActivity;
-import com.xbzhangshi.mvp.details.OpenPrizedetailsActivity;
 
 
 /**
- * 彩票投注的详情页
+ * 签到
  */
-public class BettingDetailsActivity extends BaseWebViewActivity {
+public class RedPackageActivity extends BaseWebViewActivity {
 
-    public  static  void  start(Context context,String code){
-        Intent intent = new Intent(context,BettingDetailsActivity.class);
-        intent.putExtra("code",code);
+    public  static  void  start(Context context ){
+        Intent intent = new Intent(context,RedPackageActivity.class);
         context.startActivity(intent);
     }
 
@@ -39,15 +36,8 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
 
     @Override
     public String getUrl(Bundle savedInstanceState) {
-        String code = getIntent().getStringExtra("code");
-        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode="+code;
-    }
 
-    @Override
-    protected void onRestart() {
-        String code = getIntent().getStringExtra("code");
-        webView.loadUrl("http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode="+code);
-        super.onRestart();
+        return "http://xbzhanshi.com/mobile/redPackage.do" ;
     }
 
     /**
@@ -58,7 +48,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
      */
     @JavascriptInterface //仍然必不可少
     public void confirm(String s,String d){
-
+        Toast.makeText(this, s+d, Toast.LENGTH_SHORT).show();
     }
 
 

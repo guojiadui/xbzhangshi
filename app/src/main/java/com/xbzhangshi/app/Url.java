@@ -44,6 +44,8 @@ public class Url {
      public  final  static String realpng =APP_URL_HEAD+"/mobile/v3/images/real/";//真人额度转换
      public  final  static String thirdRealTransMoney =APP_URL_HEAD+"/rc4m/thirdRealTransMoney.do";//转出转入第三方额度
      public  final  static String getBalanceitem =APP_URL_HEAD+"/rc4m/getBalance.do";//获得某真人余额
+     public  final  static String signByMonth =APP_URL_HEAD+"/sign/signByMonth.do";//获取每个月的签到天
+     public  final  static String signIn =APP_URL_HEAD+"/sign/signIn.do";//签到
 
 
  /**

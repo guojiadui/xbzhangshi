@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.xbzhangshi.mvp.home.presenter.HomePresenter;
 import com.xbzhangshi.mvp.home.presenter.SidePesenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.webview.RedPackageActivity;
 import com.xbzhangshi.view.BottomBar;
 import com.xbzhangshi.view.BottomBarTab;
 import com.xbzhangshi.view.PermissionsSetDialog;
@@ -54,6 +56,8 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
 
     @BindView(R.id.bottomBar)
     BottomBar mBottomBar;
+    @BindView(R.id.red_pack)
+    Button radpack;
     HomeBettingFragment homeBettingFragment;//投注
     HomePurchaseFragment homePurchaseFragment;//购彩
     HomeOpenPrizeFragmenrt homeOpenPrizeFragmenrt;//开奖公告
@@ -81,6 +85,12 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
                 .addItem(new BottomBarTab(this, R.mipmap.grzx_nor, "个人中心"));
         mBottomBar.setCurrentItem(0);
         switchFragment(0);
+        radpack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RedPackageActivity.start(HomeActivity.this);
+            }
+        });
         mBottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override
             public boolean onInterceptTouchEvent(int position) {
