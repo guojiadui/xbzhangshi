@@ -74,11 +74,11 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 //设置脚本是否允许自动打开弹窗
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
 // 加快HTML网页加载完成速度
-        if (Build.VERSION.SDK_INT >= 19) {
+        /*if (Build.VERSION.SDK_INT >= 19) {
             settings.setLoadsImagesAutomatically(true);
         } else {
             settings.setLoadsImagesAutomatically(false);
-        }
+        }*/
 // 设置编码格式
         settings.setDefaultTextEncodingName("utf-8");
 
@@ -142,22 +142,22 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
         @Override
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            Log.i("ansen","拦截Error:"+errorResponse.getEncoding());
-            Log.i("ansen","拦截Error:"+errorResponse.getMimeType());
-            Log.i("ansen","拦截Error:"+errorResponse.getData());
+            Log.i("ansen", "拦截Error:" + errorResponse.getEncoding());
+            Log.i("ansen", "拦截Error:" + errorResponse.getMimeType());
+            Log.i("ansen", "拦截Error:" + errorResponse.getData());
             super.onReceivedHttpError(view, request, errorResponse);
         }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            Log.i("ansen","拦截onReceivedError:"+error);
+            Log.i("ansen", "拦截onReceivedError:" + error);
             super.onReceivedError(view, request, error);
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.i("ansen","拦截url:"+url);
-            if(url.equals("http://www.google.com/")){
+            Log.i("ansen", "拦截url:" + url);
+            if (url.equals("http://www.google.com/")) {
                 return true;//表示我已经处理过了
             }
             return super.shouldOverrideUrlLoading(view, url);

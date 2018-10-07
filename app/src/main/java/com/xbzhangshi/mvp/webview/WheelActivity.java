@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -59,7 +60,7 @@ public class WheelActivity extends BaseActivity {
     @BindView(R.id.integral)
     TextView integral;
     @BindView(R.id.scrollView)
-     ScrollView scrollView;
+    ScrollView scrollView;
 
     private List<Object> urlList;
 
@@ -101,12 +102,16 @@ public class WheelActivity extends BaseActivity {
         initPrizeList();
         initLuckPan();
         getConfigure();
-        scrollView.post(new Runnable() {
-            @Override
-            public void run() {
-            scrollView.scrollTo(0,0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (urlList != null) {
+            for (Object o : urlList) {
+                OkGo.getInstance().cancelTag(o);
             }
-        });
+        }
     }
 
     /**

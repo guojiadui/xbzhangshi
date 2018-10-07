@@ -26,19 +26,25 @@ import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
 
 import com.xbzhangshi.app.Key;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
+import com.xbzhangshi.mvp.home.event.RedPackEvent;
 import com.xbzhangshi.mvp.home.event.SelectEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.RegisterUserActivity;
+import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
+import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
+import com.xbzhangshi.mvp.webview.RedPackageActivity;
 import com.xbzhangshi.mvp.webview.SignInActivity;
 import com.xbzhangshi.mvp.webview.WheelActivity;
+import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.CustomViewPager;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
 import com.xbzhangshi.view.MarqueeTextView;
@@ -70,7 +76,6 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     BettingPresenter bettingPresenter;
     @BindView(R.id.notice)
     MarqueeTextView notice;
-
     @BindView(R.id.login)
     TextView login;
     @BindView(R.id.register)
@@ -89,10 +94,11 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     ResizableImageView mdzp;
     @BindView(R.id.qd)
     ResizableImageView mqd;
+    @BindView(R.id.red_pack)
+    ImageView redPack;
 
     public static HomeBettingFragment newInstance() {
         HomeBettingFragment fragment = new HomeBettingFragment();
-
         return fragment;
     }
 
@@ -122,9 +128,17 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         }
     }
 
-    @OnClick({R.id.menu1, R.id.menu2, R.id.menu3, R.id.menu4, R.id.login, R.id.register})
+    @OnClick({R.id.menu1, R.id.menu2, R.id.menu3, R.id.menu4, R.id.login, R.id.register, R.id.red_pack})
     public void click(View v) {
         switch (v.getId()) {
+            case R.id.red_pack:
+                //判断是否登录
+                if (!UserInfo.getInstance().isLogin) {
+                    LoginActivity.startLogin(mActivity);
+                    return;
+                }
+                RedPackageActivity.start(mActivity);
+                break;
             case R.id.menu1:
             case R.id.menu2:
                 //判断是否登录
@@ -136,6 +150,16 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
                     return;
                 }
                 EventBus.getDefault().post(new SelectEvent(3));
+                break;
+            case R.id.menu3://优惠活动
+                if (!UserInfo.getInstance().isLogin) {
+                    LoginActivity.startLogin(mActivity);
+                    return;
+                }
+                PreferentialActivitiy.start(mActivity);
+                break;
+            case R.id.menu4://客服
+                CustomerServiceActivity.start(mActivity);
                 break;
             case R.id.login:
                 LoginActivity.startLogin(mActivity);
@@ -170,10 +194,26 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(RedPackEvent event) {
+        if (event.isFlag()) {
+            redPack.setVisibility(View.VISIBLE);
+        } else {
+            redPack.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void initView(View view) {
+        boolean red = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.RED_ENVELOPPES_STATE, true);
+        if (red) {
+            redPack.setVisibility(View.VISIBLE);
+        } else {
+            redPack.setVisibility(View.GONE);
+        }
+
         Boolean an = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.ANIMATION_STATE);
-        if(an){
+        if (an) {
             notice.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -196,7 +236,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
 
                 }
             }, 50);
-        }else {
+        } else {
             anim1.setVisibility(View.VISIBLE);
             anim2.setVisibility(View.VISIBLE);
         }
@@ -319,32 +359,40 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             balance.setVisibility(View.VISIBLE);
             balance.setText(msg);
             RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
-            Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
+            Glide.with(this).load(Url.touxiang).apply(requestOptions).into(userIcon);
         }
     }
 
     @Override
     public void setSwith(boolean dzp, boolean qd) {
-        if(dzp){
+        if (dzp) {
             mdzp.setVisibility(View.VISIBLE);
             mdzp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!UserInfo.getInstance().isLogin) {
+                        LoginActivity.startLogin(mActivity);
+                        return;
+                    }
                     WheelActivity.start(mActivity);
                 }
             });
-        }else {
+        } else {
             mdzp.setVisibility(View.GONE);
         }
-        if(qd){
+        if (qd) {
             mqd.setVisibility(View.VISIBLE);
             mqd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!UserInfo.getInstance().isLogin) {
+                        LoginActivity.startLogin(mActivity);
+                        return;
+                    }
                     SignInActivity.start(mActivity);
                 }
             });
-        }else {
+        } else {
             mqd.setVisibility(View.GONE);
         }
     }

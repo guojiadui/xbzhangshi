@@ -1,9 +1,11 @@
 package com.xbzhangshi.mvp.home.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -18,7 +20,12 @@ import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
+import com.xbzhangshi.mvp.home.event.RedPackEvent;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
 import com.xbzhangshi.single.UserInfo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.DecimalFormat;
 
@@ -34,8 +41,22 @@ public class SidePesenter extends BasePresenter {
     }
 
 
-    public  void  init(Context context){
-      boolean red =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.RED_ENVELOPPES_STATE);
+    public  void  init(Activity context){
+
+        RelativeLayout act_info  = sideView.findViewById(R.id.act_info);
+        RelativeLayout help_center  = sideView.findViewById(R.id.help_center);
+        act_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!UserInfo.getInstance().isLogin){
+                    LoginActivity.startLogin(context);
+                    return;
+                }
+                PreferentialActivitiy.start(context);
+            }
+        });
+
+      boolean red =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.RED_ENVELOPPES_STATE,true);
       boolean window =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP,true);
       boolean animation =  SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.ANIMATION_STATE);
         SwitchButton switchButton1  = sideView.findViewById(R.id.check1);
@@ -50,6 +71,7 @@ public class SidePesenter extends BasePresenter {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 SPUtils.getInstance(Key.APP_SET_NAME).put(Key.RED_ENVELOPPES_STATE,isChecked);
+                EventBus.getDefault().post(new RedPackEvent(isChecked));
             }
         });
         switchButton2.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {

@@ -20,10 +20,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/dp_55"
         android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/red_pack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"/>
+
 </FrameLayout>
 

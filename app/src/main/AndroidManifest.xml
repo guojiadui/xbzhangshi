@@ -57,6 +57,9 @@
         <activity android:name=".mvp.webview.SignInActivity" />
         <activity android:name=".mvp.webview.WheelActivity" />
         <activity android:name=".mvp.webview.RedPackageActivity" />
+        <activity android:name=".mvp.webview.PreferentialActivitiy" />
+        <activity android:name=".mvp.webview.ActDescActivity" />
+        <activity android:name=".mvp.webview.CustomerServiceActivity" />
 
     </application>
 

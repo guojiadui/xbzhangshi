@@ -66,8 +66,9 @@
                         android:id="@+id/continuity_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/dp_10"
-                        android:layout_marginTop="@dimen/dp_8"
+                       android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="@dimen/dp_5"
+                        android:layout_centerVertical="true"
                         android:textSize="@dimen/font_size_large"
                         android:textColor="@color/black"
                         android:text="已经连续签到0天"/>

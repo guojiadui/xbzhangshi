@@ -110,6 +110,7 @@
             android:background="#393939" />
 
         <RelativeLayout
+            android:id="@+id/act_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/sideslip_btn_selected"
@@ -164,6 +165,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/help_center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/sideslip_btn_selected"

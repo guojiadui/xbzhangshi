@@ -56,8 +56,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
 
     @BindView(R.id.bottomBar)
     BottomBar mBottomBar;
-    @BindView(R.id.red_pack)
-    Button radpack;
+
     HomeBettingFragment homeBettingFragment;//投注
     HomePurchaseFragment homePurchaseFragment;//购彩
     HomeOpenPrizeFragmenrt homeOpenPrizeFragmenrt;//开奖公告
@@ -85,12 +84,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
                 .addItem(new BottomBarTab(this, R.mipmap.grzx_nor, "个人中心"));
         mBottomBar.setCurrentItem(0);
         switchFragment(0);
-        radpack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RedPackageActivity.start(HomeActivity.this);
-            }
-        });
+
         mBottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override
             public boolean onInterceptTouchEvent(int position) {
@@ -122,7 +116,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
             }
         });
         initMenu();
-        RxPermissions rxPermissions = new RxPermissions((FragmentActivity) this);
+        /*RxPermissions rxPermissions = new RxPermissions((FragmentActivity) this);
         rxPermissions
                 .requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(permission -> { // will emit 2 Permission objects
@@ -136,7 +130,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
                         PermissionsSetDialog permissionsSetDialog = new PermissionsSetDialog(this, null, "d");
                         permissionsSetDialog.show();
                     }
-                });
+                });*/
     }
 
     @Override

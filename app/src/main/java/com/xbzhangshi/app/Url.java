@@ -48,6 +48,12 @@ public class Url {
      public  final  static String signIn =APP_URL_HEAD+"/sign/signIn.do";//签到
      public  final  static String lastrd =APP_URL_HEAD+"/center/active/lastrd.do";//获奖名单
      public  final  static String award =APP_URL_HEAD+"/center/active/award.do";//抽奖
+     public  final  static String touxiang =APP_URL_HEAD+"/mobile/v3/images/touxiang.png";//头像
+     public  final  static String active_infos =APP_URL_HEAD+"/native/active_infos.do";//获取优惠活动列表
+     public  final  static String activeDesc =APP_URL_HEAD+"/mobile/v3/activeDesc.do";//活动详情
+     public  final  static String redPackage =APP_URL_HEAD+"/mobile/redPackage.do";//红包页链接
+     public  final  static String grab =APP_URL_HEAD+"/center/redpacket/grab.do";//绑定cookie的红包链接
+     public  final  static String customerService =APP_URL_HEAD+"/mobile/v3/customerService.do";//客服
 
 
  /**

@@ -46,7 +46,7 @@ public class BettingPresenter extends BasePresenter {
 
     }
 
-    public boolean isLogin() {
+    public static boolean isLogin() {
         return UserInfo.getInstance().isLogin();
     }
 
