@@ -155,7 +155,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         //为侧滑菜单设置布局
         viewMenu = LayoutInflater.from(this).inflate(R.layout.sideslip_layout, null);
         menu.setMenu(viewMenu);
-        sidePesenter = SidePesenter.newInstance(viewMenu);
+        sidePesenter = SidePesenter.newInstance(menu,viewMenu);
         sidePesenter.init(this);
         RelativeLayout sideExit = viewMenu.findViewById(R.id.side_app_exit);
         sideExit.setOnClickListener(new View.OnClickListener() {

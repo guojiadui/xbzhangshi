@@ -142,10 +142,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             case R.id.menu1:
             case R.id.menu2:
                 //判断是否登录
-                if (bettingPresenter == null) {
-                    return;
-                }
-                if (!bettingPresenter.isLogin()) {
+                if (!UserInfo.getInstance().isLogin) {
                     LoginActivity.startLogin(mActivity);
                     return;
                 }

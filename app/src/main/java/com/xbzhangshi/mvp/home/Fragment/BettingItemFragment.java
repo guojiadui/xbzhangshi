@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 
 import com.xbzhangshi.R;
+import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
@@ -20,6 +21,7 @@ import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
 
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
+import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.CustomViewPager;
 
 import java.util.List;
@@ -115,6 +117,7 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
         bettingTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
                 BettingTypeAdapter bettingTypeAdapter1 = (BettingTypeAdapter) adapter;
                 BesidesLotteryBean.ContentBean contentBean = bettingTypeAdapter1.getData().get(position);
                 BettingDetailsActivity.start(mActivity, contentBean.getPlayCode());

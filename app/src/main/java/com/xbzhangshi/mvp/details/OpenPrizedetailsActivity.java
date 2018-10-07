@@ -22,6 +22,7 @@ import com.xbzhangshi.mvp.details.baseview.IOpenPrizeDetailsBaseView;
 import com.xbzhangshi.mvp.details.bean.OpenPrizeListBean;
 import com.xbzhangshi.mvp.details.presenter.OpenPrizeDetailspresenter;
 import com.xbzhangshi.mvp.home.bean.OpenPrizeBean;
+import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
 import com.xbzhangshi.view.CustomToolbar;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
         betting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                BettingDetailsActivity.start(OpenPrizedetailsActivity.this,code);
             }
         });
         multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {

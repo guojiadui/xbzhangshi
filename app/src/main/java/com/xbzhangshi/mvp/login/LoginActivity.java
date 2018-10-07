@@ -1,6 +1,7 @@
 package com.xbzhangshi.mvp.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -56,7 +57,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     @BindView(R.id.verifyCode_layout)
     RelativeLayout verifyCodeLayout;
 
-    public static void startLogin(Activity context) {
+    public static void startLogin(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
     }

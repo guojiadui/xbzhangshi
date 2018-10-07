@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.webview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.widget.Toast;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseWebViewActivity;
 import com.xbzhangshi.mvp.details.OpenPrizedetailsActivity;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.single.UserInfo;
 
 
 /**
@@ -17,7 +20,11 @@ import com.xbzhangshi.mvp.details.OpenPrizedetailsActivity;
  */
 public class BettingDetailsActivity extends BaseWebViewActivity {
 
-    public  static  void  start(Context context,String code){
+    public  static  void  start(Context context, String code){
+        if (!UserInfo.getInstance().isLogin) {
+            LoginActivity.startLogin(context);
+            return;
+        }
         Intent intent = new Intent(context,BettingDetailsActivity.class);
         intent.putExtra("code",code);
         context.startActivity(intent);

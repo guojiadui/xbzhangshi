@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
+import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter2;
 import com.xbzhangshi.mvp.home.baseView.IPurchaseItemView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
@@ -23,6 +25,9 @@ import com.xbzhangshi.mvp.home.adapter.VPurchaseTypeAdapter;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.mvp.home.event.UpdateLotteryEvent;
 import com.xbzhangshi.mvp.home.presenter.PurchaseItemPesenter;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
+import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.DividerGridItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,8 +49,6 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
     @BindView(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
     PurchaseItemPesenter purchaseItemPesenter;
-
-
 
 
     public static PurchaseItemFragment newInstance(int curPosiition) {
@@ -118,7 +121,7 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
     @Override
     protected void initView(View view) {
         int curPosition = getArguments().getInt("curPosiition");
-        purchaseItemPesenter = PurchaseItemPesenter.newInstance(this,curPosition);
+        purchaseItemPesenter = PurchaseItemPesenter.newInstance(this, curPosition);
 
     }
 
@@ -140,8 +143,9 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
     GridLayoutManager gridLayoutManager;
     VPurchaseTypeAdapter vPurchaseTypeAdapter;
     GPurchaseTypeAdapter gPurchaseTypeAdapter;
+
     @Override
-    public void onSuccess(List<LoctteryBean.ContentBean> list, boolean mode,int curPosition) {
+    public void onSuccess(List<LoctteryBean.ContentBean> list, boolean mode, int curPosition) {
         multipleStatusView.showContent();
         if (mode) {
             if (linearLayoutManager == null) {
@@ -157,6 +161,14 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
             recyclerView.addItemDecoration(vdecoration);
             if (vPurchaseTypeAdapter == null) {
                 vPurchaseTypeAdapter = new VPurchaseTypeAdapter(mActivity, list, curPosition);
+                vPurchaseTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        VPurchaseTypeAdapter adapter1 = (VPurchaseTypeAdapter) adapter;
+                        String code = adapter1.getData().get(position).getCode();
+                        BettingDetailsActivity.start(mActivity,code);
+                    }
+                });
             }
             recyclerView.setAdapter(vPurchaseTypeAdapter);
         } else {
@@ -171,15 +183,23 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
             }
             recyclerView.setPadding(0, 0, 0, 0);
             recyclerView.addItemDecoration(gdecoration);
-            if(gPurchaseTypeAdapter ==null){
+            if (gPurchaseTypeAdapter == null) {
                 gPurchaseTypeAdapter = new GPurchaseTypeAdapter(mActivity, list, curPosition);
+                gPurchaseTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        GPurchaseTypeAdapter adapter1 = (GPurchaseTypeAdapter) adapter;
+                        String code = adapter1.getData().get(position).getCode();
+                        BettingDetailsActivity.start(mActivity,code);
+                    }
+                });
             }
             recyclerView.setAdapter(gPurchaseTypeAdapter);
         }
     }
 
     @Override
-    public void swtih(List<LoctteryBean.ContentBean> list, boolean mode,int curPosition) {
+    public void swtih(List<LoctteryBean.ContentBean> list, boolean mode, int curPosition) {
         if (recyclerView.getAdapter() == null) {
             return;
         }
@@ -200,6 +220,14 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
             recyclerView.addItemDecoration(vdecoration);
             if (vPurchaseTypeAdapter == null) {
                 vPurchaseTypeAdapter = new VPurchaseTypeAdapter(mActivity, list, curPosition);
+                vPurchaseTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        VPurchaseTypeAdapter adapter1 = (VPurchaseTypeAdapter) adapter;
+                        String code = adapter1.getData().get(position).getCode();
+                        BettingDetailsActivity.start(mActivity,code);
+                    }
+                });
             }
             recyclerView.setAdapter(vPurchaseTypeAdapter);
         } else {
@@ -208,6 +236,7 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
             }
             if (gridLayoutManager == null) {
                 gridLayoutManager = new GridLayoutManager(mActivity, 3);
+
             }
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerView.removeItemDecoration(vdecoration);
@@ -217,12 +246,22 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
             }
             recyclerView.setPadding(0, 0, 0, 0);
             recyclerView.addItemDecoration(gdecoration);
-            if(gPurchaseTypeAdapter ==null){
+            if (gPurchaseTypeAdapter == null) {
                 gPurchaseTypeAdapter = new GPurchaseTypeAdapter(mActivity, list, curPosition);
+                gPurchaseTypeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        GPurchaseTypeAdapter adapter1 = (GPurchaseTypeAdapter) adapter;
+                        String code = adapter1.getData().get(position).getCode();
+                        BettingDetailsActivity.start(mActivity,code);
+                    }
+                });
             }
             recyclerView.setAdapter(gPurchaseTypeAdapter);
         }
     }
+
+
 
     @Override
     public void onEmpty() {
