@@ -15,11 +15,14 @@ import com.xbzhangshi.R;
  */
 public class SignInDialog extends Dialog {
     Context context;
+    String title;
+    String cotent;
 
-    public SignInDialog(Context context  ) {
+    public SignInDialog(Context context, String title, String cotent) {
         super(context, R.style.MyDialog);
         this.context = context;
-
+        this.title = title;
+        this.cotent = cotent;
     }
 
 
@@ -34,6 +37,10 @@ public class SignInDialog extends Dialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.signin_dialog, null);
         TextView cancel = view.findViewById(R.id.cancel_action);
+        TextView content = view.findViewById(R.id.content);
+        TextView notice = view.findViewById(R.id.notice);
+        content.setText(cotent);
+        notice.setText(title);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -156,7 +156,8 @@ public class SignInActivity extends BaseActivity {
                 try {
                     SignInBean signInBean = JSON.parseObject(response.body(), SignInBean.class);
                     if (signInBean.isSuccess()) {
-                        SignInDialog signInDialog = new SignInDialog(SignInActivity.this);
+                        SignInDialog signInDialog = new SignInDialog(SignInActivity.this, "签到成功",
+                                "获得" + signInBean.getScore() + "积分");
                         signInDialog.show();
                         sign.setText("已签到");
                         sign.setBackgroundResource(R.drawable.bg_rectangle_grayandwhite);

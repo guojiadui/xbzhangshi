@@ -142,13 +142,15 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
         @Override
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            Log.i("ansen","拦截url:"+errorResponse);
+            Log.i("ansen","拦截Error:"+errorResponse.getEncoding());
+            Log.i("ansen","拦截Error:"+errorResponse.getMimeType());
+            Log.i("ansen","拦截Error:"+errorResponse.getData());
             super.onReceivedHttpError(view, request, errorResponse);
         }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            Log.i("ansen","拦截url:"+error);
+            Log.i("ansen","拦截onReceivedError:"+error);
             super.onReceivedError(view, request, error);
         }
 

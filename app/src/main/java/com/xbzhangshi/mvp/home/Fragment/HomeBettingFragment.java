@@ -70,7 +70,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     BettingPresenter bettingPresenter;
     @BindView(R.id.notice)
     MarqueeTextView notice;
-    Unbinder unbinder;
+
     @BindView(R.id.login)
     TextView login;
     @BindView(R.id.register)
