@@ -20,13 +20,21 @@ import com.xbzhangshi.single.UserInfo;
  */
 public class BettingDetailsActivity extends BaseWebViewActivity {
 
-    public  static  void  start(Context context, String code){
+    public static long startitme = 0;
+
+    public static void start(Context context, String code) {
+   //连续俩次点击大于500
+        long cur = System.currentTimeMillis();
+        if ((cur - startitme) < 500) {
+            return;
+        }
+        startitme = cur;
         if (!UserInfo.getInstance().isLogin) {
             LoginActivity.startLogin(context);
             return;
         }
-        Intent intent = new Intent(context,BettingDetailsActivity.class);
-        intent.putExtra("code",code);
+        Intent intent = new Intent(context, BettingDetailsActivity.class);
+        intent.putExtra("code", code);
         context.startActivity(intent);
     }
 
@@ -34,6 +42,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     protected int getlayout() {
         return R.layout.betting_details_activity_layout;
     }
+
     @Override
     public int getWebViewId() {
         return R.id.webview;
@@ -47,13 +56,13 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     @Override
     public String getUrl(Bundle savedInstanceState) {
         String code = getIntent().getStringExtra("code");
-        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode="+code;
+        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode=" + code;
     }
 
     @Override
     protected void onRestart() {
         String code = getIntent().getStringExtra("code");
-        webView.loadUrl("http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode="+code);
+        webView.loadUrl("http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode=" + code);
         super.onRestart();
     }
 
@@ -64,7 +73,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
      * @return
      */
     @JavascriptInterface //仍然必不可少
-    public void confirm(String s,String d){
+    public void confirm(String s, String d) {
 
     }
 

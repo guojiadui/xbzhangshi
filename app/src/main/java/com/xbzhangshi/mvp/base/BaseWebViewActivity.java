@@ -125,7 +125,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     @JavascriptInterface //仍然必不可少
     public String isAndroidApp() {
-        return "'2222'";
+        return "'isAndroid";
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件
@@ -142,24 +142,19 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
         @Override
         public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-            Log.i("ansen", "拦截Error:" + errorResponse.getEncoding());
-            Log.i("ansen", "拦截Error:" + errorResponse.getMimeType());
-            Log.i("ansen", "拦截Error:" + errorResponse.getData());
+
             super.onReceivedHttpError(view, request, errorResponse);
         }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            Log.i("ansen", "拦截onReceivedError:" + error);
+
             super.onReceivedError(view, request, error);
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.i("ansen", "拦截url:" + url);
-            if (url.equals("http://www.google.com/")) {
-                return true;//表示我已经处理过了
-            }
+
             return super.shouldOverrideUrlLoading(view, url);
         }
 
@@ -188,7 +183,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            Log.i("ansen", "网页标题:" + title);
+
         }
 
         //加载进度回调

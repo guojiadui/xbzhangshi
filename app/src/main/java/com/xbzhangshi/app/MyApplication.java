@@ -115,7 +115,13 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
             ServiceTime.getInstance().exit();
         }
         isExit = true;
-       System.exit(0);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.exit(0);
+            }
+        },500);
+      // System.exit(0);
     }
 
     @Override

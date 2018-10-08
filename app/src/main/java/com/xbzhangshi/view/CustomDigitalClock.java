@@ -106,7 +106,10 @@ public class CustomDigitalClock extends android.support.v7.widget.AppCompatTextV
         super.onDetachedFromWindow();
         contentBean = null;
         mClockListener = null;
-        ServiceTime.getInstance().removeListener(this);
+        if (ServiceTime.getInstance() != null){
+            ServiceTime.getInstance().removeListener(this);
+        }
+
     }
 
     /**

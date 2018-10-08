@@ -56,6 +56,8 @@ public class ServiceTime {
 
     public void exit() {
         isstop =false;
+        listeners.clear();
+        serviceTime = null;
     }
 
     public static ServiceTime getInstance(Context context, List<LoctteryBean.ContentBean> contentBeanList) {
