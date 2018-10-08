@@ -13,6 +13,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
@@ -38,7 +39,7 @@ public class LogInPresenter extends BasePresenter {
     ILoginView contentView;
 
     List<String> namelist;
-    boolean isshowCode =false;
+    boolean isshowCode = false;
 
     public LogInPresenter(ILoginView contentView) {
         this.contentView = contentView;
@@ -72,25 +73,25 @@ public class LogInPresenter extends BasePresenter {
      * @param remmber
      */
 
-    public void login(Context context, String name, String pwd,String code, boolean remmber) {
-        if(isshowCode){
-           if(TextUtils.isEmpty(code)){
-               contentView.LoginonError("验证码不能我空");
-               return;
-           }
+    public void login(Context context, String name, String pwd, String code, boolean remmber) {
+        if (isshowCode) {
+            if (TextUtils.isEmpty(code)) {
+                contentView.LoginonError("验证码不能我空");
+                return;
+            }
         }
 
-        Object tag = UserInfo.getInstance().login(context, name, pwd,code, new StringCallback() {
+        Object tag = UserInfo.getInstance().login(context,LoginBean.class, name, pwd, code, new OkGoCallback<LoginBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
-                UserInfo.getInstance().setLoginBean(loginBean);
-                if (loginBean.isSuccess()) {
+            public void onSuccess(LoginBean response) {
+
+                UserInfo.getInstance().setLoginBean(response);
+                if (response.isSuccess()) {
                     //获取用户信息
                     getUserInfo(context, name, pwd, remmber);
                 } else {
-                    if (!TextUtils.isEmpty(loginBean.getMsg())) {
-                        contentView.LoginonError(loginBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                         /**
                          * 添加验证码判断
                          */
@@ -110,6 +111,12 @@ public class LogInPresenter extends BasePresenter {
             }
 
             @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
+            }
+
+            @Override
             public void onError(Response<String> response) {
                 super.onError(response);
                 contentView.LoginonError("请求出错");
@@ -121,18 +128,20 @@ public class LogInPresenter extends BasePresenter {
 
     /**
      * 更新验证码
+     *
      * @param context
      */
-   public  void  upDateCode(Context context){
-       HttpParams httpParams = new HttpParams();
-       httpParams.put("timestamp",System.currentTimeMillis());
-       HttpManager.getBitmap(context, Url.login_code , httpParams, new BitmapCallback() {
-           @Override
-           public void onSuccess(Response<Bitmap> response) {
-               contentView.showCode(response.body());
-           }
-       });
-   }
+    public void upDateCode(Context context) {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("timestamp", System.currentTimeMillis());
+        HttpManager.getBitmap(context, Url.login_code, httpParams, new BitmapCallback() {
+            @Override
+            public void onSuccess(Response<Bitmap> response) {
+                contentView.showCode(response.body());
+            }
+        });
+    }
+
     /**
      * 获取用户信息
      *
@@ -141,11 +150,11 @@ public class LogInPresenter extends BasePresenter {
      */
     public void getUserInfo(Context context, String name, String pwd, boolean remmber) {
         //获取用户信息
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
+            public void onSuccess(LoginUserInfoBean response) {
+
+                if (response.isSuccess()) {
                     //保存账号密码
                     //保存是否记住密码的钩
                     SPUtils.getInstance(Key.APP_SET_NAME).put(Key.LOGIN_C_ISCHECK_PWD, remmber);
@@ -166,17 +175,23 @@ public class LogInPresenter extends BasePresenter {
                     UserInfo.getInstance().setLogin(true);
                     UserInfo.getInstance().setmUsername(name);
                     UserInfo.getInstance().setmPassword(pwd);
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
                     HomeActivity.start(context);
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        contentView.LoginonError(loginUserInfoBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -191,32 +206,38 @@ public class LogInPresenter extends BasePresenter {
     /**
      * 获取免费账号
      *
-
      * @param
      */
     public void getFreeUser(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.reg_guest, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
-                UserInfo.getInstance().setLoginBean(loginBean);
-                if (loginBean.isSuccess()) {
-                    //获取用户信息
-                    getFreeUserInfo(context, loginBean.getContent().getAccount());
-                } else {
-                    if (!TextUtils.isEmpty(loginBean.getMsg())) {
-                        contentView.LoginonError(loginBean.getMsg());
-                    } else {
-                        contentView.LoginonError("登录失败");
+        Object tag = HttpManager.getObject(context, LoginBean.class,
+                Url.BASE_URL + Url.reg_guest, null, new OkGoCallback<LoginBean>() {
+                    @Override
+                    public void onSuccess(LoginBean response) {
+                        UserInfo.getInstance().setLoginBean(response);
+                        if (response.isSuccess()) {
+                            //获取用户信息
+                            getFreeUserInfo(context, response.getContent().getAccount());
+                        } else {
+                            if (!TextUtils.isEmpty(response.getMsg())) {
+                                contentView.LoginonError(response.getMsg());
+                            } else {
+                                contentView.LoginonError("登录失败");
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-            }
-        });
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.LoginonError("请求出错");
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.LoginonError("请求出错");
+                    }
+                });
         addNet(tag);
     }
 
@@ -225,27 +246,33 @@ public class LogInPresenter extends BasePresenter {
      *
      * @param
      */
-    public void getFreeUserInfo(Context context,String name) {
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+    public void getFreeUserInfo(Context context, String name) {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
+            public void onSuccess(LoginUserInfoBean response) {
+
+                if (response.isSuccess()) {
 
                     //设置以及登录信息
                     UserInfo.getInstance().setLogin(true);
                     UserInfo.getInstance().setmUsername(name);
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
                     HomeActivity.start(context);
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        contentView.LoginonError(loginUserInfoBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -276,6 +303,7 @@ public class LogInPresenter extends BasePresenter {
         }
 
     }
+
     public List<String> getNamelist() {
         return namelist;
     }

@@ -9,6 +9,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.record.baseview.IThreeLotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.ThreeLotteryRecordBean;
@@ -81,35 +82,27 @@ public class ElectronicsLotteryRecordPresenter extends BasePresenter {
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
 
-        Object tag = HttpManager.post(context, Url.egamerecord, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context, ThreeLotteryRecordBean.class, Url.egamerecord, httpParams, new OkGoCallback<ThreeLotteryRecordBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ThreeLotteryRecordBean bean = null;
-                try {
-                    bean = JSON.parseObject(response.body(), ThreeLotteryRecordBean.class);
-                } catch (Exception e) {
-                    contentView.error("请求出错");
-                    return;
+            public void onSuccess(ThreeLotteryRecordBean response) {
+                if (response.getAggsData() != null) {
+                    double d = response.getAggsData().getWinMoneyCount() - response.getAggsData().getBettingMoneyCount();
+                    String s = df.format(d);
+                    contentView.setprofit(response.getAggsData().getBettingMoneyCount(), response.getAggsData().getWinMoneyCount(), Double.valueOf(s));
                 }
-
-                if (bean != null) {
-                    if (bean.getAggsData() != null) {
-                        double d = bean.getAggsData().getWinMoneyCount() - bean.getAggsData().getBettingMoneyCount();
-                        String s = df.format(d);
-                        contentView.setprofit(bean.getAggsData().getBettingMoneyCount(), bean.getAggsData().getWinMoneyCount(), Double.valueOf(s));
-                    }
-                    if (bean.getRows() != null && bean.getRows().size() > 0) {
-                        contentView.successData(bean.getRows());
-
-                    } else {
-                        contentView.empty();
-                    }
+                if (response.getRows() != null && response.getRows().size() > 0) {
+                    contentView.successData(response.getRows());
 
                 } else {
-                    contentView.error("请求出错");
+                    contentView.empty();
                 }
 
+            }
 
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.error("请求出错");
             }
 
             @Override

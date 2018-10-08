@@ -11,6 +11,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.record.baseview.IAountChangeBaseView;
 import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
@@ -127,41 +128,36 @@ public class AcountChangeRecordPresenter extends BasePresenter {
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
 
-        Object tag = HttpManager.post(context, Url.mnyrecord_list, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context,AcountChangeRecordBean.class, Url.mnyrecord_list, httpParams, new OkGoCallback<AcountChangeRecordBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                AcountChangeRecordBean bean = null;
-                try {
-                    bean = JSON.parseObject(response.body(), AcountChangeRecordBean.class);
-                } catch (Exception e) {
-                    contentView.error("请求出错");
-                    return;
-                }
-
-                if (bean != null) {
-                    if (bean.getList() != null && bean.getList().size() > 0) {
-                        if (curpage == 1) {
-                            contentView.successData(bean.getList(), MYkeys, bean.isHasNext());
-                        } else {
-                            contentView.successMore(bean.getList(), bean.isHasNext());
-                        }
-
+            public void onSuccess(AcountChangeRecordBean response) {
+                if (response.getList() != null && response.getList().size() > 0) {
+                    if (curpage == 1) {
+                        contentView.successData(response.getList(), MYkeys, response.isHasNext());
                     } else {
-                        if (curpage == 1) {
-                            contentView.empty();
-                        } else {
-                            contentView.emptyMore(bean.isHasNext());
-                        }
+                        contentView.successMore(response.getList(), response.isHasNext());
+                    }
 
-                    }
-                    if (bean.isHasNext()) {
-                        curpage = bean.getNextPage();
-                    }
                 } else {
-                    contentView.error("请求出错");
+                    if (curpage == 1) {
+                        contentView.empty();
+                    } else {
+                        contentView.emptyMore(response.isHasNext());
+                    }
+
+                }
+                if (response.isHasNext()) {
+                    curpage = response.getNextPage();
                 }
 
 
+
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.error("请求出错");
             }
 
             @Override

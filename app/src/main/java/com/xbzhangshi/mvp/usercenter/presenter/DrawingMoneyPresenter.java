@@ -8,6 +8,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.IDrawingMoneyBaseView;
 import com.xbzhangshi.mvp.usercenter.BaseView.IExchangeBaseView;
@@ -34,15 +35,21 @@ public class DrawingMoneyPresenter extends BasePresenter {
         HttpParams httpParams = new HttpParams();
         httpParams.put("money", num);
         httpParams.put("repPwd", pwd);
-        Object tag = HttpManager.post(context, Url.BASE_URL + Url.drawcommit, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context, ResultBean.class, Url.BASE_URL + Url.drawcommit, httpParams, new OkGoCallback<ResultBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ResultBean resultBean = JSON.parseObject(response.body(),ResultBean.class);
-                if(resultBean.isSuccess()){
+            public void onSuccess(ResultBean response) {
+
+                if (response.isSuccess()) {
                     contentView.drawSuccess();
-                }else {
+                } else {
                     contentView.drawError("提款失败");
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.drawError("请求出错");
             }
 
             @Override
@@ -59,23 +66,29 @@ public class DrawingMoneyPresenter extends BasePresenter {
      */
 
     public void getConfigInfo(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.withDrawData, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                DrawMoneyInfoBean drawMoneyInfoBean = JSON.parseObject(response.body(), DrawMoneyInfoBean.class);
-                if (drawMoneyInfoBean != null && drawMoneyInfoBean.getCommit() != null) {
-                    contentView.setConfigInfo(drawMoneyInfoBean);
-                } else {
-                    contentView.setConfigError("请求出错");
-                }
-            }
+        Object tag = HttpManager.getObject(context, DrawMoneyInfoBean.class,
+                Url.BASE_URL + Url.withDrawData, null, new OkGoCallback<DrawMoneyInfoBean>() {
+                    @Override
+                    public void onSuccess(DrawMoneyInfoBean response) {
+                        if (response.getCommit() != null) {
+                            contentView.setConfigInfo(response);
+                        } else {
+                            contentView.setConfigError("请求出错");
+                        }
+                    }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.setConfigError("请求出错");
-            }
-        });
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.setConfigError("请求出错");
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.setConfigError("请求出错");
+                    }
+                });
         addNet(tag);
     }
 

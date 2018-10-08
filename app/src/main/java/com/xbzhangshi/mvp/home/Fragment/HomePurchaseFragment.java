@@ -19,6 +19,7 @@ import com.xbzhangshi.mvp.home.baseView.IPurchaseView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.mvp.home.presenter.PurchasePesenter;
+import com.xbzhangshi.single.ServiceTime;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -64,6 +65,15 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
             purchasePesenter.onDestory();
         }
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(ServiceTime.getInstance()!=null){
+            ServiceTime.getInstance().setIsvisable(!hidden);
+        }
+    }
+
 
     @Override
     protected int getLayoutId() {

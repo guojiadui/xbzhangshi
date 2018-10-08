@@ -7,6 +7,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
 import com.xbzhangshi.mvp.home.bean.MsgCountBean;
@@ -34,17 +35,18 @@ public class HomePresenter extends BasePresenter {
 
 
     public void getMsgCount(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.getMsgCount, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context, MsgCountBean.class,
+                Url.BASE_URL + Url.getMsgCount, null, new OkGoCallback<MsgCountBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                MsgCountBean msgCountBean = JSON.parseObject(response.body(),MsgCountBean.class);
-                if(msgCountBean.isSuccess()){
-                    if(msgCountBean.getContent()>0){
-                        contentView.upMsgCount(msgCountBean.getContent());
+            public void onSuccess(MsgCountBean response) {
+                if(response.isSuccess()){
+                    if(response.getContent()>0){
+                        contentView.upMsgCount(response.getContent());
                     }else {
                         contentView.upMsgCount(0);
                     }
                 }
+
             }
         });
         addNet(tag);

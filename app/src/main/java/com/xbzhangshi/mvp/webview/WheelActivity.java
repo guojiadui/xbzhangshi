@@ -24,6 +24,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.usercenter.bean.ExchangeConfigBean;
 import com.xbzhangshi.mvp.webview.bean.PrzeListBean;
@@ -118,13 +119,13 @@ public class WheelActivity extends BaseActivity {
      * 获取积分
      */
     public void getConfigure() {
-        Object tag = HttpManager.post(this, Url.BASE_URL + Url.exchangeConfig, null, new StringCallback() {
+        Object tag = HttpManager.postObject(this, ExchangeConfigBean.class,
+                Url.BASE_URL + Url.exchangeConfig, null, new OkGoCallback<ExchangeConfigBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ExchangeConfigBean configBean = JSON.parseObject(response.body(), ExchangeConfigBean.class);
-                if (configBean.isSuccess()) {
+            public void onSuccess(ExchangeConfigBean response) {
+                if (response.isSuccess()) {
                     DecimalFormat df = new DecimalFormat("#0.00");
-                    integral.setText("积分" + df.format(configBean.getContent().getScore()));
+                    integral.setText("积分" + df.format(response.getContent().getScore()));
                 }
             }
 
@@ -221,32 +222,32 @@ public class WheelActivity extends BaseActivity {
     public void getPrize() {
         HttpParams httpParams = new HttpParams();
         httpParams.put("activeId", 2);
-        Object tag = HttpManager.post(this, Url.award, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(this,WheelPrizeLsitbean.class, Url.award, httpParams, new OkGoCallback<WheelPrizeLsitbean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                try {
-                    WheelPrizeLsitbean wheelPrizeLsitbean = JSON.parseObject(response.body(), WheelPrizeLsitbean.class);
-                    if (TextUtils.isEmpty(wheelPrizeLsitbean.getMsg()) && wheelPrizeLsitbean.getIndex() > 0) {
-                        /**
-                         * 启动转盘
-                         */
-                        if (wheelPrizeLsitbean.getIndex() < des.length) {
-                            wheelSurfView2.startRotate(wheelPrizeLsitbean.getIndex());
-                        }
-                        getConfigure();
-                    } else {
-                        if (!TextUtils.isEmpty(wheelPrizeLsitbean.getMsg())) {
-                            SignInDialog signInDialog = new SignInDialog(WheelActivity.this, "消息", wheelPrizeLsitbean.getMsg());
-                            signInDialog.show();
-                        } else {
-                            Toast.makeText(WheelActivity.this, "请求出错", Toast.LENGTH_SHORT).show();
-                        }
+            public void onSuccess(WheelPrizeLsitbean response) {
+                if (TextUtils.isEmpty(response.getMsg()) && response.getIndex() > 0) {
+                    /**
+                     * 启动转盘
+                     */
+                    if (response.getIndex() < des.length) {
+                        wheelSurfView2.startRotate(response.getIndex());
                     }
-                } catch (Exception e) {
-                    SignInDialog signInDialog = new SignInDialog(WheelActivity.this, "消息", "抽奖失败");
-                    signInDialog.show();
+                    getConfigure();
+                } else {
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        SignInDialog signInDialog = new SignInDialog(WheelActivity.this, "消息", response.getMsg());
+                        signInDialog.show();
+                    } else {
+                        Toast.makeText(WheelActivity.this, "请求出错", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                Toast.makeText(WheelActivity.this, "请求出错", Toast.LENGTH_SHORT).show();
             }
 
             @Override

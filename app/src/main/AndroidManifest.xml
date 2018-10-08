@@ -62,6 +62,8 @@
         <activity android:name=".mvp.webview.PreferentialActivitiy" />
         <activity android:name=".mvp.webview.ActDescActivity" />
         <activity android:name=".mvp.webview.CustomerServiceActivity" />
+        <activity android:name=".mvp.webview.HelpCneterActivity" />
+        <activity android:name=".mvp.webview.HelpDetailActivity" />
 
     </application>
 

@@ -5,8 +5,10 @@ import android.content.Context;
 import android.os.Handler;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 
+import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.callback.StringCallback;
 
 import com.lzy.okgo.model.Response;
@@ -43,6 +45,16 @@ public class ServiceTime {
     Context context;
 
     private boolean isstop =true;
+
+    public boolean isIsvisable() {
+        return isvisable;
+    }
+
+    public void setIsvisable(boolean isvisable) {
+        this.isvisable = isvisable;
+    }
+
+    private  boolean isvisable = true;
 
     public List<LoctteryBean.ContentBean> getContentBeanList() {
         return contentBeanList;
@@ -91,6 +103,10 @@ public class ServiceTime {
                     handler.postDelayed(this, TIME);
                     // Long startIime = System.currentTimeMillis();
                     remoteServiceTime = remoteServiceTime + 1000;//更新服务器时间
+                    if(!isvisable){
+                        return;
+                    }
+                    Log.e("TAG","可见");
                     //判断是否有时间要更新
                     for (LoctteryBean.ContentBean contentBean : contentBeanList) {
                         // contentBean.setServerTime(contentBean.getServerTime() + 1000);

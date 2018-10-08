@@ -18,6 +18,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.webview.adpater.DateAdpater;
@@ -150,27 +151,28 @@ public class SignInActivity extends BaseActivity {
 
     public void signIn() {
 
-        HttpManager.get(this, Url.signIn, null, new StringCallback() {
+        HttpManager.getObject(this,SignInBean.class, Url.signIn, null, new OkGoCallback<SignInBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                try {
-                    SignInBean signInBean = JSON.parseObject(response.body(), SignInBean.class);
-                    if (signInBean.isSuccess()) {
-                        SignInDialog signInDialog = new SignInDialog(SignInActivity.this, "签到成功",
-                                "获得" + signInBean.getScore() + "积分");
-                        signInDialog.show();
-                        sign.setText("已签到");
-                        sign.setBackgroundResource(R.drawable.bg_rectangle_grayandwhite);
-                        continuityDay.setText("连续签到" + signInBean.getDays() + "天");
-                        getMonthDays();
-                    } else {
-                        Toast.makeText(SignInActivity.this, "签到失败", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
+            public void onSuccess(SignInBean response) {
+                if (response.isSuccess()) {
+                    SignInDialog signInDialog = new SignInDialog(SignInActivity.this, "签到成功",
+                            "获得" + response.getScore() + "积分");
+                    signInDialog.show();
+                    sign.setText("已签到");
+                    sign.setBackgroundResource(R.drawable.bg_rectangle_grayandwhite);
+                    continuityDay.setText("连续签到" + response.getDays() + "天");
+                    getMonthDays();
+                } else {
                     Toast.makeText(SignInActivity.this, "签到失败", Toast.LENGTH_SHORT).show();
                 }
 
 
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                Toast.makeText(SignInActivity.this, "请求出错", Toast.LENGTH_SHORT).show();
             }
 
             @Override

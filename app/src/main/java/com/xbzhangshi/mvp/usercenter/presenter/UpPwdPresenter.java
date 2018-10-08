@@ -12,6 +12,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.IExchangeBaseView;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUpPwdBaseView;
@@ -73,11 +74,11 @@ public class UpPwdPresenter extends BasePresenter {
         httpParams.put("pwd", newPwd);
         httpParams.put("rpwd", rpwd);
         httpParams.put("updType", type);
-        Object tag = HttpManager.post(context, Url.up_login_pwd, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context, ResultBean.class, Url.up_login_pwd, httpParams, new OkGoCallback<ResultBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ResultBean resultBean = JSON.parseObject(response.body(), ResultBean.class);
-                if (resultBean.isSuccess()) {
+            public void onSuccess(ResultBean response) {
+
+                if (response.isSuccess()) {
                     //保存账号密码
                     //否记住密码的钩
                     boolean remmber = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.LOGIN_C_ISCHECK_PWD, false);
@@ -95,10 +96,16 @@ public class UpPwdPresenter extends BasePresenter {
                     UserInfo.getInstance().setmPassword(newPwd);
                     contentView.LoginPwdSuccess();
                 } else {
-                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
-                        contentView.LoginPwdError(resultBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginPwdError(response.getMsg());
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginPwdError("请求出错");
             }
 
             @Override

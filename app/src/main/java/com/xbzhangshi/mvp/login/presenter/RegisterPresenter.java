@@ -14,6 +14,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.login.BaseView.IRegisterView;
@@ -37,7 +38,8 @@ public class RegisterPresenter extends BasePresenter {
 
     IRegisterView contentView;
 
-  LoadingDailog loadingDialog;
+    LoadingDailog loadingDialog;
+
     public RegisterPresenter(IRegisterView contentView) {
         this.contentView = contentView;
     }
@@ -50,42 +52,48 @@ public class RegisterPresenter extends BasePresenter {
      * @param
      */
     public void getRegconfig(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.regconfig, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                RegisterItemBean registerItemBean = JSON.parseObject(response.body(), RegisterItemBean.class);
-                if (registerItemBean.isSuccess()) {
-                    RegisterItemBean.ContentBean contentBean4 = new RegisterItemBean.ContentBean();
-                    contentBean4.setName("验证码");
-                    contentBean4.setKey("verifyCode");
-                    registerItemBean.getContent().add(contentBean4);
-                    RegisterItemBean.ContentBean contentBean3 = new RegisterItemBean.ContentBean();
-                    contentBean3.setName("重复密码");
-                    contentBean3.setRegex("^[a-zA-Z0-9]{6,16}$");
-                    contentBean3.setKey("rpassword");
-                    registerItemBean.getContent().add(0, contentBean3);
-                    RegisterItemBean.ContentBean contentBean2 = new RegisterItemBean.ContentBean();
-                    contentBean2.setName("登录密码");
-                    contentBean2.setRegex("^[a-zA-Z0-9]{6,16}$");
-                    contentBean2.setKey("password");
-                    registerItemBean.getContent().add(0, contentBean2);
-                    RegisterItemBean.ContentBean contentBean1 = new RegisterItemBean.ContentBean();
-                    contentBean1.setName("用户账号");
-                    contentBean1.setRegex("^[a-zA-Z0-9]{5,11}$");
-                    contentBean1.setKey("account");
-                    registerItemBean.getContent().add(0, contentBean1);
-                    contentView.setRegconfig(registerItemBean.getContent());
-                } else {
-                    contentView.setRegconfigError();
-                }
-            }
+        Object tag = HttpManager.getObject(context, RegisterItemBean.class,
+                Url.BASE_URL + Url.regconfig, null, new OkGoCallback<RegisterItemBean>() {
+                    @Override
+                    public void onSuccess(RegisterItemBean response) {
+                        if (response.isSuccess()) {
+                            RegisterItemBean.ContentBean contentBean4 = new RegisterItemBean.ContentBean();
+                            contentBean4.setName("验证码");
+                            contentBean4.setKey("verifyCode");
+                            response.getContent().add(contentBean4);
+                            RegisterItemBean.ContentBean contentBean3 = new RegisterItemBean.ContentBean();
+                            contentBean3.setName("重复密码");
+                            contentBean3.setRegex("^[a-zA-Z0-9]{6,16}$");
+                            contentBean3.setKey("rpassword");
+                            response.getContent().add(0, contentBean3);
+                            RegisterItemBean.ContentBean contentBean2 = new RegisterItemBean.ContentBean();
+                            contentBean2.setName("登录密码");
+                            contentBean2.setRegex("^[a-zA-Z0-9]{6,16}$");
+                            contentBean2.setKey("password");
+                            response.getContent().add(0, contentBean2);
+                            RegisterItemBean.ContentBean contentBean1 = new RegisterItemBean.ContentBean();
+                            contentBean1.setName("用户账号");
+                            contentBean1.setRegex("^[a-zA-Z0-9]{5,11}$");
+                            contentBean1.setKey("account");
+                            response.getContent().add(0, contentBean1);
+                            contentView.setRegconfig(response.getContent());
+                        } else {
+                            contentView.setRegconfigError();
+                        }
+                    }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.setRegconfigError();
-            }
-        });
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.setRegconfigError();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.setRegconfigError();
+                    }
+                });
         addNet(tag);
     }
 
@@ -140,24 +148,34 @@ public class RegisterPresenter extends BasePresenter {
             loadingDialog = loadBuilder.create();
         }
         loadingDialog.show();
-        HttpManager.post(context, Url.BASE_URL + Url.register, httpParams, new StringCallback() {
+        HttpManager.postObject(context, RegisterBean.class, Url.BASE_URL + Url.register, httpParams, new OkGoCallback<RegisterBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
+            public void onSuccess(RegisterBean response) {
                 if (loadingDialog != null && loadingDialog.isShowing()) {
                     loadingDialog.dismiss();
                 }
-                RegisterBean registerBean = JSON.parseObject(response.body(), RegisterBean.class);
-                if (registerBean.isSuccess()) {
-                    contentView.registerSuccess(name1,pwd1);
+
+                if (response.isSuccess()) {
+                    contentView.registerSuccess(name1, pwd1);
                 } else {
-                    if (!TextUtils.isEmpty(registerBean.getMsg())) {
-                        showDialog(context, registerBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        showDialog(context, response.getMsg());
                         contentView.updateCode();
                     } else {
                         contentView.registerError("注册失败");
                         contentView.updateCode();
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+                contentView.registerError("请求失败");
+                contentView.updateCode();
             }
 
             @Override
@@ -188,23 +206,30 @@ public class RegisterPresenter extends BasePresenter {
         localBuilder.show();
 
     }
-    public void login(Context context, String name, String pwd  ) {
 
-        Object tag = UserInfo.getInstance().login(context, name, pwd,"" , new StringCallback() {
+    public void login(Context context, String name, String pwd) {
+
+        Object tag = UserInfo.getInstance().login(context, LoginBean.class, name, pwd, "", new OkGoCallback<LoginBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
-                UserInfo.getInstance().setLoginBean(loginBean);
-                if (loginBean.isSuccess()) {
+            public void onSuccess(LoginBean response) {
+
+                UserInfo.getInstance().setLoginBean(response);
+                if (response.isSuccess()) {
                     //获取用户信息
-                   getUserInfo(context, name, pwd);
+                    getUserInfo(context, name, pwd);
                 } else {
-                    if (!TextUtils.isEmpty(loginBean.getMsg())) {
-                        contentView.LoginonError(loginBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -216,19 +241,20 @@ public class RegisterPresenter extends BasePresenter {
         addNet(tag);
 
     }
+
     /**
      * 获取用户信息
      *
      * @param context
      * @param
      */
-    private void getUserInfo(Context context,String name,String  pwd) {
+    private void getUserInfo(Context context, String name, String pwd) {
         //获取用户信息
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
+            public void onSuccess(LoginUserInfoBean response) {
+
+                if (response.isSuccess()) {
                     //保存账号密码
                     //保存是否记住密码的钩
                     SPUtils.getInstance(Key.APP_SET_NAME).put(Key.LOGIN_C_ISCHECK_PWD, true);
@@ -245,17 +271,23 @@ public class RegisterPresenter extends BasePresenter {
                     UserInfo.getInstance().setLogin(true);
                     UserInfo.getInstance().setmUsername(name);
                     UserInfo.getInstance().setmPassword(pwd);
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
                     HomeActivity.start(context);
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        contentView.LoginonError(loginUserInfoBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -273,28 +305,35 @@ public class RegisterPresenter extends BasePresenter {
      * @param
      */
     public void getFreeUser(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.reg_guest, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
-                UserInfo.getInstance().setLoginBean(loginBean);
-                if (loginBean.isSuccess()) {
-                    //获取用户信息
-                    getFreeUserInfo(context, loginBean.getContent().getAccount());
-                } else {
-                    if (!TextUtils.isEmpty(loginBean.getMsg())) {
-                        contentView.LoginonError(loginBean.getMsg());
-                    } else {
-                        contentView.LoginonError("登录失败");
+        Object tag = HttpManager.getObject(context, LoginBean.class,
+                Url.BASE_URL + Url.reg_guest, null, new OkGoCallback<LoginBean>() {
+                    @Override
+                    public void onSuccess(LoginBean response) {
+                        UserInfo.getInstance().setLoginBean(response);
+                        if (response.isSuccess()) {
+                            //获取用户信息
+                            getFreeUserInfo(context, response.getContent().getAccount());
+                        } else {
+                            if (!TextUtils.isEmpty(response.getMsg())) {
+                                contentView.LoginonError(response.getMsg());
+                            } else {
+                                contentView.LoginonError("登录失败");
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-            }
-        });
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.LoginonError("请求出错");
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.LoginonError("请求出错");
+                    }
+                });
         addNet(tag);
     }
 
@@ -304,25 +343,31 @@ public class RegisterPresenter extends BasePresenter {
      * @param
      */
     public void getFreeUserInfo(Context context, String name) {
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
+            public void onSuccess(LoginUserInfoBean response) {
+
+                if (response.isSuccess()) {
                     //设置以及登录信息
                     UserInfo.getInstance().setLogin(true);
                     UserInfo.getInstance().setmUsername(name);
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
                     HomeActivity.start(context);
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        contentView.LoginonError(loginUserInfoBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -333,7 +378,6 @@ public class RegisterPresenter extends BasePresenter {
         });
         addNet(tag);
     }
-
 
 
 }

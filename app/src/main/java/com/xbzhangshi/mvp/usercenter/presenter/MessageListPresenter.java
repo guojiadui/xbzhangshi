@@ -11,6 +11,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.IMesssageListBaseView;
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
@@ -51,30 +52,36 @@ public class MessageListPresenter extends BasePresenter {
         httpParams.put("pageNumber", curpage);
         httpParams.put("status", 0);
         httpParams.put("pageSize", 100);
-        Object tag = HttpManager.get(context, Url.message_list, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context, MsgBean.class,Url.message_list, null, new OkGoCallback<MsgBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                MsgBean msgBean = JSON.parseObject(response.body(), MsgBean.class);
-                if (msgBean.getCurrentPageNo() > 0) {
-                    if (msgBean.getList().size() > 0) {
+            public void onSuccess(MsgBean response) {
+
+                if (response.getCurrentPageNo() > 0) {
+                    if (response.getList().size() > 0) {
                         if (curpage == 1) {
-                            contentView.success(MessageListPresenter.this, msgBean.getList(), msgBean.isHasNext());
+                            contentView.success(MessageListPresenter.this, response.getList(), response.isHasNext());
                         } else {
-                            contentView.successMore(MessageListPresenter.this, msgBean.getList(), msgBean.isHasNext());
+                            contentView.successMore(MessageListPresenter.this, response.getList(), response.isHasNext());
                         }
 
                     } else {
                         if (curpage == 1) {
-                            contentView.empty(msgBean.isHasNext());
+                            contentView.empty(response.isHasNext());
                         } else {
-                            contentView.emptyMore(msgBean.isHasNext());
+                            contentView.emptyMore(response.isHasNext());
                         }
 
                     }
-                    curpage = msgBean.getCurrentPageNo();
+                    curpage = response.getCurrentPageNo();
                 } else {
                     contentView.Error("请求出错");
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.Error("请求出错");
             }
 
             @Override
@@ -158,18 +165,23 @@ public class MessageListPresenter extends BasePresenter {
         }
         HttpParams httpParams = new HttpParams();
         httpParams.put("id", datasBean.getId());
-        Object tag = HttpManager.get(context, Url.read, httpParams, new StringCallback() {
+        Object tag = HttpManager.getObject(context,ReadBean.class, Url.read, httpParams, new OkGoCallback<ReadBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ReadBean readBean = JSON.parseObject(response.body(), ReadBean.class);
-                if (readBean.isSuccess()) {
+            public void onSuccess(ReadBean response) {
+                if (response.isSuccess()) {
                     contentView.readSuccess(datasBean.getId() + "");
                     EventBus.getDefault().post(new UpdateMsgCount());
                 } else {
-                    if (!TextUtils.isEmpty(readBean.getMsg())) {
-                        contentView.readError(readBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.readError(response.getMsg());
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.readError("请求出错");
             }
 
             @Override
@@ -184,18 +196,23 @@ public class MessageListPresenter extends BasePresenter {
     public void read(Context context, String value) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("id", value);
-        Object tag = HttpManager.get(context, Url.read, httpParams, new StringCallback() {
+        Object tag = HttpManager.getObject(context,ReadBean.class, Url.read, httpParams, new OkGoCallback<ReadBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ReadBean readBean = JSON.parseObject(response.body(), ReadBean.class);
-                if (readBean.isSuccess()) {
+            public void onSuccess(ReadBean response) {
+                if (response.isSuccess()) {
                     contentView.readSuccess(value);
                     EventBus.getDefault().post(new UpdateMsgCount());
                 } else {
-                    if (!TextUtils.isEmpty(readBean.getMsg())) {
-                        contentView.readError(readBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.readError(response.getMsg());
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.readError("请求出错");
             }
 
             @Override
@@ -210,25 +227,23 @@ public class MessageListPresenter extends BasePresenter {
     public void del(Context context, String value) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("id", value);
-        Object tag = HttpManager.get(context, Url.del_msg, httpParams, new StringCallback() {
+        Object tag = HttpManager.getObject(context,ReadBean.class, Url.del_msg, httpParams, new OkGoCallback<ReadBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ReadBean readBean = null;
-                try {
-                    readBean = JSON.parseObject(response.body(), ReadBean.class);
-                } catch (Exception e) {
-                    contentView.delError("请求出错");
-                    return;
-                }
-
-                if (readBean.isSuccess()) {
+            public void onSuccess(ReadBean response) {
+                if (response.isSuccess()) {
                     contentView.delSuccess(value);
                     EventBus.getDefault().post(new UpdateMsgCount());
                 } else {
-                    if (!TextUtils.isEmpty(readBean.getMsg())) {
-                        contentView.delError(readBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.delError(response.getMsg());
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.delError("请求出错");
             }
 
             @Override

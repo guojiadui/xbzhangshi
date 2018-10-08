@@ -10,6 +10,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.ISetPwdBaseView;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUpPwdBaseView;
@@ -47,18 +48,24 @@ public class SetPwdPresenter extends BasePresenter {
         HttpParams httpParams = new HttpParams();
         httpParams.put("pwd", pwd);
         httpParams.put("rpwd", rpwd);
-        HttpManager.post(context, Url.drawing_money_pwd, httpParams, new StringCallback() {
+        HttpManager.postObject(context, ResultBean.class, Url.drawing_money_pwd, httpParams, new OkGoCallback<ResultBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ResultBean resultBean = JSON.parseObject(response.body(), ResultBean.class);
-                if (resultBean.isSuccess()) {
+            public void onSuccess(ResultBean response) {
+                if (response.isSuccess()) {
                     UserInfo.getInstance().getLoginUserInfoBean().getContent().setReceiptPwd("********");//用假密码代替
                     contentView.success();
                 } else {
-                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
-                        contentView.error(resultBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.error(response.getMsg());
                     }
                 }
+
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.error("请求出错");
             }
 
             @Override

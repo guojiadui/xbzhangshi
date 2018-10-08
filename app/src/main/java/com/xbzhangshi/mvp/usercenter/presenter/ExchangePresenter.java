@@ -10,6 +10,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.usercenter.BaseView.IExchangeBaseView;
@@ -59,10 +60,11 @@ public class ExchangePresenter extends BasePresenter {
     }
 
     public void getConfigure(Context context) {
-        Object tag = HttpManager.post(context, Url.BASE_URL + Url.exchangeConfig, null, new StringCallback() {
+        Object tag = HttpManager.postObject(context, ExchangeConfigBean.class,Url.BASE_URL + Url.exchangeConfig,
+                null, new OkGoCallback<ExchangeConfigBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                configBean = JSON.parseObject(response.body(), ExchangeConfigBean.class);
+            public void onSuccess(ExchangeConfigBean response) {
+                configBean = response;
                 if (configBean.isSuccess()) {
                     DecimalFormat df = new DecimalFormat("#0.00");
                     contentView.upDateIntegral(df.format(configBean.getContent().getScore()));
@@ -110,26 +112,33 @@ public class ExchangePresenter extends BasePresenter {
         httpParams.put("typeId", curType);
         httpParams.put("amount", value);
 
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.exchange, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                ExchangeBean exchangeBean = JSON.parseObject(response.body(), ExchangeBean.class);
-                if (exchangeBean.isSuccess()) {
-                    contentView.success();
-                    init(context);
-                } else {
-                    if (TextUtils.isEmpty(exchangeBean.getMsg())) {
-                        Toast.makeText(context, exchangeBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+        Object tag = HttpManager.getObject(context, ExchangeBean.class,
+                Url.BASE_URL + Url.exchange, httpParams, new OkGoCallback<ExchangeBean>() {
+                    @Override
+                    public void onSuccess(ExchangeBean response) {
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        if (response.isSuccess()) {
+                            contentView.success();
+                            init(context);
+                        } else {
+                            if (TextUtils.isEmpty(response.getMsg())) {
+                                Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
+                    }
+                });
         addNet(tag);
     }
 
@@ -139,14 +148,14 @@ public class ExchangePresenter extends BasePresenter {
      * @param context
      */
     public void getBalance(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context,BalanceBean.class,
+                Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
-                if (balanceBean.isSuccess()) {
+            public void onSuccess(BalanceBean response) {
+                if (response.isSuccess()) {
                     try {
                         DecimalFormat df = new DecimalFormat("#0.00");
-                        contentView.updateBalance(df.format(balanceBean.getContent().getBalance()));
+                        contentView.updateBalance(df.format(response.getContent().getBalance()));
                     } catch (Exception e) {
 
                     }

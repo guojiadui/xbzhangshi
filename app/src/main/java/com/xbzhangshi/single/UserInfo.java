@@ -7,6 +7,7 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
 
@@ -59,14 +60,14 @@ public class UserInfo {
     /**
      * 登录
      */
-    public Object login(Context context, String name, String password, String code, StringCallback stringCallback) {
+    public  <T> Object login(Context context, Class<T> c,String name, String password, String code, OkGoCallback<T> stringCallback) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("username", name);
         httpParams.put("password", password);
         if (!TextUtils.isEmpty(code)) {
             httpParams.put("verifyCode", code);
         }
-        return HttpManager.post(context, Url.BASE_URL + Url.login, httpParams, stringCallback);
+        return HttpManager.postObject(context, c,Url.BASE_URL + Url.login, httpParams, stringCallback);
     }
 
     /**
@@ -74,8 +75,9 @@ public class UserInfo {
      *
      * @param
      */
-    public Object getUserInfo(Context context, StringCallback stringCallback) {
-        return HttpManager.get(context, Url.BASE_URL + Url.accountInfo, null, stringCallback);
+    public <T> Object  getUserInfo(Context context,Class<T> t, OkGoCallback<T> okGoCallback) {
+        return HttpManager.getObject(context, t,
+                Url.BASE_URL + Url.accountInfo, null, okGoCallback);
     }
 
     public void setLogin(boolean login) {

@@ -9,6 +9,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.record.bean.LotteryRecordBean;
 import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
@@ -38,37 +39,44 @@ public class LotteryRecordPresenter extends BasePresenter {
 
 
     public void initData(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.Loctterys, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LotteryRecordBean lotteryRecordBean = JSON.parseObject(response.body(), LotteryRecordBean.class);
-                if (lotteryRecordBean.isSuccess()) {
-                    //移除六合彩
-                    for (int i = -0; i < lotteryRecordBean.getContent().size(); i++) {
-                        LotteryRecordBean.ContentBean contentBean = lotteryRecordBean.getContent().get(i);
-                        if ("LHC".equals(contentBean.getCode())) {
-                            lotteryRecordBean.getContent().remove(i);
-                            break;
+        Object tag = HttpManager.getObject(context, LotteryRecordBean.class,
+                Url.BASE_URL + Url.Loctterys, null, new OkGoCallback<LotteryRecordBean>() {
+                    @Override
+                    public void onSuccess(LotteryRecordBean response) {
+
+                        if (response.isSuccess()) {
+                            //移除六合彩
+                            for (int i = -0; i < response.getContent().size(); i++) {
+                                LotteryRecordBean.ContentBean contentBean = response.getContent().get(i);
+                                if ("LHC".equals(contentBean.getCode())) {
+                                    response.getContent().remove(i);
+                                    break;
+                                }
+                            }
+                            contentView.successType(response.getContent());
+                            //获取默认的查询
+                            Date curDate = new Date(System.currentTimeMillis());
+                            String str = dFormat.format(curDate);
+                            query(context, str, str);
+                        } else {
+                            if (TextUtils.isEmpty(response.getMsg())) {
+                                contentView.error(response.getMsg());
+                            }
                         }
                     }
-                    contentView.successType(lotteryRecordBean.getContent());
-                    //获取默认的查询
-                    Date curDate = new Date(System.currentTimeMillis());
-                    String str = dFormat.format(curDate);
-                    query(context, str, str);
-                } else {
-                    if (TextUtils.isEmpty(lotteryRecordBean.getMsg())) {
-                        contentView.error(lotteryRecordBean.getMsg());
-                    }
-                }
-            }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.error("请求出错");
-            }
-        });
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.error("请求出错");
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.error("请求出错");
+                    }
+                });
         addNet(tag);
     }
 
@@ -103,52 +111,46 @@ public class LotteryRecordPresenter extends BasePresenter {
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
 
-        Object tag = HttpManager.post(context, Url.get_lottery_order, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                ResultLotteryRecordBean bean = null;
-                try {
-                    bean = JSON.parseObject(response.body(), ResultLotteryRecordBean.class);
-                } catch (Exception e) {
-                    contentView.error("请求出错");
-                    return;
-                }
+        Object tag = HttpManager.postObject(context, ResultLotteryRecordBean.class, Url.get_lottery_order,
+                httpParams, new OkGoCallback<ResultLotteryRecordBean>() {
+                    @Override
+                    public void onSuccess(ResultLotteryRecordBean response) {
+                        double d = response.getSumWinMoney() - response.getSumBuyMoney();
+                        String s = df.format(d);
+                        contentView.setprofit(response.getSumBuyMoney(), response.getSumWinMoney(), Double.valueOf(s));
+                        if (response.getPage().getList() != null && response.getPage().getList().size() > 0) {
+                            if (curpage == 1) {
+                                contentView.successData(response.getPage().getList(), response.getPage().isHasNext());
+                            } else {
+                                contentView.successMore(response.getPage().getList(), response.getPage().isHasNext());
+                            }
 
-                if (bean != null && bean.getPage() != null) {
-                    double d = bean.getSumWinMoney() - bean.getSumBuyMoney();
-                    String s = df.format(d);
-                    contentView.setprofit(bean.getSumBuyMoney(), bean.getSumWinMoney(), Double.valueOf(s));
-                    if (bean.getPage().getList() != null && bean.getPage().getList().size() > 0) {
-                        if (curpage == 1) {
-                            contentView.successData(bean.getPage().getList(), bean.getPage().isHasNext());
                         } else {
-                            contentView.successMore(bean.getPage().getList(), bean.getPage().isHasNext());
+                            if (curpage == 1) {
+                                contentView.empty();
+                            } else {
+                                contentView.emptyMore(response.getPage().isHasNext());
+                            }
+
                         }
-
-                    } else {
-                        if (curpage == 1) {
-                            contentView.empty();
-                        } else {
-                            contentView.emptyMore(bean.getPage().isHasNext());
+                        if (response.getPage().isHasNext()) {
+                            curpage = curpage + 1;
                         }
 
                     }
-                    if (bean.getPage().isHasNext()) {
-                        curpage = curpage + 1;
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.error("请求出错");
                     }
-                } else {
-                    contentView.error("请求出错");
-                }
 
-
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.error("请求出错");
-            }
-        });
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.error("请求出错");
+                    }
+                });
         addNet(tag);
     }
 
@@ -156,23 +158,23 @@ public class LotteryRecordPresenter extends BasePresenter {
     public void cancelOrder(Context context, String orderId) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("orderId", orderId);
-        Object tag = HttpManager.post(context, Url.cancelOrder, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context,ResultBean.class, Url.cancelOrder, httpParams, new OkGoCallback<ResultBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ResultBean resultBean = null;
-                try {
-                    resultBean = JSON.parseObject(response.body(), ResultBean.class);
-                } catch (Exception e) {
-                    contentView.cancalError("撤单失败");
-                    return;
-                }
-                if (resultBean.isSuccess()) {
+            public void onSuccess(ResultBean response) {
+                if (response.isSuccess()) {
                     contentView.cancalSuccess(orderId);
                 } else {
-                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
-                        contentView.cancalError(resultBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.cancalError(response.getMsg());
                     }
                 }
+
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.cancalError("请求出错");
             }
 
             @Override

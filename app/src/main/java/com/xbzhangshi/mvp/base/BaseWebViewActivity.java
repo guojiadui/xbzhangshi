@@ -214,15 +214,13 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     }*/
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (webView != null) {
             webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             webView.clearHistory();
             webView.destroy();
             webView = null;
         }
-
-
+        super.onDestroy();
     }
 
 

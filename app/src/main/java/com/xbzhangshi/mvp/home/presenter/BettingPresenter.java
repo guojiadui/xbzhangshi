@@ -12,6 +12,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
@@ -55,46 +56,44 @@ public class BettingPresenter extends BasePresenter {
         //加载公告
         HttpParams httpParams = new HttpParams();
         httpParams.put("code", "13");
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.notice, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LogUtils.e("TAG", response.body());
-                NoticeBean noticeBean = JSON.parseObject(response.body(), NoticeBean.class);
-                if (noticeBean.isSuccess()) {
-                    if (!TextUtils.isEmpty(noticeBean.getContent())) {
-                        //是否登出提窗口
-                        boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP,true);
-                        contentView.setNotice(noticeBean.getContent(), ishow);
+        Object tag = HttpManager.getObject(context, NoticeBean.class,
+                Url.BASE_URL + Url.notice, httpParams, new OkGoCallback<NoticeBean>() {
+                    @Override
+                    public void onSuccess(NoticeBean response) {
+                        if (response.isSuccess()) {
+                            if (!TextUtils.isEmpty(response.getContent())) {
+                                //是否登出提窗口
+                                boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP, true);
+                                contentView.setNotice(response.getContent(), ishow);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
         addNet(tag);
-        Object tag2 = HttpManager.get(context, Url.BASE_URL + Url.getUniversalSwitch, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LogUtils.e("TAG", response.body());
-                try {
-                    HomeSwithBean swithBean = JSON.parseObject(response.body(), HomeSwithBean.class);
-                    boolean dzp, qd;
-                    if (!TextUtils.isEmpty(swithBean.getIsDzpOnOff()) && swithBean.getIsDzpOnOff().equals("on")) {
-                        dzp = true;
-                    } else {
-                        dzp = false;
+        Object tag2 = HttpManager.getObject(context, HomeSwithBean.class,
+                Url.BASE_URL + Url.getUniversalSwitch, null, new OkGoCallback<HomeSwithBean>() {
+                    @Override
+                    public void onSuccess(HomeSwithBean response) {
+                        boolean dzp, qd;
+                        if (!TextUtils.isEmpty(response.getIsDzpOnOff()) && response.getIsDzpOnOff().equals("on")) {
+                            dzp = true;
+                        } else {
+                            dzp = false;
+                        }
+                        if (!TextUtils.isEmpty(response.getIsQdOnOff()) && response.getIsQdOnOff().equals("on")) {
+                            qd = true;
+                        } else {
+                            qd = false;
+                        }
+                        contentView.setSwith(dzp, qd);
                     }
-                    if (!TextUtils.isEmpty(swithBean.getIsQdOnOff()) && swithBean.getIsQdOnOff().equals("on")) {
-                        qd = true;
-                    } else {
-                        qd = false;
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.setSwith(true, true);
                     }
-                    contentView.setSwith(dzp, qd);
-                } catch (Exception e) {
-                    contentView.setSwith(true, true);
-                }
-
-
-            }
-        });
+                });
         addNet(tag2);
     }
 
@@ -126,21 +125,27 @@ public class BettingPresenter extends BasePresenter {
      */
 
     private void login(Context context, String name, String pwd) {
-        Object tag = UserInfo.getInstance().login(context, name, pwd, "", new StringCallback() {
+        Object tag = UserInfo.getInstance().login(context,LoginBean.class, name, pwd, "", new OkGoCallback<LoginBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginBean loginBean = JSON.parseObject(response.body(), LoginBean.class);
-                UserInfo.getInstance().setLoginBean(loginBean);
-                if (loginBean.isSuccess()) {
+            public void onSuccess(LoginBean response) {
+
+                UserInfo.getInstance().setLoginBean(response);
+                if (response.isSuccess()) {
                     //获取用户信息
                     getUserInfo(context, name, pwd);
                 } else {
-                    if (!TextUtils.isEmpty(loginBean.getMsg())) {
-                        contentView.LoginonError(loginBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -160,27 +165,33 @@ public class BettingPresenter extends BasePresenter {
      * @param context
      * @param
      */
-    private void getUserInfo(Context context, String name, String pwd) {
+    private <T> void getUserInfo(Context context, String name, String pwd) {
         //获取用户信息
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
+            public void onSuccess(LoginUserInfoBean response) {
+
+                if (response.isSuccess()) {
                     //设置以及登录信息
                     UserInfo.getInstance().setLogin(true);
                     UserInfo.getInstance().setmUsername(name);
                     UserInfo.getInstance().setmPassword(pwd);
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        contentView.LoginonError(loginUserInfoBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.LoginonError(response.getMsg());
                     } else {
                         contentView.LoginonError("登录失败");
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.LoginonError("请求出错");
             }
 
             @Override
@@ -196,15 +207,15 @@ public class BettingPresenter extends BasePresenter {
      * 获取余额
      */
     public void getBalance(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
-                if (balanceBean.isSuccess()) {
-                    contentView.updateBalance(subZeroAndDot(balanceBean.getContent().getBalance() + ""));
-                }
-            }
-        });
+        Object tag = HttpManager.getObject(context, BalanceBean.class,
+                Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
+                    @Override
+                    public void onSuccess(BalanceBean response) {
+                        if (response.isSuccess()) {
+                            contentView.updateBalance(subZeroAndDot(response.getContent().getBalance() + ""));
+                        }
+                    }
+                });
         addNet(tag);
     }
 

@@ -15,6 +15,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.webview.adpater.ActAdapter;
 import com.xbzhangshi.mvp.webview.bean.ActInfoBean;
@@ -63,24 +64,19 @@ public class PreferentialActivitiy extends BaseActivity {
 
 
     public void getList() {
-        HttpManager.get(this, Url.active_infos, null, new StringCallback() {
+        HttpManager.getObject(this,ActInfoBean.class, Url.active_infos, null, new OkGoCallback<ActInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                try {
-                    ActInfoBean actInfoBean = JSON.parseObject(response.body(), ActInfoBean.class);
-                    if (actInfoBean.isSuccess()) {
-                        ActAdapter actAdapter = new ActAdapter(PreferentialActivitiy.this, actInfoBean.getContent());
-                        actAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                                ActAdapter actAdapter1 = (ActAdapter) adapter;
-                                ActDescActivity.start(PreferentialActivitiy.this, actAdapter1.getItem(position).getId()+"" );
-                            }
-                        });
-                        recyclerView.setAdapter(actAdapter);
-                    }
-                } catch (Exception e) {
-
+            public void onSuccess(ActInfoBean response) {
+                if (response.isSuccess()) {
+                    ActAdapter actAdapter = new ActAdapter(PreferentialActivitiy.this, response.getContent());
+                    actAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            ActAdapter actAdapter1 = (ActAdapter) adapter;
+                            ActDescActivity.start(PreferentialActivitiy.this, actAdapter1.getItem(position).getId()+"" );
+                        }
+                    });
+                    recyclerView.setAdapter(actAdapter);
                 }
             }
 

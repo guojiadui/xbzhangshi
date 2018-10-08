@@ -57,6 +57,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        LogUtils.e("---onDestroy");
         MyApplication.getInstance().finishActivity(this);
     }
 

@@ -10,6 +10,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.usercenter.BaseView.IRealPersonExchangeBaseView;
@@ -44,22 +45,22 @@ public class RealPersonExcahngePresenter extends BasePresenter {
         httpParams.put("changeTo", to);//sys
         httpParams.put("quota", sum);
 
-        Object tag = HttpManager.post(context, Url.thirdRealTransMoney, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context, ResultBean.class, Url.thirdRealTransMoney, httpParams, new OkGoCallback<ResultBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                try {
-                    ResultBean resultBean = JSON.parseObject(response.body(), ResultBean.class);
-                    if (resultBean.isSuccess()) {
-                        contentView.transMoneySuccess();
-                    } else {
-                        if (!TextUtils.isEmpty(resultBean.getMsg())) {
-                            contentView.transMoneyError(resultBean.getMsg());
-                        }
+            public void onSuccess(ResultBean response) {
+                if (response.isSuccess()) {
+                    contentView.transMoneySuccess();
+                } else {
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.transMoneyError(response.getMsg());
                     }
-                } catch (Exception e) {
-                    contentView.transMoneyError("转换失败");
                 }
+            }
 
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.transMoneyError("转换失败");
             }
 
             @Override
@@ -101,19 +102,20 @@ public class RealPersonExcahngePresenter extends BasePresenter {
     public void getBalanceItem(Context context, String type) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("type", type);
-        HttpManager.post(context, Url.getBalanceitem, httpParams, new StringCallback() {
+        HttpManager.postObject(context,ItemBalanceBean.class, Url.getBalanceitem, httpParams, new OkGoCallback<ItemBalanceBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                try {
-                    ItemBalanceBean itemBalanceBean = JSON.parseObject(response.body(), ItemBalanceBean.class);
-                    if (!TextUtils.isEmpty(itemBalanceBean.getBalance())) {
-                       contentView.updateBalanceItem(type,itemBalanceBean.getBalance());
-                    } else {
-                        contentView.updateBalanceError("");
-                    }
-                } catch (Exception e) {
-                    contentView.updateBalanceError("刷新失败");
+            public void onSuccess(ItemBalanceBean response) {
+                if (!TextUtils.isEmpty(response.getBalance())) {
+                    contentView.updateBalanceItem(type, response.getBalance());
+                } else {
+                    contentView.updateBalanceError("");
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.updateBalanceError("刷新失败");
             }
 
             @Override
@@ -130,14 +132,14 @@ public class RealPersonExcahngePresenter extends BasePresenter {
      * @param context
      */
     public void getBalance(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context, BalanceBean.class, Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
-                if (balanceBean.isSuccess()) {
+            public void onSuccess(BalanceBean response) {
+
+                if (response.isSuccess()) {
                     try {
                         DecimalFormat df = new DecimalFormat("#0.00");
-                        contentView.updateBalance(df.format(balanceBean.getContent().getBalance()));
+                        contentView.updateBalance(df.format(response.getContent().getBalance()));
                     } catch (Exception e) {
 
                     }

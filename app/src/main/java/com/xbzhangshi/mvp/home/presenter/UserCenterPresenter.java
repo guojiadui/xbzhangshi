@@ -12,6 +12,7 @@ import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
@@ -61,17 +62,15 @@ public class UserCenterPresenter extends BasePresenter {
     }
 
     public void getVip(Context context) {
-        Object tag = HttpManager.get(context, Url.getVip, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                VIPBean vipBean = JSON.parseObject(response.body(), VIPBean.class);
-                if (vipBean == null)
-                    return;
-                if (!TextUtils.isEmpty(vipBean.getCurrent())) {
-                    contentView.upVip(vipBean);
-                }
-            }
-        });
+        Object tag = HttpManager.getObject(context, VIPBean.class,
+                Url.getVip, null, new OkGoCallback<VIPBean>() {
+                    @Override
+                    public void onSuccess(VIPBean response) {
+                        if (!TextUtils.isEmpty(response.getCurrent())) {
+                            contentView.upVip(response);
+                        }
+                    }
+                });
         addNet(tag);
     }
 
@@ -79,81 +78,87 @@ public class UserCenterPresenter extends BasePresenter {
      * 获取页面配置信息
      */
     public void getConfigure(Context context) {
-        HttpManager.get(context, Url.BASE_URL + Url.geRecordSwitch, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
+        HttpManager.get(context,
+                Url.BASE_URL + Url.geRecordSwitch, null, new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        JSONObject jsonObject = JSON.parseObject(response.body());
+                        Set<String> keys = jsonObject.keySet();
+                        Iterator iterator = keys.iterator();
+                        List<USerCenterOnOffBean> strings = new ArrayList<>();
+                        while (iterator.hasNext()) {
+                            String key = (String) iterator.next();
+                            String value = jsonObject.getString(key);
+                            USerCenterOnOffBean uSerCenterOnOffBean = new USerCenterOnOffBean();
+                            uSerCenterOnOffBean.setKey(key);
+                            uSerCenterOnOffBean.setName(value);
+                            strings.add(uSerCenterOnOffBean);
+                        }
+                        if (strings.size() > 0) {
+                            contentView.setConfig(strings);
+                        } else {
+                            contentView.error();
+                        }
 
-                JSONObject jsonObject = JSON.parseObject(response.body());
-                Set<String> keys = jsonObject.keySet();
-                Iterator iterator = keys.iterator();
-                List<USerCenterOnOffBean> strings = new ArrayList<>();
-                while (iterator.hasNext()) {
-                    String key = (String) iterator.next();
-                    String  value = jsonObject.getString(key);
-                    USerCenterOnOffBean uSerCenterOnOffBean = new USerCenterOnOffBean();
-                    uSerCenterOnOffBean.setKey(key);
-                    uSerCenterOnOffBean.setName(value);
-                    strings.add(uSerCenterOnOffBean);
-                }
-                if(strings.size()>0){
-                    contentView.setConfig(strings);
-                }else {
-                    contentView.error();
-                }
+                    }
 
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.error();
-            }
-        });
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.error();
+                    }
+                });
     }
 
-   //登录密码修改
-   //账号明细记录
+    //登录密码修改
+    //账号明细记录
 
     /**
      * 登出
      */
     public void Logout(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.logout, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                LogOutBean logOutBean = JSON.parseObject(response.body(), LogOutBean.class);
-                if (logOutBean.isSuccess()) {
-                    //清空自动登录的账号
-                    SPUtils.getInstance(Key.APP_USER_INFO_NAME).put(Key.LOGIN_USER_NAME, "");
-                    SPUtils.getInstance(Key.APP_USER_INFO_NAME).put(Key.LOGIN_USER_PWD, "");
-                    //清空内存数据
-                    UserInfo.getInstance().logout();
-                    contentView.LogoutSuccess();
-                    EventBus.getDefault().post(new LogoutEvent());
-                } else {
-                    contentView.LogoutonError();
-                }
-            }
+        Object tag = HttpManager.getObject(context, LogOutBean.class,
+                Url.BASE_URL + Url.logout, null, new OkGoCallback<LogOutBean>() {
+                    @Override
+                    public void onSuccess(LogOutBean response) {
+                        if (response.isSuccess()) {
+                            //清空自动登录的账号
+                            SPUtils.getInstance(Key.APP_USER_INFO_NAME).put(Key.LOGIN_USER_NAME, "");
+                            SPUtils.getInstance(Key.APP_USER_INFO_NAME).put(Key.LOGIN_USER_PWD, "");
+                            //清空内存数据
+                            UserInfo.getInstance().logout();
+                            contentView.LogoutSuccess();
+                            EventBus.getDefault().post(new LogoutEvent());
+                        } else {
+                            contentView.LogoutonError();
+                        }
+                    }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.LogoutonError();
-            }
-        });
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        contentView.LogoutonError();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.LogoutonError();
+                    }
+                });
         addNet(tag);
     }
 
 
     public void getBalance(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context,BalanceBean.class,
+                Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
-                if (balanceBean.isSuccess()) {
+            public void onSuccess(BalanceBean response) {
+                if (response.isSuccess()) {
                     try {
                         DecimalFormat df = new DecimalFormat("#0.00");
-                        contentView.updateBalance(df.format(balanceBean.getContent().getBalance()));
+                        contentView.updateBalance(df.format(response.getContent().getBalance()));
                     } catch (Exception e) {
 
                     }
@@ -165,13 +170,13 @@ public class UserCenterPresenter extends BasePresenter {
     }
 
     public void getMsgCount(Context context) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.getMsgCount, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context, MsgCountBean.class,
+                Url.BASE_URL + Url.getMsgCount, null, new OkGoCallback<MsgCountBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                MsgCountBean msgCountBean = JSON.parseObject(response.body(), MsgCountBean.class);
-                if (msgCountBean.isSuccess()) {
-                    if (msgCountBean.getContent() > 0) {
-                        contentView.upMsgCount(msgCountBean.getContent() + "");
+            public void onSuccess(MsgCountBean response) {
+                if (response.isSuccess()) {
+                    if (response.getContent() > 0) {
+                        contentView.upMsgCount(response.getContent() + "");
                     } else {
                         contentView.upMsgCount("");
                     }

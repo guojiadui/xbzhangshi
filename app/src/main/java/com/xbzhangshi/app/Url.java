@@ -54,6 +54,7 @@ public class Url {
      public  final  static String redPackage =APP_URL_HEAD+"/mobile/redPackage.do";//红包页链接
      public  final  static String grab =APP_URL_HEAD+"/center/redpacket/grab.do";//绑定cookie的红包链接
      public  final  static String customerService =APP_URL_HEAD+"/mobile/v3/customerService.do";//客服
+     public  final  static String helplist =APP_URL_HEAD+"/native/helplist.do";//帮助中心
 
 
  /**

@@ -10,6 +10,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
 import com.xbzhangshi.mvp.usercenter.BaseView.IBindingBlankBaseView;
@@ -65,35 +66,31 @@ public class BindingBlankPresenter extends BasePresenter {
             httpParams.put("bankAddress", bankAddress);
         httpParams.put("cardNo", blankCar);
         httpParams.put("repPwd", pwd);
-        Object tag = HttpManager.post(context, Url.bindingBlank, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context,ResultBean.class, Url.bindingBlank, httpParams, new OkGoCallback<ResultBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                ResultBean resultBean = null;
-                try {
-                    resultBean = JSON.parseObject(response.body(), ResultBean.class);
-                } catch (Exception e) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    contentView.error("绑定失败");
-                    return;
+            public void onSuccess(ResultBean response) {
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
                 }
-                if (resultBean == null) {
-                    if (loadingDialog != null && loadingDialog.isShowing()) {
-                        loadingDialog.dismiss();
-                    }
-                    return;
-                }
-                if (resultBean.isSuccess()) {
+                if (response.isSuccess()) {
                     getUserInfo(context);
                 } else {
                     if (loadingDialog != null && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
-                    if (!TextUtils.isEmpty(resultBean.getMsg())) {
-                        contentView.error(resultBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.error(response.getMsg());
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+                contentView.error("绑定失败");
             }
 
             @Override
@@ -113,22 +110,31 @@ public class BindingBlankPresenter extends BasePresenter {
      */
 
     public void getUserInfo(Context context) {
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
+            public void onSuccess(LoginUserInfoBean response) {
                 if (loadingDialog != null && loadingDialog.isShowing()) {
                     loadingDialog.dismiss();
                 }
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+
+                if (response.isSuccess()) {
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.success();
                     EventBus.getDefault().post(new UpUserInfoEvent());
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        contentView.error(loginUserInfoBean.getMsg());
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.error(response.getMsg());
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                if (loadingDialog != null && loadingDialog.isShowing()) {
+                    loadingDialog.dismiss();
+                }
+                contentView.error("请求出错");
             }
 
             @Override

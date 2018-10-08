@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.home.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,10 +20,12 @@ import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.MyApplication;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.home.event.RedPackEvent;
 import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.webview.HelpCneterActivity;
 import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
 import com.xbzhangshi.single.UserInfo;
 
@@ -31,14 +34,14 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.DecimalFormat;
 
 public class SidePesenter extends BasePresenter {
-    public static SidePesenter newInstance(SlidingMenu menu,View sideView) {
-        return new SidePesenter(menu,sideView);
+    public static SidePesenter newInstance(SlidingMenu menu, View sideView) {
+        return new SidePesenter(menu, sideView);
     }
 
     View sideView;
     SlidingMenu menu;
 
-    public SidePesenter(SlidingMenu menu,View sideView) {
+    public SidePesenter(SlidingMenu menu, View sideView) {
         this.sideView = sideView;
         this.menu = menu;
     }
@@ -63,6 +66,8 @@ public class SidePesenter extends BasePresenter {
             @Override
             public void onClick(View v) {
                 menu.toggle();
+                Intent intent = new Intent(context, HelpCneterActivity.class);
+                context.startActivity(intent);
             }
         });
 
@@ -135,17 +140,17 @@ public class SidePesenter extends BasePresenter {
      * 获取余额
      */
     public void getBalance(Context context, TextView textView) {
-        Object tag = HttpManager.get(context, Url.BASE_URL + Url.meminfo, null, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                BalanceBean balanceBean = JSON.parseObject(response.body(), BalanceBean.class);
-                if (balanceBean.isSuccess()) {
-                    DecimalFormat df = new DecimalFormat("#0.00");
-                    textView.setText(df.format(balanceBean.getContent().getBalance()) + "元");
+        Object tag = HttpManager.getObject(context, BalanceBean.class,
+                Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
+                    @Override
+                    public void onSuccess(BalanceBean response) {
+                        if (response.isSuccess()) {
+                            DecimalFormat df = new DecimalFormat("#0.00");
+                            textView.setText(df.format(response.getContent().getBalance()) + "元");
 
-                }
-            }
-        });
+                        }
+                    }
+                });
         addNet(tag);
     }
 

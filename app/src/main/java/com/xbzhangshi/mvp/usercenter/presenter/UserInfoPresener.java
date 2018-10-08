@@ -10,6 +10,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
 import com.xbzhangshi.mvp.usercenter.BaseView.IUserInfoBaseView;
@@ -53,26 +54,33 @@ public class UserInfoPresener extends BasePresenter {
         HttpParams httpParams = new HttpParams();
         httpParams.put("typeStr", key);
         httpParams.put("str", value);
-        Object tag = HttpManager.post(context, Url.BASE_URL + Url.updateuserInfo, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                UpDataUserbean upDataUserbean = JSON.parseObject(response.body(), UpDataUserbean.class);
-                if (upDataUserbean.isSuccess()) {
-                    getUserInfo(context);
-                    Toast.makeText(context, "绑定成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (!TextUtils.isEmpty(upDataUserbean.getMsg())) {
-                        Toast.makeText(context, upDataUserbean.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+        Object tag = HttpManager.postObject(context, UpDataUserbean.class, Url.BASE_URL + Url.updateuserInfo, httpParams,
+                new OkGoCallback<UpDataUserbean>() {
+                    @Override
+                    public void onSuccess(UpDataUserbean response) {
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        if (response.isSuccess()) {
+                            getUserInfo(context);
+                            Toast.makeText(context, "绑定成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (!TextUtils.isEmpty(response.getMsg())) {
+                                Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
+                    }
+                });
         addNet(tag);
     }
 
@@ -81,18 +89,24 @@ public class UserInfoPresener extends BasePresenter {
      */
 
     public void getUserInfo(Context context) {
-        Object tag = UserInfo.getInstance().getUserInfo(context, new StringCallback() {
+        Object tag = UserInfo.getInstance().getUserInfo(context, LoginUserInfoBean.class, new OkGoCallback<LoginUserInfoBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                LoginUserInfoBean loginUserInfoBean = JSON.parseObject(response.body(), LoginUserInfoBean.class);
-                if (loginUserInfoBean.isSuccess()) {
-                    UserInfo.getInstance().setLoginUserInfoBean(loginUserInfoBean);
+            public void onSuccess(LoginUserInfoBean response) {
+
+                if (response.isSuccess()) {
+                    UserInfo.getInstance().setLoginUserInfoBean(response);
                     initData();
                 } else {
-                    if (!TextUtils.isEmpty(loginUserInfoBean.getMsg())) {
-                        Toast.makeText(context, loginUserInfoBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        Toast.makeText(context, response.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+
+            @Override
+            public void parseError() {
+                super.parseError();
+                Toast.makeText(context, "请求出错", Toast.LENGTH_SHORT).show();
             }
 
             @Override

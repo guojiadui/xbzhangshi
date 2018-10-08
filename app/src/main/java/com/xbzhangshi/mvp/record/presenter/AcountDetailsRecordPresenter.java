@@ -9,6 +9,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.record.baseview.IAcountDetailsBaseView;
 import com.xbzhangshi.mvp.record.bean.AcountDetailsRecordBean;
@@ -88,46 +89,38 @@ public class AcountDetailsRecordPresenter extends BasePresenter {
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
 
-        Object tag = HttpManager.post(context, url, httpParams, new StringCallback() {
+        Object tag = HttpManager.postObject(context, AcountDetailsRecordBean.class,url, httpParams, new OkGoCallback<AcountDetailsRecordBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                AcountDetailsRecordBean bean = null;
-                try {
-                    bean = JSON.parseObject(response.body(), AcountDetailsRecordBean.class);
-                } catch (Exception e) {
-                    contentView.error("请求出错");
-                    return;
+            public void onSuccess(AcountDetailsRecordBean response) {
+                if (type == 1) {
+                    contentView.setTotalMpney(type, response.getAggsData().getTotalMoney());
+                } else if (type == 2) {
+                    contentView.setTotalMpney(type, response.getAggsData().getDrawMoney());
                 }
-
-                if (bean != null) {
-                    if (type == 1) {
-                        contentView.setTotalMpney(type, bean.getAggsData().getTotalMoney());
-                    } else if (type == 2) {
-                        contentView.setTotalMpney(type, bean.getAggsData().getDrawMoney());
-                    }
-                    if (bean.getList() != null && bean.getList().size() > 0) {
-                        if (curpage == 1) {
-                            contentView.successData(bean.getList(), type, bean.isHasNext());
-                        } else {
-                            contentView.successMore(bean.getList(), bean.isHasNext());
-                        }
-
+                if (response.getList() != null && response.getList().size() > 0) {
+                    if (curpage == 1) {
+                        contentView.successData(response.getList(), type, response.isHasNext());
                     } else {
-                        if (curpage == 1) {
-                            contentView.empty();
-                        } else {
-                            contentView.emptyMore(bean.isHasNext());
-                        }
+                        contentView.successMore(response.getList(), response.isHasNext());
+                    }
 
-                    }
-                    if (bean.isHasNext()) {
-                        curpage = curpage + 1;
-                    }
                 } else {
-                    contentView.error("请求出错");
+                    if (curpage == 1) {
+                        contentView.empty();
+                    } else {
+                        contentView.emptyMore(response.isHasNext());
+                    }
+
                 }
+                if (response.isHasNext()) {
+                    curpage = curpage + 1;
+                }
+            }
 
-
+            @Override
+            public void parseError() {
+                super.parseError();
+                contentView.error("请求出错");
             }
 
             @Override

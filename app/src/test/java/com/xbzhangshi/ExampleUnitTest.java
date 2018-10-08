@@ -1,5 +1,10 @@
 package com.xbzhangshi;
 
+import android.util.Log;
+
+import com.alibaba.fastjson.JSON;
+import com.xbzhangshi.mvp.home.bean.BalanceBean;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,6 +17,15 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        try {
+            BalanceBean t = JSON.parseObject("{}", BalanceBean.class);
+            if (t != null) {
+                System.out.print("--"+t.toString());
+            } else {
+                System.out.print("null");
+            }
+        } catch (Exception e) {
+           System.out.print("catch");
+        }
     }
 }
