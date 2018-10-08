@@ -151,7 +151,7 @@ public class SignInActivity extends BaseActivity {
 
     public void signIn() {
 
-        HttpManager.getObject(this,SignInBean.class, Url.signIn, null, new OkGoCallback<SignInBean>() {
+        HttpManager.getObject(this, SignInBean.class, Url.signIn, null, new OkGoCallback<SignInBean>() {
             @Override
             public void onSuccess(SignInBean response) {
                 if (response.isSuccess()) {
@@ -193,7 +193,14 @@ public class SignInActivity extends BaseActivity {
         HttpManager.post(this, Url.signByMonth, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                List<SignDayBean> list = JSON.parseArray(response.body(), SignDayBean.class);
+                List<SignDayBean> list = null;
+                try {
+                    list = JSON.parseArray(response.body(), SignDayBean.class);
+                } catch (Exception e) {
+                    Toast.makeText(SignInActivity.this, "请求出错", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (flag) {
                     flag = false;
                     sign.setOnClickListener(new View.OnClickListener() {

@@ -56,7 +56,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
             }
         });*/
         LogUtils.getConfig().setLogSwitch(true);
-        AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(), this);
+       /* AppUtils.registerAppStatusChangedListener(AppUtils.class.getName(), this);
         LogUtils.e("TAG", "------------------app");
          if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -64,7 +64,7 @@ public class MyApplication extends Application implements Utils.OnAppStatusChang
             return;
         }
 
-        LeakCanary.install(this);
+        LeakCanary.install(this);*/
 
     }
 

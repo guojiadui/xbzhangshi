@@ -54,7 +54,14 @@ public class ServiceTime {
         this.isvisable = isvisable;
     }
 
-    private  boolean isvisable = true;
+    private  boolean isvisable = true;//fragment是否可见
+    private  boolean isResume = true;//fragment是否活动焦点
+    public boolean isResume() {
+        return isResume;
+    }
+    public void setResume(boolean resume) {
+        isResume = resume;
+    }
 
     public List<LoctteryBean.ContentBean> getContentBeanList() {
         return contentBeanList;
@@ -103,10 +110,10 @@ public class ServiceTime {
                     handler.postDelayed(this, TIME);
                     // Long startIime = System.currentTimeMillis();
                     remoteServiceTime = remoteServiceTime + 1000;//更新服务器时间
-                    if(!isvisable){
+                    if(!isvisable||!isResume){
                         return;
                     }
-                    Log.e("TAG","可见");
+                   // Log.e("TAG","可操作");
                     //判断是否有时间要更新
                     for (LoctteryBean.ContentBean contentBean : contentBeanList) {
                         // contentBean.setServerTime(contentBean.getServerTime() + 1000);

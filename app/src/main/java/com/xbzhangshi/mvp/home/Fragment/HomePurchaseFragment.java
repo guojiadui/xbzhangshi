@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.home.Fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.se.omapi.SEService;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -74,6 +75,21 @@ public class HomePurchaseFragment extends BaseFragment implements IPurchaseView 
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(ServiceTime.getInstance()!=null ){
+            ServiceTime.getInstance().setResume(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(ServiceTime.getInstance()!=null){
+            ServiceTime.getInstance().setResume(true);
+        }
+    }
 
     @Override
     protected int getLayoutId() {

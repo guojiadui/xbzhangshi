@@ -146,15 +146,20 @@ public class WheelActivity extends BaseActivity {
         Object tag = HttpManager.post(this, Url.lastrd, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                List<PrzeListBean> przeListBeans = JSON.parseArray(response.body(), PrzeListBean.class);
-                if (przeListBeans != null) {
-                    String s = "最近<font color=\"red\">" + przeListBeans.size() + "</font>人中奖";
-                    prizeSum.setText(Html.fromHtml(s));
+                try {
+                    List<PrzeListBean> przeListBeans = JSON.parseArray(response.body(), PrzeListBean.class);
+                    if (przeListBeans != null) {
+                        String s = "最近<font color=\"red\">" + przeListBeans.size() + "</font>人中奖";
+                        prizeSum.setText(Html.fromHtml(s));
+                    }
+                    for (PrzeListBean bean : przeListBeans) {
+                        bean.setAccount(replaceString2Star(bean.getAccount(), 3, 0));
+                    }
+                    smoothscroll.setData(przeListBeans);
+                }catch (Exception e){
+
                 }
-                for (PrzeListBean bean : przeListBeans) {
-                    bean.setAccount(replaceString2Star(bean.getAccount(), 3, 0));
-                }
-                smoothscroll.setData(przeListBeans);
+
             }
         });
         addNet(tag);
