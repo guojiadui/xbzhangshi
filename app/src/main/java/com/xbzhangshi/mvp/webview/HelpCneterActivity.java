@@ -19,6 +19,7 @@ import com.xbzhangshi.mvp.webview.adpater.HelpAdapter;
 import com.xbzhangshi.mvp.webview.bean.HelpListBean;
 import com.xbzhangshi.view.CustomToolbar;
 import com.xbzhangshi.view.DividerGridItemDecoration;
+import com.xbzhangshi.view.DividerGridItemDecoration2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +56,7 @@ public class HelpCneterActivity extends BaseActivity {
             }
         });
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.addItemDecoration(new DividerGridItemDecoration2(this));
         multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +86,7 @@ public class HelpCneterActivity extends BaseActivity {
                         HelpDetailActivity.start(HelpCneterActivity.this, adapter1.getItem(position).getContent());
                     }
                 });
-                recyclerView.addItemDecoration(new DividerGridItemDecoration(HelpCneterActivity.this));
+
                 recyclerView.setAdapter(adapter);
             }
 

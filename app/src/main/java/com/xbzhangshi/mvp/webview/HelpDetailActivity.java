@@ -58,5 +58,14 @@ public class HelpDetailActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        if (webview != null) {
+            webview.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            webview.clearHistory();
+            webview.destroy();
+            webview = null;
+        }
+        super.onDestroy();
+    }
 }
