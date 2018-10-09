@@ -54,6 +54,13 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
         intent.putExtra("code", dataBean.getLotCode());
         context.startActivity(intent);
     }
+    public static void start(Context context, String name,String lotType,String code ) {
+        Intent intent = new Intent(context, OpenPrizedetailsActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("lotType", lotType);
+        intent.putExtra("code", code);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getlayout() {

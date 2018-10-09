@@ -82,23 +82,28 @@ public class UserCenterPresenter extends BasePresenter {
                 Url.BASE_URL + Url.geRecordSwitch, null, new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        JSONObject jsonObject = JSON.parseObject(response.body());
-                        Set<String> keys = jsonObject.keySet();
-                        Iterator iterator = keys.iterator();
-                        List<USerCenterOnOffBean> strings = new ArrayList<>();
-                        while (iterator.hasNext()) {
-                            String key = (String) iterator.next();
-                            String value = jsonObject.getString(key);
-                            USerCenterOnOffBean uSerCenterOnOffBean = new USerCenterOnOffBean();
-                            uSerCenterOnOffBean.setKey(key);
-                            uSerCenterOnOffBean.setName(value);
-                            strings.add(uSerCenterOnOffBean);
-                        }
-                        if (strings.size() > 0) {
-                            contentView.setConfig(strings);
-                        } else {
+                        try {
+                            JSONObject jsonObject = JSON.parseObject(response.body());
+                            Set<String> keys = jsonObject.keySet();
+                            Iterator iterator = keys.iterator();
+                            List<USerCenterOnOffBean> strings = new ArrayList<>();
+                            while (iterator.hasNext()) {
+                                String key = (String) iterator.next();
+                                String value = jsonObject.getString(key);
+                                USerCenterOnOffBean uSerCenterOnOffBean = new USerCenterOnOffBean();
+                                uSerCenterOnOffBean.setKey(key);
+                                uSerCenterOnOffBean.setName(value);
+                                strings.add(uSerCenterOnOffBean);
+                            }
+                            if (strings.size() > 0) {
+                                contentView.setConfig(strings);
+                            } else {
+                                contentView.error();
+                            }
+                        }catch (Exception e){
                             contentView.error();
                         }
+
 
                     }
 

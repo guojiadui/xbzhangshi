@@ -122,7 +122,14 @@ public abstract class BaseWebViewActivity extends BaseActivity {
                 break;
         }
     }
-
+    @JavascriptInterface
+    public void webBack(String ss) {
+        finish();
+    }
+    @JavascriptInterface
+    public void webHome(String ss) {
+        HomeActivity.start(this); //返回首页
+    }
     @JavascriptInterface //仍然必不可少
     public String isAndroidApp() {
         return "'isAndroid";
@@ -165,7 +172,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         //不支持js的alert弹窗，需要自己监听然后通过dialog弹窗
         @Override
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-            Toast.makeText(BaseWebViewActivity.this, "不支持", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(BaseWebViewActivity.this, "不支持", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder localBuilder = new AlertDialog.Builder(webView.getContext());
             localBuilder.setMessage(message).setPositiveButton("确定", null);
             localBuilder.setCancelable(false);
@@ -195,7 +202,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {//点击返回按钮的时候判断有没有上一页
+        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_UP) {//点击返回按钮的时候判断有没有上一页
             webView.goBack(); // goBack()表示返回webView的上一页面
             return true;
         }

@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 
+import com.blankj.utilcode.util.LogUtils;
 import com.xbzhangshi.R;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseWebViewActivity;
 import com.xbzhangshi.mvp.details.OpenPrizedetailsActivity;
 import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.mvp.record.LotteryRecordActivity;
 import com.xbzhangshi.single.UserInfo;
 
 
@@ -19,11 +24,10 @@ import com.xbzhangshi.single.UserInfo;
  * 彩票投注的详情页
  */
 public class BettingDetailsActivity extends BaseWebViewActivity {
-
     public static long startitme = 0;
 
     public static void start(Context context, String code) {
-   //连续俩次点击大于500
+        //连续俩次点击大于500
         long cur = System.currentTimeMillis();
         if ((cur - startitme) < 500) {
             return;
@@ -56,14 +60,23 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     @Override
     public String getUrl(Bundle savedInstanceState) {
         String code = getIntent().getStringExtra("code");
-        return "http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode=" + code;
+        return Url.bet_lotterys + code;
     }
 
     @Override
-    protected void onRestart() {
-        String code = getIntent().getStringExtra("code");
-        webView.loadUrl("http://xbzhanshi.com/mobile/v3/bet_lotterys.do?lotCode=" + code);
-        super.onRestart();
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String code = intent.getStringExtra("code");
+        webView.loadUrl(Url.bet_lotterys + code);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {//点击返回按钮的时候判断有没有上一页
+            finish();// goBack()表示返回webView的上一页面
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -72,10 +85,29 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
      * @param
      * @return
      */
-    @JavascriptInterface //仍然必不可少
-    public void confirm(String s, String d) {
 
+
+    //投注记录
+    @JavascriptInterface
+    public void locaLotteryNotes(String ss) {
+        LotteryRecordActivity.start(this);
     }
 
+    @JavascriptInterface
+    public void loginLose(String ss) {
+        LoginActivity.startLogin(this);
+    }
+
+    //开奖历史记录
+    @JavascriptInterface
+    public void lotteryCode(String code, String name, String type) {
+        OpenPrizedetailsActivity.start(this, name, type, code);
+    }
+
+    //彩票跳转
+    @JavascriptInterface
+    public void locaLottery(String code) {
+        BettingDetailsActivity.start(this, code);
+    }
 
 }

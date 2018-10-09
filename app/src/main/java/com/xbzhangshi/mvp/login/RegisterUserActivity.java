@@ -23,6 +23,7 @@ import com.xbzhangshi.mvp.login.BaseView.IRegisterView;
 import com.xbzhangshi.mvp.login.adapter.RegisterAdapter;
 import com.xbzhangshi.mvp.login.bean.RegisterItemBean;
 import com.xbzhangshi.mvp.login.presenter.RegisterPresenter;
+import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
 import com.xbzhangshi.view.CustomToolbar;
 
 import java.util.List;
@@ -42,6 +43,8 @@ public class RegisterUserActivity extends BaseActivity implements IRegisterView 
     RecyclerView recyclerView;
     @BindView(R.id.register_user)
     TextView registerUser;
+    @BindView(R.id.online_customer)
+    TextView onlineCustomer;
     @BindView(R.id.multipleStatusView)
     MultipleStatusView multipleStatusView;
     LoadingDailog loadingDialog;
@@ -67,6 +70,12 @@ public class RegisterUserActivity extends BaseActivity implements IRegisterView 
             public void onClick(View v) {
                 multipleStatusView.showLoading();
                 registerPresenter.getRegconfig(RegisterUserActivity.this);
+            }
+        });
+        onlineCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomerServiceActivity.start(RegisterUserActivity.this);
             }
         });
     }

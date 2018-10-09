@@ -30,6 +30,7 @@ import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
 import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
+import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
 import com.xbzhangshi.view.CustomToolbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -114,6 +115,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
                 showHistoryNames(logInPresenter.getNamelist());
             }
         });
+
         /**
          * 注册
          */
@@ -126,7 +128,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         onlineCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                CustomerServiceActivity.start(LoginActivity.this);
             }
         });
         /**
