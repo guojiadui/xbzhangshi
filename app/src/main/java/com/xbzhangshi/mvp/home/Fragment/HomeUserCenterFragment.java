@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IUserCenterBaseView;
 import com.xbzhangshi.mvp.home.bean.USerCenterOnOffBean;
@@ -274,7 +275,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         super.onHiddenChanged(hidden);
         if (!hidden) {
             EventBus.getDefault().post(new ClearHomeMsgEvent());
-            if(userCenterPresenter!=null){
+            if (userCenterPresenter != null) {
                 userCenterPresenter.getBalance(mActivity);
             }
         }
@@ -295,8 +296,6 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
             userCenterPresenter.onDestory();
         }
     }
-
-
 
 
     //成功
@@ -321,7 +320,7 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
         if (!TextUtils.isEmpty(name))
             userName.setText(name.replace(" ", "").replace("\n", ""));
         RequestOptions requestOptions = new RequestOptions().transform(new GlideCircleBorderTransform(9, 0xffff5555));
-        Glide.with(this).load("http://xbzhanshi.com/mobile/v3/images/touxiang.png").apply(requestOptions).into(userIcon);
+        Glide.with(this).load(Url.touxiang).apply(requestOptions).into(userIcon);
     }
 
     @Override

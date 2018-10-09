@@ -40,7 +40,7 @@ import okhttp3.Cookie;
  */
 public abstract class BaseWebViewActivity extends BaseActivity {
     public WebView webView;
-    private ContentLoadingProgressBar progressBar;
+    public ContentLoadingProgressBar progressBar;
 
     public abstract int getWebViewId();
 
@@ -48,12 +48,17 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     public abstract String getUrl(Bundle savedInstanceState);
 
+
+
     @SuppressLint("JavascriptInterface")
     @Override
     protected void initView(Bundle savedInstanceState) {
         progressBar = (ContentLoadingProgressBar) findViewById(getProgressBarId());//进度条
         webView = (WebView) findViewById(getWebViewId());
+        initWeb(savedInstanceState);
+    }
 
+    public void initWeb(Bundle savedInstanceState) {
         webView.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
@@ -86,8 +91,8 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         setCookie(savedInstanceState);
         webView.loadUrl(getUrl(savedInstanceState));//加载url
         // webView.loadUrl("file:///android_asset/test.html");//加载asset文件夹下html
-
     }
+
 
     public void setCookie(Bundle savedInstanceState) {
         CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
@@ -122,21 +127,24 @@ public abstract class BaseWebViewActivity extends BaseActivity {
                 break;
         }
     }
+
     @JavascriptInterface
     public void webBack(String ss) {
         finish();
     }
+
     @JavascriptInterface
     public void webHome(String ss) {
         HomeActivity.start(this); //返回首页
     }
+
     @JavascriptInterface //仍然必不可少
     public String isAndroidApp() {
         return "'isAndroid";
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件
-    private WebViewClient webViewClient = new WebViewClient() {
+    public WebViewClient webViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {//页面加载完成
             progressBar.setVisibility(View.GONE);
@@ -168,11 +176,11 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     };
 
     //WebChromeClient主要辅助WebView处理Javascript的对话框、网站图标、网站title、加载进度等
-    private WebChromeClient webChromeClient = new WebChromeClient() {
+    public WebChromeClient webChromeClient = new WebChromeClient() {
         //不支持js的alert弹窗，需要自己监听然后通过dialog弹窗
         @Override
         public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-           // Toast.makeText(BaseWebViewActivity.this, "不支持", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(BaseWebViewActivity.this, "不支持", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder localBuilder = new AlertDialog.Builder(webView.getContext());
             localBuilder.setMessage(message).setPositiveButton("确定", null);
             localBuilder.setCancelable(false);
@@ -202,7 +210,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_UP) {//点击返回按钮的时候判断有没有上一页
+        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {//点击返回按钮的时候判断有没有上一页
             webView.goBack(); // goBack()表示返回webView的上一页面
             return true;
         }

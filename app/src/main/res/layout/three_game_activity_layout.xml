@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.classic.common.MultipleStatusView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/multipleStatusView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:emptyView="@layout/layout_empty"
+    app:errorView="@layout/layout_error"
+    app:loadingView="@layout/layout_loading">
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/progressbar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_4"
+        android:max="100"
+        android:progress="0"
+        android:visibility="visible"/>
+</com.classic.common.MultipleStatusView>

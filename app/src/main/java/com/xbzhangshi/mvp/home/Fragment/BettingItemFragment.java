@@ -21,6 +21,7 @@ import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
 
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
+import com.xbzhangshi.mvp.webview.ThreeGameActivity;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.CustomViewPager;
 
@@ -120,7 +121,7 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
 
                 BettingTypeAdapter bettingTypeAdapter1 = (BettingTypeAdapter) adapter;
                 BesidesLotteryBean.ContentBean contentBean = bettingTypeAdapter1.getData().get(position);
-                BettingDetailsActivity.start(mActivity, contentBean.getPlayCode());
+                ThreeGameActivity.start(mActivity, contentBean.getPlayCode());
             }
         });
         recyclerView.setAdapter(bettingTypeAdapter);

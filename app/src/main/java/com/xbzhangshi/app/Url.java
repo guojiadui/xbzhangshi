@@ -56,6 +56,8 @@ public class Url {
      public  final  static String customerService =APP_URL_HEAD+"/mobile/v3/customerService.do";//客服
      public  final  static String helplist =APP_URL_HEAD+"/native/helplist.do";//帮助中心
      public  final  static String bet_lotterys =APP_URL_HEAD+"/mobile/v3/bet_lotterys.do?lotCode=";//投注网页
+     public  final  static String forwardReal =APP_URL_HEAD+"/native/forwardReal.do?playCode=";//三方跳转网页
+
 
 
  /**
