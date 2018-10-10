@@ -202,18 +202,34 @@ public class BettingPresenter extends BasePresenter {
         });
         addNet(tag);
     }
-
+    boolean isLoadingBalance = false;
     /**
      * 获取余额
      */
     public void getBalance(Context context) {
+        if(isLoadingBalance){
+            return;
+        }
+        isLoadingBalance =true;
         Object tag = HttpManager.getObject(context, BalanceBean.class,
                 Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
                     @Override
                     public void onSuccess(BalanceBean response) {
+                        isLoadingBalance =false;
                         if (response.isSuccess()) {
                             contentView.updateBalance(subZeroAndDot(response.getContent().getBalance() + ""));
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        isLoadingBalance =false;
+                    }
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        isLoadingBalance =false;
                     }
                 });
         addNet(tag);

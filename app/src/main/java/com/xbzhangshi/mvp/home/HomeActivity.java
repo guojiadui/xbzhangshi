@@ -79,7 +79,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         EventBus.getDefault().register(this);
 
         mBottomBar.addItem(new BottomBarTab(this, R.mipmap.sy_nor, "投注大厅"))
-                .addItem(new BottomBarTab(this, R.mipmap.gcdt_nor, "采购大厅"))
+                .addItem(new BottomBarTab(this, R.mipmap.gcdt_nor, "购彩大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.kjdt_nor, "开奖公告"))
                 .addItem(new BottomBarTab(this, R.mipmap.grzx_nor, "个人中心"));
         mBottomBar.setCurrentItem(0);

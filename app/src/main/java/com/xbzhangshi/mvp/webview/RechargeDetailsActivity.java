@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.webview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -62,8 +63,13 @@ public class RechargeDetailsActivity extends BaseWebViewActivity {
         List<Cookie> allCookie = cookieStore.getAllCookie();
         String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
         CookieManager cookieManager = CookieManager.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.setAcceptThirdPartyCookies(webView, true);
+        }
         cookieManager.setAcceptCookie(true);
         cookieManager.setCookie(Url.generatePayOrder, cookieString);
+        cookieManager.setCookie(Url.pay, cookieString);
+        cookieManager.setCookie("https://www.9-epay.com/Pay_index.html", cookieString);
         CookieSyncManager.getInstance().sync();
     }
 

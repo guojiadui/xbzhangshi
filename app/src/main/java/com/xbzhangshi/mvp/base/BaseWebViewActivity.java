@@ -28,6 +28,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.home.HomeActivity;
+import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.record.AcountDetailsRecordActivity;
 
 import java.util.List;
@@ -47,7 +48,6 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     public abstract int getProgressBarId();
 
     public abstract String getUrl(Bundle savedInstanceState);
-
 
 
     @SuppressLint("JavascriptInterface")
@@ -99,6 +99,9 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         List<Cookie> allCookie = cookieStore.getAllCookie();
         String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
         CookieManager cookieManager = CookieManager.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.setAcceptThirdPartyCookies(webView, true);
+        }
         cookieManager.setAcceptCookie(true);
         cookieManager.setCookie(getUrl(savedInstanceState), cookieString);
         CookieSyncManager.getInstance().sync();
@@ -138,6 +141,13 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         HomeActivity.start(this); //返回首页
     }
 
+    //登录
+    @JavascriptInterface
+    public void playesLogin(String ss) {
+        LoginActivity.startLogin(this);
+    }
+  public  void loadFinish(){}
+  public  void loadStart(){}
     @JavascriptInterface //仍然必不可少
     public String isAndroidApp() {
         return "'isAndroid";
@@ -148,11 +158,13 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         @Override
         public void onPageFinished(WebView view, String url) {//页面加载完成
             progressBar.setVisibility(View.GONE);
+            loadFinish();
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {//页面开始加载
             progressBar.setVisibility(View.VISIBLE);
+            loadStart();
         }
 
         @Override
@@ -163,13 +175,12 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-
             super.onReceivedError(view, request, error);
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
+            LogUtils.e("TAG", url);
             return super.shouldOverrideUrlLoading(view, url);
         }
 
@@ -210,7 +221,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {//点击返回按钮的时候判断有没有上一页
+        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK  ) {//点击返回按钮的时候判断有没有上一页
             webView.goBack(); // goBack()表示返回webView的上一页面
             return true;
         }

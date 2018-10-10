@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.webview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.CookieManager;
@@ -71,6 +72,9 @@ public class CrownSportsActivity extends BaseWebViewActivity {
         List<Cookie> allCookie = cookieStore.getAllCookie();
         String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
         CookieManager cookieManager = CookieManager.getInstance();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.setAcceptThirdPartyCookies(webView, true);
+        }
         cookieManager.setAcceptCookie(true);
         cookieManager.setCookie(Url.Crown_Sports_cookis, cookieString);
         CookieSyncManager.getInstance().sync();

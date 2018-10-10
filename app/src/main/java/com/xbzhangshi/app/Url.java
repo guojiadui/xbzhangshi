@@ -69,6 +69,7 @@ public class Url {
   */
  public  final  static String pay_select_way =APP_URL_HEAD+"/mobile/v3/pay_select_way.do";//充值的页
  public  final  static String generatePayOrder =APP_URL_HEAD+"/m/ajax/generatePayOrder.do";//用于充值页绑定cookie的链接
+ public  final  static String pay =APP_URL_HEAD+"/onlinepay/pay.do";//用于充值页绑定cookie的链接
 
  /**
      * 投注记录

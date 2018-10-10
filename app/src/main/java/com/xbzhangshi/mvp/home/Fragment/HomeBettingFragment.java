@@ -101,6 +101,17 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     @Override
     public void onResume() {
         super.onResume();
+        if(bettingPresenter!=null){
+            bettingPresenter.getBalance(mActivity);
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden&&bettingPresenter!=null){
+            bettingPresenter.getBalance(mActivity);
+        }
     }
 
     @Override
