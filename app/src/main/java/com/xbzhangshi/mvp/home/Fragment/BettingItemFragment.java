@@ -21,6 +21,7 @@ import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
 
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
+import com.xbzhangshi.mvp.webview.CrownSportsActivity;
 import com.xbzhangshi.mvp.webview.ThreeGameActivity;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.CustomViewPager;
@@ -121,7 +122,13 @@ public class BettingItemFragment extends BaseFragment implements IBettingItemBas
 
                 BettingTypeAdapter bettingTypeAdapter1 = (BettingTypeAdapter) adapter;
                 BesidesLotteryBean.ContentBean contentBean = bettingTypeAdapter1.getData().get(position);
-                ThreeGameActivity.start(mActivity, contentBean.getPlayCode());
+                if("hgty".equals(contentBean.getPlayCode())){
+                    //皇冠体育
+                    CrownSportsActivity.start(mActivity, contentBean.getPlayCode());
+                }else {
+                    ThreeGameActivity.start(mActivity, contentBean.getPlayCode());
+                }
+
             }
         });
         recyclerView.setAdapter(bettingTypeAdapter);

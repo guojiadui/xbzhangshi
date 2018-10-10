@@ -1,16 +1,11 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.text.Annotation;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,15 +15,12 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 import com.xbzhangshi.R;
 
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseFragment;
-import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
@@ -43,7 +35,7 @@ import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
 import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
 import com.xbzhangshi.mvp.webview.RedPackageActivity;
 import com.xbzhangshi.mvp.webview.SignInActivity;
-import com.xbzhangshi.mvp.webview.WheelActivity;
+import com.xbzhangshi.mvp.webview.LuckDrawActivity;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.CustomViewPager;
 import com.xbzhangshi.view.GlideCircleBorderTransform;
@@ -56,9 +48,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * 投注大厅
@@ -371,7 +361,8 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
                         LoginActivity.startLogin(mActivity);
                         return;
                     }
-                    WheelActivity.start(mActivity);
+                    //WheelActivity.start(mActivity);
+                    LuckDrawActivity.start(mActivity);
                 }
             });
         } else {

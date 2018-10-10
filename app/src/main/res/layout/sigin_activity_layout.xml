@@ -69,6 +69,7 @@
                        android:layout_alignParentBottom="true"
                         android:layout_marginBottom="@dimen/dp_5"
                         android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/dp_5"
                         android:textSize="@dimen/font_size_large"
                         android:textColor="@color/black"
                         android:text="已经连续签到0天"/>

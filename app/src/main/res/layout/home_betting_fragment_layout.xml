@@ -30,7 +30,7 @@
             android:layout_toRightOf="@+id/side_icon"
             android:layout_marginStart="@dimen/dp_6"
             android:textSize="@dimen/font_size_xlarge"
-            android:text="新博展示站"/>
+            android:text="信博展示站"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

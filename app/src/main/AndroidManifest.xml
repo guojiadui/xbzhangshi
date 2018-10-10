@@ -64,6 +64,8 @@
         <activity android:name=".mvp.webview.HelpCneterActivity" />
         <activity android:name=".mvp.webview.HelpDetailActivity" />
         <activity android:name=".mvp.webview.ThreeGameActivity" />
+        <activity android:name=".mvp.webview.CrownSportsActivity" />
+        <activity android:name=".mvp.webview.LuckDrawActivity" />
 
     </application>
 

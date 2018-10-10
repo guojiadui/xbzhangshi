@@ -27,6 +27,7 @@ import com.xbzhangshi.mvp.home.event.UpdateLotteryEvent;
 import com.xbzhangshi.mvp.home.presenter.PurchaseItemPesenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
+import com.xbzhangshi.mvp.webview.ThreeGameActivity;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.DividerGridItemDecoration;
 
@@ -165,8 +166,13 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         VPurchaseTypeAdapter adapter1 = (VPurchaseTypeAdapter) adapter;
-                        String code = adapter1.getData().get(position).getCode();
-                        BettingDetailsActivity.start(mActivity,code);
+                      //  String code = adapter1.getData().get(position).getCode();
+                        if(adapter1.getData().get(position).getIsThird()==2){
+                            //三方彩票
+                            ThreeGameActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }else {
+                            BettingDetailsActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }
                     }
                 });
             }
@@ -190,7 +196,12 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         GPurchaseTypeAdapter adapter1 = (GPurchaseTypeAdapter) adapter;
                         String code = adapter1.getData().get(position).getCode();
-                        BettingDetailsActivity.start(mActivity,code);
+                        if(adapter1.getData().get(position).getIsThird()==2){
+                            //三方彩票
+                            ThreeGameActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }else {
+                            BettingDetailsActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }
                     }
                 });
             }
@@ -225,7 +236,12 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         VPurchaseTypeAdapter adapter1 = (VPurchaseTypeAdapter) adapter;
                         String code = adapter1.getData().get(position).getCode();
-                        BettingDetailsActivity.start(mActivity,code);
+                        if(adapter1.getData().get(position).getIsThird()==2){
+                            //三方彩票
+                            ThreeGameActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }else {
+                            BettingDetailsActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }
                     }
                 });
             }
@@ -253,7 +269,12 @@ public class PurchaseItemFragment extends BaseFragment implements IPurchaseItemV
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         GPurchaseTypeAdapter adapter1 = (GPurchaseTypeAdapter) adapter;
                         String code = adapter1.getData().get(position).getCode();
-                        BettingDetailsActivity.start(mActivity,code);
+                        if(adapter1.getData().get(position).getIsThird()==2){
+                            //三方彩票
+                            ThreeGameActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }else {
+                            BettingDetailsActivity.start(mActivity, adapter1.getData().get(position).getCode());
+                        }
                     }
                 });
             }

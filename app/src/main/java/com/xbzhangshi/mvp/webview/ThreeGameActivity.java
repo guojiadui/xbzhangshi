@@ -45,7 +45,6 @@ public class ThreeGameActivity extends BaseWebViewActivity {
             LoginActivity.startLogin(context);
             return;
         }
-
         Intent intent = new Intent(context, ThreeGameActivity.class);
         intent.putExtra("code", code);
         context.startActivity(intent);

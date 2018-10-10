@@ -57,6 +57,10 @@ public class Url {
      public  final  static String helplist =APP_URL_HEAD+"/native/helplist.do";//帮助中心
      public  final  static String bet_lotterys =APP_URL_HEAD+"/mobile/v3/bet_lotterys.do?lotCode=";//投注网页
      public  final  static String forwardReal =APP_URL_HEAD+"/native/forwardReal.do?playCode=";//三方跳转网页
+     public  final  static String Crown_Sports=APP_URL_HEAD+"/mobile/v3/sport/hg/goPage.do?dataType=TD_FT_MN";//皇冠体育
+     public  final  static String Crown_Sports_cookis=APP_URL_HEAD+"/mobile/sports/hg/getData.do";//皇冠体育的cookie绑定
+     public  final  static String turnlate=APP_URL_HEAD+"/mobile/v3/turnlate.do";//转盘页面
+     public  final  static String turnlate_cookie=APP_URL_HEAD+"/center/active/lastrd.do";//转盘页面cookie的绑定
 
 
 

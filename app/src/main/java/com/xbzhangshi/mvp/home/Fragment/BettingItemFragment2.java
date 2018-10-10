@@ -16,6 +16,7 @@ import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter2;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
+import com.xbzhangshi.mvp.webview.ThreeGameActivity;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.CustomViewPager;
 
@@ -111,8 +112,12 @@ public class BettingItemFragment2 extends BaseFragment implements IBettingItemBa
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BettingTypeAdapter2 bettingTypeAdapter1 = (BettingTypeAdapter2) adapter;
                 LoctteryBean.ContentBean contentBean = bettingTypeAdapter1.getData().get(position);
-                BettingDetailsActivity.start(mActivity, contentBean.getCode());
-
+                if(contentBean.getIsThird()==2){
+                    //三方彩票
+                    ThreeGameActivity.start(mActivity, contentBean.getCode());
+                }else {
+                    BettingDetailsActivity.start(mActivity, contentBean.getCode());
+                }
             }
         });
         recyclerView.setAdapter(bettingTypeAdapter);

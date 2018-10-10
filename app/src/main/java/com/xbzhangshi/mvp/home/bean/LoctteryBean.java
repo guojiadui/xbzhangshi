@@ -65,6 +65,17 @@ public class LoctteryBean   {
         private String qiHao;
         private long serverTime;
 
+
+        public int getIsThird() {
+            return isThird;
+        }
+
+        public void setIsThird(int isThird) {
+            this.isThird = isThird;
+        }
+
+        private int isThird;
+
         public String getLastHaoMa() {
             return lastHaoMa;
         }
