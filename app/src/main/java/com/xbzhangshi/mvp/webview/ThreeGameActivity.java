@@ -22,27 +22,45 @@ import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BaseWebViewActivity;
+import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.bean.TransUrlBean;
+import com.xbzhangshi.single.UserInfo;
 
 import java.util.List;
 
 import okhttp3.Cookie;
 
 public class ThreeGameActivity extends BaseWebViewActivity {
-   MultipleStatusView multipleStatusView;
-    public static  void start(Context context,String code){
-        Intent intent =new Intent(context,ThreeGameActivity.class);
-        intent.putExtra("code",code);
+
+    public static long startitme = 0;
+
+    public static void start(Context context, String code) {
+
+        long cur = System.currentTimeMillis();
+        if ((cur - startitme) < 500) {
+            return;
+        }
+        startitme = cur;
+        if (!UserInfo.getInstance().isLogin) {
+            LoginActivity.startLogin(context);
+            return;
+        }
+
+        Intent intent = new Intent(context, ThreeGameActivity.class);
+        intent.putExtra("code", code);
         context.startActivity(intent);
     }
-  String code ;
+
+    MultipleStatusView multipleStatusView;
+    String code;
+
     @SuppressLint("JavascriptInterface")
     @Override
     protected void initView(Bundle savedInstanceState) {
         progressBar = (ContentLoadingProgressBar) findViewById(getProgressBarId());//进度条
         webView = (WebView) findViewById(getWebViewId());
         multipleStatusView = findViewById(R.id.multipleStatusView);
-        code  = getIntent().getStringExtra("code");
+        code = getIntent().getStringExtra("code");
         multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,18 +69,19 @@ public class ThreeGameActivity extends BaseWebViewActivity {
         });
         getUrl();
     }
-    public  void getUrl(){
+
+    public void getUrl() {
 
         multipleStatusView.showLoading();
-        HttpManager.getObject(this, TransUrlBean.class, Url.forwardReal+code, null, new OkGoCallback<TransUrlBean>() {
+        HttpManager.getObject(this, TransUrlBean.class, Url.forwardReal + code, null, new OkGoCallback<TransUrlBean>() {
             @Override
             public void onSuccess(TransUrlBean response) {
                 multipleStatusView.showContent();
-                if(response.isSuccess()){
+                if (response.isSuccess()) {
                     initWeb(response.getContent().getUrl());
-                }else {
-                    if(!TextUtils.isEmpty(response.getMsg())){
-                        Toast.makeText(ThreeGameActivity.this,response.getMsg(),Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        Toast.makeText(ThreeGameActivity.this, response.getMsg(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -79,7 +98,7 @@ public class ThreeGameActivity extends BaseWebViewActivity {
         });
     }
 
-    public void initWeb(String url ) {
+    public void initWeb(String url) {
         webView.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(webViewClient);
@@ -107,9 +126,10 @@ public class ThreeGameActivity extends BaseWebViewActivity {
         }*/
 // 设置编码格式
         settings.setDefaultTextEncodingName("utf-8");
-        setCookie(url );
+        setCookie(url);
         webView.loadUrl(url);//加载url
     }
+
     public void setCookie(String url) {
         CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
         List<Cookie> allCookie = cookieStore.getAllCookie();
@@ -119,7 +139,6 @@ public class ThreeGameActivity extends BaseWebViewActivity {
         cookieManager.setCookie(url, cookieString);
         CookieSyncManager.getInstance().sync();
     }
-
 
 
     @Override
