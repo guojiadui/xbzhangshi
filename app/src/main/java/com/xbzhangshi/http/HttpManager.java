@@ -92,6 +92,47 @@ public class HttpManager {
         return url;
     }
 
+    /**
+     *  webview 中的网络请求
+     * @param context
+     * @param c
+     * @param url
+     * @param params
+     * @param back
+     * @param <T>
+     * @return
+     */
+    public static <T> Object postObjectByWeb(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
+        Log.e("net", url);
+        OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("netuccess", response.body());
+                try {
+                    T t = JSON.parseObject(response.body(), c);
+                    if (back != null) {
+                        back.onSuccess(t);
+                    }
+                } catch (Exception e) {
+                    if (back != null) {
+                        back.parseError();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+                if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("netonError", response.body());
+                if (back != null) {
+                    back.onError(response);
+                }
+            }
+        });
+        return url;
+    }
+
     public static Object get(Context context, String url, HttpParams params, StringCallback back) {
         Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {

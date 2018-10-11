@@ -184,7 +184,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
             return;
         }
         isloadingBalance =true;
-        HttpManager.getObject(this, BalanceBean.class,
+        HttpManager.postObjectByWeb(this, BalanceBean.class,
                 Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
                     @Override
 

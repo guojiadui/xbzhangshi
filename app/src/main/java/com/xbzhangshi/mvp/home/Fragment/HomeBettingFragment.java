@@ -255,21 +255,13 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         mdzp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!UserInfo.getInstance().isLogin) {
-                    LoginActivity.startLogin(mActivity);
-                    return;
-                }
-                //WheelActivity.start(mActivity);
+
                 LuckDrawActivity.start(mActivity);
             }
         });
         mqd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!UserInfo.getInstance().isLogin) {
-                    LoginActivity.startLogin(mActivity);
-                    return;
-                }
                 SignInActivity.start(mActivity);
             }
         });

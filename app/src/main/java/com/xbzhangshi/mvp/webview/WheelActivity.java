@@ -26,6 +26,7 @@ import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.usercenter.bean.ExchangeConfigBean;
 import com.xbzhangshi.mvp.webview.bean.PrzeListBean;
 import com.xbzhangshi.mvp.webview.bean.WheelPrizeLsitbean;
@@ -76,6 +77,10 @@ public class WheelActivity extends BaseActivity {
     SmoothScrollLayout smoothscroll;*/
 
     public static void start(Context context) {
+        if(!UserInfo.userInfo.isLogin){
+            LoginActivity.startLogin(context);
+            return;
+        }
         Intent intent = new Intent(context, WheelActivity.class);
         context.startActivity(intent);
     }

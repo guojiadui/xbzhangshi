@@ -21,9 +21,11 @@ import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.home.HomeActivity;
+import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.adpater.DateAdpater;
 import com.xbzhangshi.mvp.webview.bean.SignDayBean;
 import com.xbzhangshi.mvp.webview.bean.SignInBean;
+import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.view.dialog.SignInDialog;
 
 import java.util.ArrayList;
@@ -53,6 +55,10 @@ public class SignInActivity extends BaseActivity {
     TextView sign;
 
     public static void start(Context context) {
+        if(!UserInfo.userInfo.isLogin){
+            LoginActivity.startLogin(context);
+            return;
+        }
         Intent intent = new Intent(context, SignInActivity.class);
         context.startActivity(intent);
     }

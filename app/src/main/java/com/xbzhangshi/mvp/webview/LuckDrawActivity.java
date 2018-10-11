@@ -12,14 +12,24 @@ import com.lzy.okgo.cookie.store.CookieStore;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseWebViewActivity;
+import com.xbzhangshi.mvp.login.LoginActivity;
+import com.xbzhangshi.single.UserInfo;
 
 import java.util.List;
 
 import okhttp3.Cookie;
 
+/**
+ * 幸运转盘
+ */
+
 public class LuckDrawActivity extends BaseWebViewActivity {
 
     public static void start(Context context) {
+        if(!UserInfo.userInfo.isLogin){
+            LoginActivity.startLogin(context);
+            return;
+        }
         Intent intent = new Intent(context, LuckDrawActivity.class);
         context.startActivity(intent);
     }

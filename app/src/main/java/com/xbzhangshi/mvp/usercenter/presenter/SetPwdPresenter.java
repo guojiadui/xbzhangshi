@@ -51,7 +51,7 @@ public class SetPwdPresenter extends BasePresenter {
         HttpManager.postObject(context, ResultBean.class, Url.drawing_money_pwd, httpParams, new OkGoCallback<ResultBean>() {
             @Override
             public void onSuccess(ResultBean response) {
-                if (response.isSuccess()) {
+                if (response.isSuccess()&&UserInfo.getInstance().getLoginUserInfoBean()!=null) {
                     UserInfo.getInstance().getLoginUserInfoBean().getContent().setReceiptPwd("********");//用假密码代替
                     contentView.success();
                 } else {
