@@ -20,6 +20,7 @@ import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.home.bean.HomeDialogBean;
 import com.xbzhangshi.mvp.home.bean.HomeSwithBean;
 import com.xbzhangshi.mvp.home.bean.NoticeBean;
+import com.xbzhangshi.mvp.home.event.BalanceEvent;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
@@ -67,7 +68,7 @@ public class BettingPresenter extends BasePresenter {
                         if (response.isSuccess()) {
                             if (!TextUtils.isEmpty(response.getContent())) {
 
-                                contentView.setNotice(response.getContent() );
+                                contentView.setNotice(response.getContent());
                             }
                         }
                     }
@@ -77,13 +78,18 @@ public class BettingPresenter extends BasePresenter {
                 Url.BASE_URL + Url.getUniversalSwitch, null, new OkGoCallback<HomeSwithBean>() {
                     @Override
                     public void onSuccess(HomeSwithBean response) {
+
                         boolean dzp, qd;
-                        if (!TextUtils.isEmpty(response.getIsDzpOnOff()) && response.getIsDzpOnOff().equals("on")) {
+                        if(TextUtils.isEmpty(response.getIsDzpOnOff()) ){
+                            dzp = true;
+                        }else if ( response.getIsDzpOnOff().equals("on")) {
                             dzp = true;
                         } else {
                             dzp = false;
                         }
-                        if (!TextUtils.isEmpty(response.getIsQdOnOff()) && response.getIsQdOnOff().equals("on")) {
+                        if(TextUtils.isEmpty(response.getIsQdOnOff())){
+                            qd = true;
+                        }else if (response.getIsQdOnOff().equals("on")) {
                             qd = true;
                         } else {
                             qd = false;
@@ -96,6 +102,12 @@ public class BettingPresenter extends BasePresenter {
                         super.parseError();
                         contentView.setSwith(true, true);
                     }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        contentView.setSwith(true, true);
+                    }
                 });
         addNet(tag2);
         getHomeTip(context);
@@ -104,18 +116,18 @@ public class BettingPresenter extends BasePresenter {
     public void getHomeTip(Context context) {
         //是否登出提窗口
         boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP, true);
-        if(ishow){
+        if (ishow) {
             HttpParams httpParams = new HttpParams();
             httpParams.put("code", 19);
             Object tag = HttpManager.post(context, Url.getArticle, httpParams, new StringCallback() {
                 @Override
                 public void onSuccess(Response<String> response) {
                     try {
-                        List<HomeDialogBean> list =   JSON.parseArray(response.body(),HomeDialogBean.class);
-                        if(list.size()>0){
+                        List<HomeDialogBean> list = JSON.parseArray(response.body(), HomeDialogBean.class);
+                        if (list.size() > 0) {
                             contentView.showDialog(list.get(0).getContent());
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
 
@@ -202,8 +214,6 @@ public class BettingPresenter extends BasePresenter {
                 if (response.isSuccess()) {
                     //设置以及登录信息
                     UserInfo.getInstance().setLogin(true);
-                    UserInfo.getInstance().setmUsername(name);
-                    UserInfo.getInstance().setmPassword(pwd);
                     UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
@@ -237,6 +247,9 @@ public class BettingPresenter extends BasePresenter {
      * 获取余额
      */
     public void getBalance(Context context) {
+        if (!UserInfo.getInstance().isLogin) {
+            return;
+        }
         if (isLoadingBalance) {
             return;
         }
@@ -247,7 +260,10 @@ public class BettingPresenter extends BasePresenter {
                     public void onSuccess(BalanceBean response) {
                         isLoadingBalance = false;
                         if (response.isSuccess()) {
-                            contentView.updateBalance(subZeroAndDot(response.getContent().getBalance() + ""));
+                            String  b = subZeroAndDot(response.getContent().getBalance() + "");
+                            contentView.updateBalance(b);
+                            EventBus.getDefault().post(new BalanceEvent(b));
+
                         }
                     }
 

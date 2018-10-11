@@ -252,8 +252,27 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             anim1.setVisibility(View.VISIBLE);
             anim2.setVisibility(View.VISIBLE);
         }
-
-
+        mdzp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!UserInfo.getInstance().isLogin) {
+                    LoginActivity.startLogin(mActivity);
+                    return;
+                }
+                //WheelActivity.start(mActivity);
+                LuckDrawActivity.start(mActivity);
+            }
+        });
+        mqd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!UserInfo.getInstance().isLogin) {
+                    LoginActivity.startLogin(mActivity);
+                    return;
+                }
+                SignInActivity.start(mActivity);
+            }
+        });
         fragmentTabmainViewPager.setOffscreenPageLimit(tabNames.length);
         fragmentTabmainViewPager.addOnPageChangeListener(this);
 
@@ -373,32 +392,11 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     public void setSwith(boolean dzp, boolean qd) {
         if (dzp) {
             mdzp.setVisibility(View.VISIBLE);
-            mdzp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!UserInfo.getInstance().isLogin) {
-                        LoginActivity.startLogin(mActivity);
-                        return;
-                    }
-                    //WheelActivity.start(mActivity);
-                    LuckDrawActivity.start(mActivity);
-                }
-            });
         } else {
             mdzp.setVisibility(View.GONE);
         }
         if (qd) {
             mqd.setVisibility(View.VISIBLE);
-            mqd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!UserInfo.getInstance().isLogin) {
-                        LoginActivity.startLogin(mActivity);
-                        return;
-                    }
-                    SignInActivity.start(mActivity);
-                }
-            });
         } else {
             mqd.setVisibility(View.GONE);
         }

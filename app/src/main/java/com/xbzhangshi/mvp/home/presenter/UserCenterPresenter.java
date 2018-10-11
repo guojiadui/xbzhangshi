@@ -54,7 +54,7 @@ public class UserCenterPresenter extends BasePresenter {
         if (!UserInfo.getInstance().isLogin) {
             return;
         }
-        contentView.setUserinfo(UserInfo.getInstance().mUsername);
+        contentView.setUserinfo(UserInfo.getInstance().getLoginUserInfoBean().getContent().getAccount());
         getBalance(context);//获取余额
         getVip(context);//vip信息
         getConfigure(context);//获取配置

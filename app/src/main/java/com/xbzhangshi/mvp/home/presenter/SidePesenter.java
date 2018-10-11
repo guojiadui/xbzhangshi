@@ -43,6 +43,7 @@ public class SidePesenter extends BasePresenter {
 
     View sideView;
     SlidingMenu menu;
+    TextView balance;
 
     public SidePesenter(SlidingMenu menu, View sideView) {
         this.sideView = sideView;
@@ -122,10 +123,12 @@ public class SidePesenter extends BasePresenter {
             LinearLayout l = sideView.findViewById(R.id.user_info_layout);
             l.setVisibility(View.VISIBLE);
             TextView name = l.findViewById(R.id.sideslip_user_name);
-            TextView balance = l.findViewById(R.id.sideslip_balance);
-            if (!TextUtils.isEmpty(UserInfo.getInstance().mUsername))
-                name.setText(UserInfo.getInstance().mUsername.replace("\n", "").replace(" ", ""));
-            getBalance(context, balance);
+            balance = l.findViewById(R.id.sideslip_balance);
+            if (UserInfo.getInstance().getLoginUserInfoBean() != null &&
+                    !TextUtils.isEmpty(UserInfo.getInstance().getLoginUserInfoBean().getContent().getAccount())) {
+                name.setText(UserInfo.getInstance().getLoginUserInfoBean().getContent().getAccount().replace("\n", "").replace(" ", ""));
+
+            }
         }
 
     }
@@ -143,7 +146,7 @@ public class SidePesenter extends BasePresenter {
     /**
      * 获取余额
      */
-    public void getBalance(Context context, TextView textView) {
+   /* public void getBalance(Context context, TextView textView) {
         Object tag = HttpManager.getObject(context, BalanceBean.class,
                 Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
                     @Override
@@ -156,6 +159,11 @@ public class SidePesenter extends BasePresenter {
                     }
                 });
         addNet(tag);
+    }*/
+    public void setBalance(String s) {
+        if (balance != null&&!TextUtils.isEmpty(s)) {
+            balance.setText(s);
+        }
     }
 
     public static String subZeroAndDot(String s) {

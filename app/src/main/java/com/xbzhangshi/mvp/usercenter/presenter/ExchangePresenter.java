@@ -35,7 +35,9 @@ public class ExchangePresenter extends BasePresenter {
     }
 
     public void init(Context context) {
-        contentView.upDateAcount(UserInfo.getInstance().mUsername);
+        if(UserInfo.getInstance().getLoginUserInfoBean()!=null){
+            contentView.upDateAcount(UserInfo.getInstance().getLoginUserInfoBean().getContent().getAccount());
+        }
         getBalance(context);
         getConfigure(context);
     }

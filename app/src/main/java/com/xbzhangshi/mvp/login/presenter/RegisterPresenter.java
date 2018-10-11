@@ -269,8 +269,6 @@ public class RegisterPresenter extends BasePresenter {
                     SPUtils.getInstance(Key.APP_USER_INFO_NAME).put(Key.REMMBER_USER_PWD, p);
                     //设置以及登录信息
                     UserInfo.getInstance().setLogin(true);
-                    UserInfo.getInstance().setmUsername(name);
-                    UserInfo.getInstance().setmPassword(pwd);
                     UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());
@@ -350,7 +348,6 @@ public class RegisterPresenter extends BasePresenter {
                 if (response.isSuccess()) {
                     //设置以及登录信息
                     UserInfo.getInstance().setLogin(true);
-                    UserInfo.getInstance().setmUsername(name);
                     UserInfo.getInstance().setLoginUserInfoBean(response);
                     contentView.loginSuccess();
                     EventBus.getDefault().post(new LoginSuccessEvent());

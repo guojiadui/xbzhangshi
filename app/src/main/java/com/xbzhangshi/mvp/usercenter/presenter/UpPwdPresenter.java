@@ -56,6 +56,10 @@ public class UpPwdPresenter extends BasePresenter {
             Toast.makeText(context, "俩次输入的密码不一致", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (pwd.equals(newPwd)) {
+            Toast.makeText(context, "新密码不能与旧密码一致", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (type == 1) {
             //登录密码
             boolean isMatch1 = Pattern.matches(loginReg, newPwd);
@@ -92,8 +96,6 @@ public class UpPwdPresenter extends BasePresenter {
                     }
                     //保存账号密码用于下次进入的登录
                     SPUtils.getInstance(Key.APP_USER_INFO_NAME).put(Key.LOGIN_USER_PWD, p);
-
-                    UserInfo.getInstance().setmPassword(newPwd);
                     contentView.LoginPwdSuccess();
                 } else {
                     if (!TextUtils.isEmpty(response.getMsg())) {

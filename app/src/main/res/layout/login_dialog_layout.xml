@@ -17,6 +17,7 @@
         android:layout_height="@dimen/dp_1"
         android:background="@color/line_gray"/>
     <TextView
+        android:id="@+id/login"
         android:layout_width="@dimen/dp_220"
         android:layout_height="@dimen/dp_45"
         android:text="确定"

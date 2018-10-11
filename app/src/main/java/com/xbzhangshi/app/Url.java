@@ -3,6 +3,8 @@ package com.xbzhangshi.app;
 public class Url {
 
     public  final  static String APP_URL_HEAD ="http://xbzhanshi.com";
+   public  final  static String intercept_Home_Back1 =APP_URL_HEAD+"/mobile";//返回webview的返回首页拦截
+   public  final  static String intercept_Home_Back2 =APP_URL_HEAD+"/index.do";//返回webview的返回首页拦截釦
 
      public  final  static String BASE_URL =APP_URL_HEAD+"/native";
      public  final  static String BASE_END =".do";

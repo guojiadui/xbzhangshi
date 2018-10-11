@@ -25,6 +25,7 @@ import com.xbzhangshi.mvp.home.Fragment.HomeOpenPrizeFragmenrt;
 import com.xbzhangshi.mvp.home.Fragment.HomePurchaseFragment;
 import com.xbzhangshi.mvp.home.Fragment.HomeUserCenterFragment;
 import com.xbzhangshi.mvp.home.baseView.IHomeBaseView;
+import com.xbzhangshi.mvp.home.event.BalanceEvent;
 import com.xbzhangshi.mvp.home.event.ClearHomeMsgEvent;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.home.event.SelectEvent;
@@ -52,6 +53,11 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
     public  static void start(Context context){
         Intent intent = new Intent(context,HomeActivity.class);
         context.startActivity(intent);
+    }
+    public  static void start(Context context,int ppostion){
+        Intent intent = new Intent(context,HomeActivity.class);
+        context.startActivity(intent);
+        EventBus.getDefault().post(new SelectEvent(0));
     }
 
     @BindView(R.id.bottomBar)
@@ -173,6 +179,12 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         if (menu != null && !menu.isMenuShowing()) {
             menu.toggle();
         }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(BalanceEvent event) {
+       if(sidePesenter!=null){
+       sidePesenter.setBalance(event.getS());
+       }
     }
 
     //退出

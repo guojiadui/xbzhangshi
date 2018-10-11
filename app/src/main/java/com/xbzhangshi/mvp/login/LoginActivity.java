@@ -29,6 +29,7 @@ import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.login.BaseView.ILoginView;
 import com.xbzhangshi.mvp.login.adapter.LoginSelectAdapter;
+import com.xbzhangshi.mvp.login.base.LogInBaseActivity;
 import com.xbzhangshi.mvp.login.presenter.LogInPresenter;
 import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
 import com.xbzhangshi.view.CustomToolbar;
@@ -46,7 +47,7 @@ import butterknife.BindView;
  * 用户登录
  */
 
-public class LoginActivity extends BaseActivity implements ILoginView {
+public class LoginActivity extends LogInBaseActivity implements ILoginView {
 
 
     @BindView(R.id.verifyCode_line)

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -27,6 +29,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.xbzhangshi.R;
+import com.xbzhangshi.app.Url;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.record.AcountDetailsRecordActivity;
@@ -146,8 +149,13 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     public void playesLogin(String ss) {
         LoginActivity.startLogin(this);
     }
-  public  void loadFinish(){}
-  public  void loadStart(){}
+
+    public void loadFinish() {
+    }
+
+    public void loadStart() {
+    }
+
     @JavascriptInterface //仍然必不可少
     public String isAndroidApp() {
         return "'isAndroid";
@@ -178,9 +186,28 @@ public abstract class BaseWebViewActivity extends BaseActivity {
             super.onReceivedError(view, request, error);
         }
 
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            Log.e("TAG1", request.getUrl().toString());
+            if (Url.intercept_Home_Back1.equals(request.getUrl().toString())||
+                    Url.intercept_Home_Back2.equals(request.getUrl().toString())) {
+                HomeActivity.start(BaseWebViewActivity.this);
+                return true;
+            }
+
+            return super.shouldOverrideUrlLoading(view, request);
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            LogUtils.e("TAG", url);
+            Log.e("TAG2", url);
+            if (Url.intercept_Home_Back1.equals(url)||
+                    Url.intercept_Home_Back2.equals(url)) {
+                HomeActivity.start(BaseWebViewActivity.this);
+                return true;
+            }
             return super.shouldOverrideUrlLoading(view, url);
         }
 
@@ -221,7 +248,7 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK  ) {//点击返回按钮的时候判断有没有上一页
+        if (webView.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {//点击返回按钮的时候判断有没有上一页
             webView.goBack(); // goBack()表示返回webView的上一页面
             return true;
         }

@@ -86,29 +86,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     }
 
 
-    @Override
-    public void setCookie(Bundle savedInstanceState) {
-        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
-        List<Cookie> allCookie = cookieStore.getAllCookie();
-        String cookieString = allCookie.get(0).name() + "=" + allCookie.get(0).value() + ";domain=" + allCookie.get(0).domain();
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeSessionCookie();// 移除以前的cookie
-        cookieManager.removeAllCookie();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cookieManager.setAcceptThirdPartyCookies(webView, true);
-        }
-        cookieManager.setAcceptCookie(true);
-        cookieManager.setCookie(Url.meminfo, cookieString);
-        CookieSyncManager.getInstance().sync();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cookieManager.setAcceptThirdPartyCookies(webView, true);
-        }
-        cookieManager.setAcceptCookie(true);
-        cookieManager.setCookie("http://xbzhanshi.com/mobile/v3/game_lottery_group_play.do", cookieString);
-        CookieSyncManager.getInstance().sync();
-        super.setCookie(savedInstanceState);
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -166,7 +144,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     public void loadFinish() {
         isSet = true;
         handler.removeCallbacks(runnable);
-        handler.postDelayed(runnable,30000);
+        handler.postDelayed(runnable,1500);
         getBalance();
     }
 
@@ -233,7 +211,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            handler.postDelayed(this, 30000);
+            handler.postDelayed(this, 20000);
             if(isAct&&isSet){
                 getBalance();
             }

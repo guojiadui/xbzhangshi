@@ -21,6 +21,7 @@ import com.xbzhangshi.mvp.base.BaseActivity;
 import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.login.BaseView.IRegisterView;
 import com.xbzhangshi.mvp.login.adapter.RegisterAdapter;
+import com.xbzhangshi.mvp.login.base.RegisterBaseActivty;
 import com.xbzhangshi.mvp.login.bean.RegisterItemBean;
 import com.xbzhangshi.mvp.login.presenter.RegisterPresenter;
 import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
@@ -34,7 +35,7 @@ import butterknife.OnClick;
 /**
  * 用户注册
  */
-public class RegisterUserActivity extends BaseActivity implements IRegisterView {
+public class RegisterUserActivity extends RegisterBaseActivty implements IRegisterView {
 
     @BindView(R.id.customtoolbar)
     CustomToolbar customtoolbar;

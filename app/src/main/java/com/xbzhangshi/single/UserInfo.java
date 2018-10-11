@@ -26,9 +26,59 @@ public class UserInfo {
     }
 
     public boolean isLogin = false;
-    public String mUsername;
-    public String mPassword;
+
     private LoginUserInfoBean loginUserInfoBean;
+    private LoginBean loginBean;
+
+
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    /**
+     * 登出
+     */
+    public void logout() {
+        isLogin = false;
+        loginUserInfoBean = null;
+        loginBean = null;
+    }
+
+    /**
+     * 登录
+     */
+    public <T> Object login(Context context, Class<T> c, String name, String password, String code, OkGoCallback<T> stringCallback) {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("username", name);
+        httpParams.put("password", password);
+        if (!TextUtils.isEmpty(code)) {
+            httpParams.put("verifyCode", code);
+        }
+        return HttpManager.postObject(context, c, Url.BASE_URL + Url.login, httpParams, stringCallback);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @param
+     */
+    public <T> Object getUserInfo(Context context, Class<T> t, OkGoCallback<T> okGoCallback) {
+        return HttpManager.getObject(context, t,
+                Url.BASE_URL + Url.accountInfo, null, okGoCallback);
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
+
+
+    public LoginUserInfoBean getLoginUserInfoBean() {
+        return loginUserInfoBean;
+    }
+
+    public void setLoginUserInfoBean(LoginUserInfoBean loginUserInfoBean) {
+        this.loginUserInfoBean = loginUserInfoBean;
+    }
 
     public LoginBean getLoginBean() {
         return loginBean;
@@ -38,73 +88,4 @@ public class UserInfo {
         this.loginBean = loginBean;
     }
 
-    private LoginBean loginBean;
-
-
-    public boolean isLogin() {
-        return isLogin;
-    }
-
-
-
-    /**
-     * 登出
-     */
-    public void logout() {
-        isLogin = false;
-        mUsername = "";
-        mPassword = "";
-        loginUserInfoBean = null;
-    }
-
-    /**
-     * 登录
-     */
-    public  <T> Object login(Context context, Class<T> c,String name, String password, String code, OkGoCallback<T> stringCallback) {
-        HttpParams httpParams = new HttpParams();
-        httpParams.put("username", name);
-        httpParams.put("password", password);
-        if (!TextUtils.isEmpty(code)) {
-            httpParams.put("verifyCode", code);
-        }
-        return HttpManager.postObject(context, c,Url.BASE_URL + Url.login, httpParams, stringCallback);
-    }
-
-    /**
-     * 获取用户信息
-     *
-     * @param
-     */
-    public <T> Object  getUserInfo(Context context,Class<T> t, OkGoCallback<T> okGoCallback) {
-        return HttpManager.getObject(context, t,
-                Url.BASE_URL + Url.accountInfo, null, okGoCallback);
-    }
-
-    public void setLogin(boolean login) {
-        isLogin = login;
-    }
-
-    public String getmUsername() {
-        return mUsername;
-    }
-
-    public void setmUsername(String mUsername) {
-        this.mUsername = mUsername;
-    }
-
-    public String getmPassword() {
-        return mPassword;
-    }
-
-    public void setmPassword(String mPassword) {
-        this.mPassword = mPassword;
-    }
-
-    public LoginUserInfoBean getLoginUserInfoBean() {
-        return loginUserInfoBean;
-    }
-
-    public void setLoginUserInfoBean(LoginUserInfoBean loginUserInfoBean) {
-        this.loginUserInfoBean = loginUserInfoBean;
-    }
 }
