@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
@@ -16,6 +17,7 @@ import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
+import com.xbzhangshi.mvp.home.bean.HomeDialogBean;
 import com.xbzhangshi.mvp.home.bean.HomeSwithBean;
 import com.xbzhangshi.mvp.home.bean.NoticeBean;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
@@ -25,6 +27,8 @@ import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.util.DES;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import io.reactivex.internal.operators.parallel.ParallelDoOnNextTry;
 
@@ -62,9 +66,8 @@ public class BettingPresenter extends BasePresenter {
                     public void onSuccess(NoticeBean response) {
                         if (response.isSuccess()) {
                             if (!TextUtils.isEmpty(response.getContent())) {
-                                //是否登出提窗口
-                                boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP, true);
-                                contentView.setNotice(response.getContent(), ishow);
+
+                                contentView.setNotice(response.getContent() );
                             }
                         }
                     }
@@ -95,6 +98,31 @@ public class BettingPresenter extends BasePresenter {
                     }
                 });
         addNet(tag2);
+        getHomeTip(context);
+    }
+
+    public void getHomeTip(Context context) {
+        //是否登出提窗口
+        boolean ishow = SPUtils.getInstance(Key.APP_SET_NAME).getBoolean(Key.HOME_WINDOW_TIP, true);
+        if(ishow){
+            HttpParams httpParams = new HttpParams();
+            httpParams.put("code", 19);
+            Object tag = HttpManager.post(context, Url.getArticle, httpParams, new StringCallback() {
+                @Override
+                public void onSuccess(Response<String> response) {
+                    try {
+                        List<HomeDialogBean> list =   JSON.parseArray(response.body(),HomeDialogBean.class);
+                        if(list.size()>0){
+                            contentView.showDialog(list.get(0).getContent());
+                        }
+                    }catch (Exception e){
+
+                    }
+
+                }
+            });
+            addNet(tag);
+        }
     }
 
     /**
@@ -125,7 +153,7 @@ public class BettingPresenter extends BasePresenter {
      */
 
     private void login(Context context, String name, String pwd) {
-        Object tag = UserInfo.getInstance().login(context,LoginBean.class, name, pwd, "", new OkGoCallback<LoginBean>() {
+        Object tag = UserInfo.getInstance().login(context, LoginBean.class, name, pwd, "", new OkGoCallback<LoginBean>() {
             @Override
             public void onSuccess(LoginBean response) {
 
@@ -202,20 +230,22 @@ public class BettingPresenter extends BasePresenter {
         });
         addNet(tag);
     }
+
     boolean isLoadingBalance = false;
+
     /**
      * 获取余额
      */
     public void getBalance(Context context) {
-        if(isLoadingBalance){
+        if (isLoadingBalance) {
             return;
         }
-        isLoadingBalance =true;
+        isLoadingBalance = true;
         Object tag = HttpManager.getObject(context, BalanceBean.class,
                 Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
                     @Override
                     public void onSuccess(BalanceBean response) {
-                        isLoadingBalance =false;
+                        isLoadingBalance = false;
                         if (response.isSuccess()) {
                             contentView.updateBalance(subZeroAndDot(response.getContent().getBalance() + ""));
                         }
@@ -223,13 +253,13 @@ public class BettingPresenter extends BasePresenter {
 
                     @Override
                     public void onError(Response<String> response) {
-                        isLoadingBalance =false;
+                        isLoadingBalance = false;
                     }
 
                     @Override
                     public void parseError() {
                         super.parseError();
-                        isLoadingBalance =false;
+                        isLoadingBalance = false;
                     }
                 });
         addNet(tag);

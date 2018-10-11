@@ -61,6 +61,7 @@ public class Url {
      public  final  static String Crown_Sports_cookis=APP_URL_HEAD+"/mobile/sports/hg/getData.do";//皇冠体育的cookie绑定
      public  final  static String turnlate=APP_URL_HEAD+"/mobile/v3/turnlate.do";//转盘页面
      public  final  static String turnlate_cookie=APP_URL_HEAD+"/center/active/lastrd.do";//转盘页面cookie的绑定
+     public  final  static String getArticle=APP_URL_HEAD+"/getConfig/getArticle.do";//首页弹出框
 
 
 

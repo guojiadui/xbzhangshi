@@ -156,6 +156,11 @@ public class DrawingMoneyActivity extends BaseActivity implements IDrawingMoneyB
                     Toast.makeText(DrawingMoneyActivity.this,"请输入提款金额",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                long sum = Long.parseLong(num);
+                if(sum<100){
+                    Toast.makeText(DrawingMoneyActivity.this,"取款金额不能小于100元",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 String spwd = pwd.getText().toString();
                 if(TextUtils.isEmpty(spwd)){
                     Toast.makeText(DrawingMoneyActivity.this,"请输入提款密码",Toast.LENGTH_SHORT).show();

@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.SPUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.suke.widget.SwitchButton;
 import com.xbzhangshi.R;
@@ -23,7 +24,9 @@ import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.home.bean.BalanceBean;
+import com.xbzhangshi.mvp.home.bean.HomeDialogBean;
 import com.xbzhangshi.mvp.home.event.RedPackEvent;
+import com.xbzhangshi.mvp.home.event.ShowHomeEvent;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.HelpCneterActivity;
 import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
@@ -93,6 +96,7 @@ public class SidePesenter extends BasePresenter {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 SPUtils.getInstance(Key.APP_SET_NAME).put(Key.HOME_WINDOW_TIP, isChecked);
+                EventBus.getDefault().post(new ShowHomeEvent(isChecked));
             }
         });
         switchButton3.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {

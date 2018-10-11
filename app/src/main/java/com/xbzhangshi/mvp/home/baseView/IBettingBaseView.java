@@ -16,7 +16,7 @@ public interface IBettingBaseView   {
     /**
      * 公告
      */
-    public  void setNotice(String content,boolean isShow);
+    public  void setNotice(String content );
     /**
      * 更新余额
      * @param msg
@@ -26,4 +26,8 @@ public interface IBettingBaseView   {
      * 签到大转盘
      */
     public  void  setSwith(boolean dzp,boolean qd);
+    /**
+     * 首页弹出窗
+     */
+    public  void  showDialog(String s);
 }

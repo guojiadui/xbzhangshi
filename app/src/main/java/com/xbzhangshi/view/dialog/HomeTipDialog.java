@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.xbzhangshi.R;
@@ -14,10 +15,11 @@ import com.xbzhangshi.R;
 /**
  * 首页的服务提示
  */
-public class HomeTipDialog    extends Dialog {
+public class HomeTipDialog extends Dialog {
     Context context;
     String notice;
-    public HomeTipDialog(Context context,String notice ) {
+
+    public HomeTipDialog(Context context, String notice) {
         super(context, R.style.MyDialog);
         this.context = context;
         this.notice = notice;
@@ -34,7 +36,8 @@ public class HomeTipDialog    extends Dialog {
     public void init() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.home_tip_dialog, null);
-        TextView mNotice = view.findViewById(R.id.notice);
+        WebView mNotice = view.findViewById(R.id.notice);
+        // TextView notice2 = view.findViewById(R.id.notice2);
         TextView cancel = view.findViewById(R.id.cancel_action);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +45,7 @@ public class HomeTipDialog    extends Dialog {
                 dismiss();
             }
         });
-        mNotice.setText(Html.fromHtml(notice));
+        mNotice.loadDataWithBaseURL(null, notice, "text/html", "utf-8", null);
         setContentView(view);
 
     }

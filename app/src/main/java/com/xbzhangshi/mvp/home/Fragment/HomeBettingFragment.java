@@ -26,6 +26,7 @@ import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
 import com.xbzhangshi.mvp.home.event.LogoutEvent;
 import com.xbzhangshi.mvp.home.event.RedPackEvent;
 import com.xbzhangshi.mvp.home.event.SelectEvent;
+import com.xbzhangshi.mvp.home.event.ShowHomeEvent;
 import com.xbzhangshi.mvp.home.event.SideOpenEvent;
 import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
@@ -101,7 +102,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     @Override
     public void onResume() {
         super.onResume();
-        if(bettingPresenter!=null){
+        if (bettingPresenter != null) {
             bettingPresenter.getBalance(mActivity);
         }
     }
@@ -109,7 +110,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden&&bettingPresenter!=null){
+        if (!hidden && bettingPresenter != null) {
             bettingPresenter.getBalance(mActivity);
         }
     }
@@ -200,6 +201,19 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             redPack.setVisibility(View.GONE);
         }
     }
+
+  /*  @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ShowHomeEvent event) {
+        if (event.isFlag()) {
+            if (homeTipDialog != null) {
+                homeTipDialog.show();
+                return;
+            }
+            if (bettingPresenter != null) {
+                bettingPresenter.getHomeTip(mActivity);
+            }
+        }
+    }*/
 
     @Override
     protected void initView(View view) {
@@ -336,17 +350,11 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
-    HomeTipDialog homeTipDialog;
 
     @Override
-    public void setNotice(String content, boolean isShow) {
+    public void setNotice(String content) {
         notice.setText(Html.fromHtml(content));
-        if (isShow) {
-            if (homeTipDialog == null) {
-                homeTipDialog = new HomeTipDialog(mActivity, content);
-            }
-            homeTipDialog.show();
-        }
+
 
     }
 
@@ -394,5 +402,15 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         } else {
             mqd.setVisibility(View.GONE);
         }
+    }
+
+    HomeTipDialog homeTipDialog;
+
+    @Override
+    public void showDialog(String s) {
+        if (homeTipDialog == null) {
+            homeTipDialog = new HomeTipDialog(mActivity, s);
+        }
+        homeTipDialog.show();
     }
 }

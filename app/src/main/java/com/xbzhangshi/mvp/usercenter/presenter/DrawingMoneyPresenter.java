@@ -1,6 +1,7 @@
 package com.xbzhangshi.mvp.usercenter.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.lzy.okgo.callback.StringCallback;
@@ -42,7 +43,11 @@ public class DrawingMoneyPresenter extends BasePresenter {
                 if (response.isSuccess()) {
                     contentView.drawSuccess();
                 } else {
-                    contentView.drawError("提款失败");
+                    if(!TextUtils.isEmpty(response.getMsg())){
+                        contentView.drawError(response.getMsg());
+                    }else {
+                        contentView.drawError("提款失败");
+                    }
                 }
             }
 
