@@ -32,6 +32,7 @@ import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.RegisterUserActivity;
+import com.xbzhangshi.mvp.update.UpVersion;
 import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
 import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
 import com.xbzhangshi.mvp.webview.RedPackageActivity;
@@ -310,6 +311,8 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
         });
         bettingPresenter = BettingPresenter.newInstance(this);
         bettingPresenter.init();
+       /* UpVersion upVersion = new UpVersion();
+        upVersion.upVersion(mActivity);*/
     }
 
     @Override

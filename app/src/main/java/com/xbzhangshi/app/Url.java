@@ -1,7 +1,7 @@
 package com.xbzhangshi.app;
 
 public class Url {
-
+   public static  String verPath = "/storage/emulated/0/AllenVersionPath"; //版本更新
     public  final  static String APP_URL_HEAD ="http://xbzhanshi.com";
    public  final  static String intercept_Home_Back1 =APP_URL_HEAD+"/mobile";//返回webview的返回首页拦截
    public  final  static String intercept_Home_Back2 =APP_URL_HEAD+"/index.do";//返回webview的返回首页拦截釦

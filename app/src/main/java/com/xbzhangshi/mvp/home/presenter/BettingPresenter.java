@@ -24,6 +24,7 @@ import com.xbzhangshi.mvp.home.event.BalanceEvent;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
 import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
+import com.xbzhangshi.mvp.update.UpVersion;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.util.DES;
 
