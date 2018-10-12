@@ -170,7 +170,7 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
             acountChangeAdapter.addData(listBeans);
         }
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -183,7 +183,7 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
     public void emptyMore(boolean ismore) {
         smartRefreshLayout.finishLoadMore();
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -193,7 +193,7 @@ public class AcountChangeActivity extends BaseActivity implements IAountChangeBa
         AcountChangeAdapter recordAdapter = new AcountChangeAdapter(listBeans, keys);
         recyclerView.setAdapter(recordAdapter);
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 

@@ -137,7 +137,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
         penPrizeDetailsAdapter = new OPenPrizeDetailsAdapter(this, contentBeans, lotType);
         recyclerView.setAdapter(penPrizeDetailsAdapter);
         if (!hasNext) {
-            refreshLayout.setNoMoreData(true);
+            refreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -159,7 +159,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
         }
         penPrizeDetailsAdapter.addData(contentBeans);
         if (!hasNext) {
-            refreshLayout.setNoMoreData(true);
+            refreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 

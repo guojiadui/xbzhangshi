@@ -137,6 +137,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
                 }
             }
         });
+        smartRefreshLayout.setEnableOverScrollBounce(false);//是否启用越界回弹
         smartRefreshLayout.setEnableLoadMore(true);
         smartRefreshLayout.setEnableRefresh(false);
         smartRefreshLayout.setOnLoadMoreListener(this);
@@ -175,7 +176,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
             acountDetailsAdapter.notifyDataSetChanged();
         }
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData();
         }
     }
 
@@ -188,7 +189,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
     public void emptyMore(boolean ismore) {
         smartRefreshLayout.finishLoadMore();
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -198,7 +199,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
         AcountDetailsAdapter acountDetailsAdapter = new AcountDetailsAdapter(listBeans, type);
         recyclerView.setAdapter(acountDetailsAdapter);
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 

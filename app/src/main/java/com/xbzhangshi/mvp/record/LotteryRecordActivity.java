@@ -202,7 +202,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         recordAdapter.addData(listBeans);
         recordAdapter.notifyDataSetChanged();
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -215,7 +215,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
     public void emptyMore(boolean ismore) {
         smartRefreshLayout.finishLoadMore();
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -242,7 +242,7 @@ public class LotteryRecordActivity extends BaseActivity implements ILotteryBaseV
         });
         recyclerView.setAdapter(recordAdapter);
         if (!ismore) {
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 

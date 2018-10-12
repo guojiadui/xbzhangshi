@@ -146,7 +146,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     public void success(MessageListPresenter presenter, List<MsgBean.ListBean> contentBeans,boolean isMore) {
         multipleStatusView.showContent();
         if(!isMore){
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
         MsgAdapter msgAdapter = new MsgAdapter(this, presenter, contentBeans);
         msgAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -181,7 +181,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     public void empty(boolean isMore) {
         multipleStatusView.showEmpty();
         if(!isMore){
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
@@ -194,7 +194,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     @Override
     public void successMore(MessageListPresenter presenter, List<MsgBean.ListBean> contentBeans,boolean isMore) {
         if(!isMore){
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
         if(recyclerView!=null&&recyclerView.getAdapter()!=null){
             MsgAdapter adapter = (MsgAdapter) recyclerView.getAdapter();
@@ -207,7 +207,7 @@ public class MessageListActivity extends BaseActivity implements IMesssageListBa
     public void emptyMore(boolean isMore) {
         smartRefreshLayout.finishLoadMore();
         if(!isMore){
-            smartRefreshLayout.setNoMoreData(true);
+            smartRefreshLayout.finishLoadMoreWithNoMoreData( );
         }
     }
 
