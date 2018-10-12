@@ -92,6 +92,7 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
     TextView totalMoney;
 
 
+
     public static void start(Context context) {
         Intent intent = new Intent(context, AcountDetailsRecordActivity.class);
         context.startActivity(intent);
@@ -343,9 +344,13 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
                 if (position == 1) {
                     transactionLayout.setVisibility(View.GONE);
                     transactionLine.setVisibility(View.GONE);
+
+
                 } else {
                     transactionLayout.setVisibility(View.VISIBLE);
                     transactionLine.setVisibility(View.VISIBLE);
+                    query.setVisibility(View.VISIBLE);
+                    query.requestLayout();
                 }
             }
 

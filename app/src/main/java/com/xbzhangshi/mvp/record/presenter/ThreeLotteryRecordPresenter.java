@@ -59,7 +59,7 @@ public class ThreeLotteryRecordPresenter extends BasePresenter {
         }
         /*
          * type 0所有记录 1 AG 2 BBIN 3 MG 5 ALLBET 7 OG 8 DS 12 KY 98 	BG 97 VR*/
-        if ("所以记录".equals(curPlatformType)) {
+        if ("所有记录".equals(curPlatformType)) {
             httpParams.put("type", 0);
         } else if ("AG".equals(curPlatformType)) {
             httpParams.put("type", 1);

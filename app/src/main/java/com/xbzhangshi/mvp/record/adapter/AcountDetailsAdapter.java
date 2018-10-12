@@ -64,7 +64,7 @@ public class AcountDetailsAdapter extends BaseQuickAdapter<AcountDetailsRecordBe
                 helper.setTextColor(R.id.result, 0xffff2525);
             } else {
                 helper.setText(R.id.result, "未知错误");
-                helper.setTextColor(R.id.result, 0xff00aa51);
+                helper.setTextColor(R.id.result, 0xffec2829);
             }
         }
 

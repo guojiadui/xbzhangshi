@@ -111,7 +111,7 @@ public class SportsRecordPresenter extends BasePresenter {
                     }
 
                 }else if(cur==bs_sport){
-                    //芭莎体育
+                    //沙巴体育
                     BSSportsRecordBean bean = null;
                     try {
                         bean = JSON.parseObject(response.body(), BSSportsRecordBean.class);

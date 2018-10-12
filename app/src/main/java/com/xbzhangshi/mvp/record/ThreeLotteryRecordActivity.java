@@ -268,7 +268,7 @@ public class ThreeLotteryRecordActivity extends BaseActivity implements IThreeLo
             }
         });
         List<String> list1 = new ArrayList<>();
-        list1.add("所以记录");
+        list1.add("所有记录");
         list1.add("AG");
         list1.add("BBIN");
         list1.add("MG");

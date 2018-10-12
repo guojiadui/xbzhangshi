@@ -273,7 +273,7 @@ public class SportsRecordActivity extends BaseActivity implements ISportsBaseVie
         });
         List<String> list1 = new ArrayList<>();
         list1.add("皇冠体育");
-        list1.add("芭莎体育");
+        list1.add("沙巴体育");
         lotteryRecordPresenter.curplatform = list1.get(0);
         platform.setAdapter(new ArrayAdapter<String>(this, R.layout.spinner_layout_item, list1));
         platform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -299,7 +299,7 @@ public class SportsRecordActivity extends BaseActivity implements ISportsBaseVie
             }
         });
         List<String> list2 = new ArrayList<>();
-        list2.add("所以球种");
+        list2.add("所有球种");
         list2.add("足球");
         list2.add("篮球");
         lotteryRecordPresenter.curtype = list2.get(0);
@@ -319,7 +319,6 @@ public class SportsRecordActivity extends BaseActivity implements ISportsBaseVie
 
         List<String> list3 = new ArrayList<>();
         list3.add("全部");
-        list3.add("未开奖");
         list3.add("已中奖");
         list3.add("未开奖");
         list3.add("未成功");
