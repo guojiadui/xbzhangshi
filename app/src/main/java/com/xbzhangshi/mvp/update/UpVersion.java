@@ -40,7 +40,7 @@ public class UpVersion {
                             //有本部更新
                             return crateUIData();
                         } else {
-                            FileUtils.deleteAllInDir(Url.verPath);
+                            //FileUtils.deleteAllInDir(Url.verPath);
                             //没有本部更新
                             return null;
                         }

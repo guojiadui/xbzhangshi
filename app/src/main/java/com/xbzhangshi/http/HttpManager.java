@@ -28,11 +28,11 @@ public class HttpManager {
     // public static HashSet<String> loadingparams = new HashSet<>();
 //{"success":true,"accessToken":"ce88f396-9d9c-4686-a6f9-d3f9dd74ded7","content":{"login":false}}
     public static <T> Object getObject(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-        Log.e("net", url);
+      //  Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("net", response.body());
+               // Log.e("net", response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -48,8 +48,8 @@ public class HttpManager {
 
             @Override
             public void onError(Response<String> response) {
-                if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("net", response.body());
+               /* if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("net", response.body());*/
                 super.onError(response);
                 if (back != null) {
                     back.onError(response);
@@ -61,11 +61,11 @@ public class HttpManager {
 
 
     public static <T> Object postObject(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-        Log.e("net", url);
+      //  Log.e("net", url);
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("netuccess", response.body());
+             //   Log.e("netuccess", response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -82,8 +82,8 @@ public class HttpManager {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-                if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("netonError", response.body());
+              /*  if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("netonError", response.body());*/
                 if (back != null) {
                     back.onError(response);
                 }
@@ -103,11 +103,11 @@ public class HttpManager {
      * @return
      */
     public static <T> Object postObjectByWeb(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-        Log.e("net", url);
+       // Log.e("net", url);
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("netuccess", response.body());
+             //   Log.e("netuccess", response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
                     if (back != null) {
@@ -123,8 +123,8 @@ public class HttpManager {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-                if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("netonError", response.body());
+               /* if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("netonError", response.body());*/
                 if (back != null) {
                     back.onError(response);
                 }
@@ -134,11 +134,11 @@ public class HttpManager {
     }
 
     public static Object get(Context context, String url, HttpParams params, StringCallback back) {
-        Log.e("net", url);
+      //  Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("net", response.body());
+            //    Log.e("net", response.body());
                 if (back != null) {
                     back.onSuccess(response);
                 }
@@ -146,8 +146,8 @@ public class HttpManager {
 
             @Override
             public void onError(Response<String> response) {
-                if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("net", response.body());
+               /* if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("net", response.body());*/
                 super.onError(response);
                 if (back != null) {
                     back.onError(response);
@@ -158,11 +158,11 @@ public class HttpManager {
     }
 
     public static Object post(Context context, String url, HttpParams params, StringCallback back) {
-        Log.e("net", url);
+       // Log.e("net", url);
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-                Log.e("netuccess", response.body());
+              //  Log.e("netuccess", response.body());
                 if (back != null) {
                     back.onSuccess(response);
                 }
@@ -171,8 +171,8 @@ public class HttpManager {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-                if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("netonError", response.body());
+              /*  if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("netonError", response.body());*/
                 if (back != null) {
                     back.onError(response);
                 }
@@ -182,7 +182,7 @@ public class HttpManager {
     }
 
     public static Object getBitmap(Context context, String url, HttpParams params, BitmapCallback bitmapCallback) {
-        Log.e("net", url);
+      //  Log.e("net", url);
         OkGo.<Bitmap>post(url).tag(url).params(params).execute(new BitmapCallback() {
             @Override
             public void onSuccess(Response<Bitmap> response) {
