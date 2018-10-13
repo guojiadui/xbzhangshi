@@ -137,7 +137,6 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
                 }
             }
         });
-        smartRefreshLayout.setEnableOverScrollBounce(false);//是否启用越界回弹
         smartRefreshLayout.setEnableLoadMore(true);
         smartRefreshLayout.setEnableRefresh(false);
         smartRefreshLayout.setOnLoadMoreListener(this);
