@@ -28,6 +28,7 @@ import com.xbzhangshi.mvp.record.baseview.ISportsBaseView;
 import com.xbzhangshi.mvp.record.bean.BSSportsRecordBean;
 import com.xbzhangshi.mvp.record.bean.HGSportsRecordBean;
 import com.xbzhangshi.mvp.record.details.LotteryRecorDetailsActivity;
+import com.xbzhangshi.mvp.record.details.SportsRecordDetailsActivity;
 import com.xbzhangshi.mvp.record.presenter.SportsRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
 
@@ -165,7 +166,7 @@ public class SportsRecordActivity extends BaseActivity implements ISportsBaseVie
         recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-               // LotteryRecorDetailsActivity.start(SportsRecordActivity.this);
+                SportsRecordDetailsActivity.start(SportsRecordActivity.this,((SportsRecordAdapter) adapter).getItem(position));
             }
         });
         recyclerView.setAdapter(recordAdapter);

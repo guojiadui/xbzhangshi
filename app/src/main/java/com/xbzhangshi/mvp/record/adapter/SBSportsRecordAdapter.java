@@ -14,15 +14,15 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * 体育记录
+ * 沙巴体育
  */
-public class SportsRecordAdapter extends BaseQuickAdapter<HGSportsRecordBean.RowsBean, BaseViewHolder> {
+public class SBSportsRecordAdapter extends BaseQuickAdapter<HGSportsRecordBean.RowsBean, BaseViewHolder> {
     //沙巴体育： resStatus 3未中奖 1 等待开奖 4 撤单 5 派奖回滚成功 2 已中奖 6 回滚异常 7 开奖异常
     //gameTimeType: 2       1:滚球   2:今日  3:早盘
     //plate: "H"   H:亚洲盘  I:印尼盘 E:欧洲盘 M:马来西亚盘
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public SportsRecordAdapter(@Nullable List<HGSportsRecordBean.RowsBean> data) {
+    public SBSportsRecordAdapter(@Nullable List<HGSportsRecordBean.RowsBean> data) {
         super(R.layout.sports_record_adapter_item, data);
     }
 

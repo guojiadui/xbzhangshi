@@ -1,5 +1,6 @@
 package com.xbzhangshi.mvp.record.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class HGSportsRecordBean {
@@ -64,7 +65,7 @@ public class HGSportsRecordBean {
         }
     }
 
-    public static class RowsBean {
+    public static class RowsBean  implements Serializable {
         /**
          * bettingMoney : 10.0
          * gid : 3390584
