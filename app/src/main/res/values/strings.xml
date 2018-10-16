@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">xbzhangshi</string>
+    <string name="app_name">信博展示站</string>
     <string name="test">测试</string>
     <string name="input_name">请输入用户账号</string>
     <string name="input_passwad">请输入密码</string>
