@@ -3,6 +3,7 @@ package com.xbzhangshi.mvp.record.presenter;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -21,6 +22,7 @@ import com.xbzhangshi.mvp.record.bean.ResultLotteryRecordBean;
 import com.xbzhangshi.mvp.usercenter.bean.ResultBean;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -102,6 +104,11 @@ public class AcountChangeRecordPresenter extends BasePresenter {
             Date curDate = new Date(System.currentTimeMillis());
             end = dFormat.format(curDate);
         }
+        if(isDateOneBigger(start,end)){
+            Toast.makeText(context,"截止时间要大于开始时间",Toast.LENGTH_SHORT).show();
+            contentView.empty();
+            return;
+        }
 
         HttpParams httpParams = new HttpParams();
         if (!TextUtils.isEmpty(start)) {
@@ -167,6 +174,26 @@ public class AcountChangeRecordPresenter extends BasePresenter {
             }
         });
         addNet(tag);
+    }
+
+
+    public static boolean isDateOneBigger(String str1, String str2) {
+        boolean isBigger = false;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date dt1 = null;
+        Date dt2 = null;
+        try {
+            dt1 = sdf.parse(str1);
+            dt2 = sdf.parse(str2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (dt1.getTime() > dt2.getTime()) {
+            isBigger = true;
+        } else if (dt1.getTime() <= dt2.getTime()) {
+            isBigger = false;
+        }
+        return isBigger;
     }
 
 

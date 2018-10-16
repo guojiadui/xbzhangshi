@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.record.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.lzy.okgo.callback.StringCallback;
@@ -56,6 +57,11 @@ public class ThreeLotteryRecordPresenter extends BasePresenter {
         }
         if (!TextUtils.isEmpty(end)) {
             httpParams.put("endTime", end + " 23:59:59");
+        }
+        if(AcountChangeRecordPresenter.isDateOneBigger(start,end)){
+            Toast.makeText(context,"截止时间要大于开始时间",Toast.LENGTH_SHORT).show();
+            contentView.empty();
+            return;
         }
         /*
          * type 0所有记录 1 AG 2 BBIN 3 MG 5 ALLBET 7 OG 8 DS 12 KY 98 	BG 97 VR*/

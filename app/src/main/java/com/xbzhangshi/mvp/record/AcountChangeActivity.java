@@ -52,7 +52,7 @@ import java.util.Set;
 import butterknife.BindView;
 
 /**
- * 彩票投注记录
+ *
  */
 public class AcountChangeActivity extends BaseActivity implements IAountChangeBaseView, OnLoadMoreListener {
 

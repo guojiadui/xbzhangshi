@@ -212,10 +212,10 @@ public class AcountDetailsRecordActivity extends BaseActivity implements IAcount
     public void setTotalMpney(int type, int sum) {
         if (type == 1) {
             moneyTip.setText("总充值");
-             totalMoney.setText(sum+"");
+             totalMoney.setText(sum+"元");
         } else if (type == 2) {
             moneyTip.setText("总取款");
-             totalMoney.setText(sum+"");
+             totalMoney.setText(sum+"元");
         }
     }
 
