@@ -26,7 +26,6 @@
         <item name="android:windowIsFloating">true</item>
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
-
     </style>
 
     <style name="NoSpaceActionBarTheme" parent="Base.Widget.AppCompat.Toolbar">

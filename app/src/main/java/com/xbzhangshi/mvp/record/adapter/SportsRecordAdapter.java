@@ -31,6 +31,7 @@ public class SportsRecordAdapter extends BaseQuickAdapter<HGSportsRecordBean.Row
         helper.setText(R.id.competition_name, item.getLeague());
 
         String s = "投注金额:" + "<font color=\"red\">" + item.getBettingMoney() + "</font>元";
+
         TextView t = helper.getView(R.id.sum);
         t.setText(Html.fromHtml(s));
         if(item.getDataType()!=6){//混合

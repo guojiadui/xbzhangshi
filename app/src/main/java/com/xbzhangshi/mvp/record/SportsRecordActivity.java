@@ -23,11 +23,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.record.adapter.SBSportsRecordAdapter;
 import com.xbzhangshi.mvp.record.adapter.SportsRecordAdapter;
 import com.xbzhangshi.mvp.record.baseview.ISportsBaseView;
-import com.xbzhangshi.mvp.record.bean.BSSportsRecordBean;
+import com.xbzhangshi.mvp.record.bean.SBSportsRecordBean;
 import com.xbzhangshi.mvp.record.bean.HGSportsRecordBean;
-import com.xbzhangshi.mvp.record.details.LotteryRecorDetailsActivity;
+import com.xbzhangshi.mvp.record.details.SBSportsRecordDetailsActivity;
 import com.xbzhangshi.mvp.record.details.SportsRecordDetailsActivity;
 import com.xbzhangshi.mvp.record.presenter.SportsRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
@@ -173,8 +174,16 @@ public class SportsRecordActivity extends BaseActivity implements ISportsBaseVie
     }
 
     @Override
-    public void BSsuccess(List<BSSportsRecordBean.AggsDataBean> listBeans) {
+    public void BSsuccess(List<SBSportsRecordBean.RowsBean> listBeans) {
         multipleStatusView.showContent();
+        SBSportsRecordAdapter recordAdapter = new SBSportsRecordAdapter(listBeans);
+        recordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                SBSportsRecordDetailsActivity.start(SportsRecordActivity.this,((SBSportsRecordAdapter) adapter).getItem(position));
+            }
+        });
+        recyclerView.setAdapter(recordAdapter);
     }
 
 

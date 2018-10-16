@@ -27,7 +27,7 @@ public class HttpManager {
     // public static HashSet<String> loadingUrls = new HashSet<>();
     // public static HashSet<String> loadingparams = new HashSet<>();
 //{"success":true,"accessToken":"ce88f396-9d9c-4686-a6f9-d3f9dd74ded7","content":{"login":false}}
-    public static <T> Object getObject(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
+    public static <T> Object getObject(Context context,  Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
       //  Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override

@@ -24,7 +24,6 @@ android {
 }
 
 dependencies {
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.+'
     implementation 'com.android.support:support-v4:28.+'
@@ -57,23 +56,22 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
-
     implementation project(':library')
-
-   implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //加载状态的view
     implementation 'com.classic.common:multiple-status-view:1.5.1'
     //下拉刷新
     //1.1.0 API改动过大，老用户升级需谨慎
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-    implementation 'com.android.support:appcompat-v7:25.3.1'//版本 23以上（必须）
-
+    implementation 'com.android.support:appcompat-v7:25.3.1'
+    //版本 23以上（必须）
     implementation 'com.github.gittjy:LoadingDialog:1.0.2'
     //版本更新
     implementation 'com.allenliu.versionchecklib:library:2.0.8'
+    implementation project(':XhsEmoticonsKeyboard')
 
-
+    implementation 'com.github.w446108264:AndroidEmoji:1.0.0'
 }
 repositories {
     mavenCentral()

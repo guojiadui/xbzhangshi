@@ -93,6 +93,7 @@ public class SportsDetailsAdapter extends RecyclerView.Adapter<SportsDetailsAdap
             case 4:
                 hoder.title1.setText("派彩金额");
                 hoder.layout2.setVisibility(View.GONE);
+
                 break;
             case 5:
                 hoder.title1.setText("赛事");
