@@ -139,7 +139,7 @@ public class RealPersonExcahngePresenter extends BasePresenter {
                 if (response.isSuccess()) {
                     try {
                         DecimalFormat df = new DecimalFormat("#0.00");
-                        contentView.updateBalance(df.format(response.getContent().getBalance()));
+                        contentView.updateBalance(df.format(response.getContent().getBalance())+"元");
                     } catch (Exception e) {
 
                     }

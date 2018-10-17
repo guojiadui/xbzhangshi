@@ -3,6 +3,7 @@ package com.xbzhangshi.app;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CrashUtils;
@@ -24,7 +25,7 @@ import java.util.List;
 
 import okhttp3.OkHttpClient;
 
-public class MyApplication extends Application implements Utils.OnAppStatusChangedListener  {
+public class MyApplication extends MultiDexApplication implements Utils.OnAppStatusChangedListener  {
 
 
     //记录当前栈里所有activity

@@ -261,7 +261,7 @@ public class BettingPresenter extends BasePresenter {
                     public void onSuccess(BalanceBean response) {
                         isLoadingBalance = false;
                         if (response.isSuccess()) {
-                            String  b = subZeroAndDot(response.getContent().getBalance() + "");
+                            String  b = subZeroAndDot(response.getContent().getBalance() + "元");
                             contentView.updateBalance(b);
                             EventBus.getDefault().post(new BalanceEvent(b));
 

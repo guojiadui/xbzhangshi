@@ -192,7 +192,7 @@ public class BettingDetailsActivity extends BaseWebViewActivity {
                     public void onSuccess(BalanceBean response) {
                         isloadingBalance =false;
                         if (response.isSuccess()) {
-                            getminfo(BettingPresenter.subZeroAndDot(response.getContent().getBalance() + ""));
+                            getminfo(BettingPresenter.subZeroAndDot(response.getContent().getBalance() + "元"));
                         }
                     }
                     @Override

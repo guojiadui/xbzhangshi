@@ -1,1 +1,1 @@
-include ':app', 'library', ':XhsEmoticonsKeyboard'
+include ':app', 'library', ':IMKeyBoard'

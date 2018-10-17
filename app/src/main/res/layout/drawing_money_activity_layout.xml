@@ -242,7 +242,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_centerVertical="true"
-                      android:text="账号金额"
+                      android:text="取款金额"
                       android:textSize="@dimen/font_size_large"
                       android:layout_toRightOf="@+id/icon4"
                       android:layout_marginStart="@dimen/dp_10"

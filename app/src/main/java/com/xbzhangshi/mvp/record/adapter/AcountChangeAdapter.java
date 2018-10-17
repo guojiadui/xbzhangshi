@@ -38,7 +38,7 @@ public class AcountChangeAdapter extends BaseQuickAdapter<AcountChangeRecordBean
             String num = "订单号:&nbsp;  " + "<font color=\"black\">" + item.getOrderId() + "</font>";
             number.setText(Html.fromHtml(num));
         } else {
-            number.setText(Html.fromHtml("订单号:订单号参考备注"));
+            number.setText(Html.fromHtml("订单号:"));
         }
         TextView before = helper.getView(R.id.sum_change_before);
         String BeforeMoney = "变动前金额: &nbsp; " + "<font color=#0894ec>" + item.getBeforeMoney() + "</font>元";
