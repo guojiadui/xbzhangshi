@@ -36,8 +36,8 @@ public class SportsRecordAdapter extends BaseQuickAdapter<HGSportsRecordBean.Row
         t.setText(Html.fromHtml(s));
         if(item.getDataType()!=6){//混合
             helper.getView(R.id.team_layout).setVisibility(View.VISIBLE);
-            helper.setText(R.id.team_name1, item.getHomeTeam());
-            helper.setText(R.id.team_name2, item.getGuestTeam());
+            helper.setText(R.id.team_name1, Html.fromHtml(item.getHomeTeam()));
+            helper.setText(R.id.team_name2, Html.fromHtml(item.getGuestTeam()));
         }else {
             helper.getView(R.id.team_layout).setVisibility(View.GONE);
         }
