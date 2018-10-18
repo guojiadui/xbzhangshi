@@ -169,6 +169,7 @@ public class LotteryRecordPresenter extends BasePresenter {
             public void onSuccess(ResultBean response) {
                 if (response.isSuccess()) {
                     contentView.cancalSuccess(orderId);
+                    Toast.makeText(context,"撤单成功",Toast.LENGTH_SHORT).show();
                 } else {
                     if (!TextUtils.isEmpty(response.getMsg())) {
                         contentView.cancalError(response.getMsg());
