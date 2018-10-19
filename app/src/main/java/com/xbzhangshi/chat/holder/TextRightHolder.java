@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.xbzhangshi.R;
+import com.xbzhangshi.chat.common.SimpleCommonUtils;
 
 public class TextRightHolder extends  BaseRightHolder {
     TextView content;
@@ -17,5 +18,15 @@ public class TextRightHolder extends  BaseRightHolder {
         content = itemView.findViewById(R.id.content);
         fail = itemView.findViewById(R.id.fail);
         progress = itemView.findViewById(R.id.progress);
+    }
+
+    @Override
+    public void setHolder() {
+        super.setHolder();
+        try {
+            SimpleCommonUtils.spannableEmoticonFilter(content, "");
+        } catch (Exception e) {
+            content.setText("");
+        }
     }
 }

@@ -81,6 +81,9 @@ dependencies {
     /*图片相机*/
     implementation 'cn.bingoogolapple:bga-photopicker:1.2.8@aar'
     implementation 'cn.bingoogolapple:bga-baseadapter:1.2.8@aar'
+
+
+    implementation 'org.java-websocket:Java-WebSocket:1.3.0'
 }
 repositories {
     mavenCentral()

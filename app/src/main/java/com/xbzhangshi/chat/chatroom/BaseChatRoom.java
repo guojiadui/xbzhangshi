@@ -97,6 +97,7 @@ public class BaseChatRoom extends Observable implements IChatRoom {
 
     @Override
     public void emitterListenerResut(String key, Object... args) {
+        Log.e("TAG","socket "+key);
         switch (key) {
             case Manager.EVENT_TRANSPORT:
 

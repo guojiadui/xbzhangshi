@@ -20,6 +20,8 @@ import com.xbzhangshi.R;
 
 import com.xbzhangshi.app.Key;
 import com.xbzhangshi.app.Url;
+import com.xbzhangshi.chat.chatroom.MainChatRoom;
+import com.xbzhangshi.chat.socket.AppSocket;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.adapter.LotteryTypeFraggmentAdapter;
 import com.xbzhangshi.mvp.home.baseView.IBettingBaseView;
@@ -32,6 +34,7 @@ import com.xbzhangshi.mvp.home.presenter.BettingPresenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.RegisterUserActivity;
+import com.xbzhangshi.mvp.record.bean.MatchBean;
 import com.xbzhangshi.mvp.update.UpVersion;
 import com.xbzhangshi.mvp.webview.CustomerServiceActivity;
 import com.xbzhangshi.mvp.webview.PreferentialActivitiy;
@@ -181,6 +184,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
                 //获取余额
                 bettingPresenter.getBalance(mActivity);
             }
+            MainChatRoom.init();
         }
     }
 
