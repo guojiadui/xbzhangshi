@@ -105,7 +105,7 @@ public class SimpleCommonUtils {
 
         addKaomojiPageSetEntity(pageSetAdapter, context, emoticonClickListener);
 
-       addTestPageSetEntity(pageSetAdapter, context);
+      // addTestPageSetEntity(pageSetAdapter, context);
 
         return pageSetAdapter;
     }
@@ -253,12 +253,12 @@ public class SimpleCommonUtils {
      * @param context
      */
     public static void addTestPageSetEntity(PageSetAdapter pageSetAdapter, Context context) {
-        PageSetEntity pageSetEntity = new PageSetEntity.Builder()
+     /*   PageSetEntity pageSetEntity = new PageSetEntity.Builder()
                 .addPageEntity(new PageEntity(new SimpleAppsGridView(context)))
                 .setIconUri(ImageBase.Scheme.DRAWABLE.toUri("icon_kaomoji"))
                 .setShowIndicator(false)
                 .build();
-        pageSetAdapter.add(pageSetEntity);
+        pageSetAdapter.add(pageSetEntity);*/
     }
 
     @SuppressWarnings("unchecked")

@@ -76,6 +76,11 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation 'io.socket:socket.io-client:0.8.3'
+/*图片浏览*/
+    implementation 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
+    /*图片相机*/
+    implementation 'cn.bingoogolapple:bga-photopicker:1.2.8@aar'
+    implementation 'cn.bingoogolapple:bga-baseadapter:1.2.8@aar'
 }
 repositories {
     mavenCentral()

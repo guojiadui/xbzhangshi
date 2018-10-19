@@ -1,71 +1,108 @@
 package com.xbzhangshi.chat;
 
 
-
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Environment;
+import android.provider.Settings;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.sj.emoji.EmojiBean;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xbzhangshi.R;
+import com.xbzhangshi.chat.adapter.ChatAdapter;
 import com.xbzhangshi.chat.common.Constants;
 import com.xbzhangshi.chat.common.SimpleCommonUtils;
-import com.xbzhangshi.chat.common.adapter.ChattingListAdapter;
-import com.xbzhangshi.chat.common.data.ImMsgBean;
+import com.xbzhangshi.chat.common.adapter.AppsAdapter;
 import com.xbzhangshi.chat.common.widget.SimpleAppsGridView;
+import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.util.CameraUtil;
+import com.xbzhangshi.view.CustomToolbar;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import sj.keyboard.XhsEmoticonsKeyBoard;
 import sj.keyboard.data.EmoticonEntity;
 import sj.keyboard.interfaces.EmoticonClickListener;
-import sj.keyboard.utils.EmoticonsKeyboardUtils;
 import sj.keyboard.widget.EmoticonsEditText;
 import sj.keyboard.widget.FuncLayout;
 
-public class ChatActivity extends AppCompatActivity implements FuncLayout.OnFuncKeyBoardListener {
+public class ChatActivity extends BaseActivity implements FuncLayout.OnFuncKeyBoardListener {
 
+    public final  int  CAMERA_CODE = 50;
+    public final  int  PICTURE_CODE = 100;
 
-    @BindView(R.id.lv_chat)
-    ListView lvChat;
     @BindView(R.id.ek_bar)
     XhsEmoticonsKeyBoard ekBar;
+    @BindView(R.id.lt_main_title_left)
+    TextView ltMainTitleLeft;
+    @BindView(R.id.lt_main_title)
+    TextView ltMainTitle;
+    @BindView(R.id.lt_main_title_right)
+    TextView ltMainTitleRight;
+    @BindView(R.id.customtoolbar)
+    CustomToolbar customtoolbar;
+    @BindView(R.id.recyclerview)
+    RecyclerView recyclerview;
 
-    private ChattingListAdapter chattingListAdapter;
+   ChatAdapter chatAdapter;
+    RxPermissions rxPermissions;
+    String picpath;//相机图片路径
+    @Override
+    protected int getlayout() {
+        return R.layout.chat_activity_layout;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //  this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_simple_chat);
-        ButterKnife.bind(this);
+    protected void initView(Bundle savedInstanceState) {
+       ltMainTitleLeft.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               finish();
+           }
+       });
 
-        initView();
-    }
+        LinearLayoutManager    layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerview.setLayoutManager(layoutManager);
+        chatAdapter = new ChatAdapter(this);
+        recyclerview.setAdapter(chatAdapter);
 
-    private void initView() {
         initEmoticonsKeyBoardBar();
-        initListView();
     }
+
 
     private void initEmoticonsKeyBoardBar() {
         SimpleCommonUtils.initEmoticonsEditText(ekBar.getEtChat());
         ekBar.setAdapter(SimpleCommonUtils.getCommonAdapter(this, emoticonClickListener));
         ekBar.addOnFuncKeyBoardListener(this);
-        ekBar.addFuncView(new SimpleAppsGridView(this));
+        ekBar.addFuncView(new SimpleAppsGridView(this, new AppsAdapter.OnFuncItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (position == 0) {
+                    //查看照片
+                   choicePhotoWrapper();
+                } else if (position == 1) {
+                    //拍照
+                    checkPermissinsTakePicture();
+
+                }
+            }
+        }));
 
         ekBar.getEtChat().setOnSizeChangedListener(new EmoticonsEditText.OnSizeChangedListener() {
             @Override
@@ -81,97 +118,12 @@ public class ChatActivity extends AppCompatActivity implements FuncLayout.OnFunc
                 ekBar.getEtChat().setText("");
             }
         });
-       /* ekBar.getEmoticonsToolBarView().addFixedToolItemView(false, R.mipmap.icon_add, null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(SimpleChatActivity.this, "ADD", Toast.LENGTH_SHORT).show();
-            }
-        });
-        ekBar.getEmoticonsToolBarView().addToolItemView(R.mipmap.icon_setting, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(ChatActivity.this, "SETTING", Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
-    EmoticonClickListener emoticonClickListener = new EmoticonClickListener() {
-        @Override
-        public void onEmoticonClick(Object o, int actionType, boolean isDelBtn) {
-
-            if (isDelBtn) {
-                SimpleCommonUtils.delClick(ekBar.getEtChat());
-            } else {
-                if(o == null){
-                    return;
-                }
-                if(actionType == Constants.EMOTICON_CLICK_BIGIMAGE){
-                    if(o instanceof EmoticonEntity){
-                        OnSendImage(((EmoticonEntity)o).getIconUri());
-                    }
-                } else {
-                    String content = null;
-                    if(o instanceof EmojiBean){
-                        content = ((EmojiBean)o).emoji;
-                    } else if(o instanceof EmoticonEntity){
-                        content = ((EmoticonEntity)o).getContent();
-                    }
-
-                    if(TextUtils.isEmpty(content)){
-                        return;
-                    }
-                    int index = ekBar.getEtChat().getSelectionStart();
-                    Editable editable = ekBar.getEtChat().getText();
-                    editable.insert(index, content);
-                }
-            }
-        }
-    };
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if(EmoticonsKeyboardUtils.isFullScreen(this)){
-            boolean isConsum = ekBar.dispatchKeyEventInFullScreen(event);
-            return isConsum ? isConsum : super.dispatchKeyEvent(event);
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    private void initListView() {
-        chattingListAdapter = new ChattingListAdapter(this);
-        List<ImMsgBean> beanList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            ImMsgBean bean = new ImMsgBean();
-            bean.setContent("Test:" + i);
-            beanList.add(bean);
-        }
-        chattingListAdapter.addData(beanList);
-        lvChat.setAdapter(chattingListAdapter);
-        lvChat.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case SCROLL_STATE_FLING:
-                        break;
-                    case SCROLL_STATE_IDLE:
-                        break;
-                    case SCROLL_STATE_TOUCH_SCROLL:
-                        ekBar.reset();
-                        break;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-        });
-    }
 
     private void OnSendBtnClick(String msg) {
         if (!TextUtils.isEmpty(msg)) {
-            ImMsgBean bean = new ImMsgBean();
-            bean.setContent(msg);
-            chattingListAdapter.addData(bean, true, false);
+
             scrollToBottom();
         }
     }
@@ -183,13 +135,7 @@ public class ChatActivity extends AppCompatActivity implements FuncLayout.OnFunc
     }
 
     private void scrollToBottom() {
-        lvChat.requestLayout();
-        lvChat.post(new Runnable() {
-            @Override
-            public void run() {
-                lvChat.setSelection(lvChat.getBottom());
-            }
-        });
+
     }
 
     @Override
@@ -198,11 +144,173 @@ public class ChatActivity extends AppCompatActivity implements FuncLayout.OnFunc
     }
 
     @Override
-    public void OnFuncClose() { }
+    public void OnFuncClose() {
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
         ekBar.reset();
     }
+
+
+    /**
+     * 照相
+     */
+    private void checkPermissinsTakePicture() {
+        if (rxPermissions == null) {
+            rxPermissions = new RxPermissions(this);
+        }
+
+        rxPermissions
+                .requestEachCombined(Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(permission -> { // will emit 1 Permission object
+                    if (permission.granted) {
+                        picpath = CameraUtil.takePicture(this, CAMERA_CODE);
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(this);
+                        normalDialog.setMessage("拍照需要获取内存卡读写权限，相机权限");
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        checkPermissinsTakePicture();
+                                    }
+                                });
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+                    } else {
+                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(this);
+                        normalDialog.setMessage("拍照需要获取内存卡读写权限，相机权限");
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        Uri packageURI = Uri.parse("package:" + getPackageName());
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                                        startActivity(intent);
+                                    }
+                                });
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+                    }
+                });
+    }
+
+    /**
+     * 选中图片
+     */
+    private void choicePhotoWrapper() {
+        if (rxPermissions == null) {
+            rxPermissions = new RxPermissions(this);
+        }
+
+        rxPermissions
+                .requestEachCombined(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(permission -> { // will emit 1 Permission object
+                    if (permission.granted) {
+                        Intent photoPickerIntent = new BGAPhotoPickerActivity.IntentBuilder(this)
+                                .maxChooseCount(1) // 图片选择张数的最大值
+                                .selectedPhotos(null) // 当前已选中的图片路径集合
+                                .pauseOnScroll(false) // 滚动列表时是否暂停加载图片
+                                .build();
+                        startActivityForResult(photoPickerIntent, PICTURE_CODE);
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(this);
+                        normalDialog.setMessage("获取相册需要获取内存卡读权限");
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        checkPermissinsTakePicture();
+                                    }
+                                });
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+                    } else {
+                        final AlertDialog.Builder normalDialog = new AlertDialog.Builder(this);
+                        normalDialog.setMessage("拍照需要获取内存卡读写权限，相机权限");
+                        normalDialog.setPositiveButton("确定",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        Uri packageURI = Uri.parse("package:" + getPackageName());
+                                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                                        startActivity(intent);
+                                    }
+                                });
+                        normalDialog.setNegativeButton("取消",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        // 显示
+                        normalDialog.show();
+                    }
+                });
+
+    }
+
+    EmoticonClickListener emoticonClickListener = new EmoticonClickListener() {
+        @Override
+        public void onEmoticonClick(Object o, int actionType, boolean isDelBtn) {
+
+            if (isDelBtn) {
+                SimpleCommonUtils.delClick(ekBar.getEtChat());
+            } else {
+                if (o == null) {
+                    return;
+                }
+                if (actionType == Constants.EMOTICON_CLICK_BIGIMAGE) {
+                    if (o instanceof EmoticonEntity) {
+                        OnSendImage(((EmoticonEntity) o).getIconUri());
+                    }
+                } else {
+                    String content = null;
+                    if (o instanceof EmojiBean) {
+                        content = ((EmojiBean) o).emoji;
+                    } else if (o instanceof EmoticonEntity) {
+                        content = ((EmoticonEntity) o).getContent();
+                    }
+
+                    if (TextUtils.isEmpty(content)) {
+                        return;
+                    }
+                    int index = ekBar.getEtChat().getSelectionStart();
+                    Editable editable = ekBar.getEtChat().getText();
+                    editable.insert(index, content);
+                }
+            }
+        }
+    };
+
+
 }

@@ -17,13 +17,14 @@ import java.util.ArrayList;
 public class SimpleAppsGridView extends RelativeLayout {
 
     protected View view;
-
-    public SimpleAppsGridView(Context context) {
-        this(context, null);
+    AppsAdapter.OnFuncItemClickListener onFuncItemClickListener;
+    public SimpleAppsGridView(Context context,AppsAdapter.OnFuncItemClickListener onFuncItemClickListener) {
+        this(context, null, onFuncItemClickListener);
     }
 
-    public SimpleAppsGridView(Context context, AttributeSet attrs) {
+    public SimpleAppsGridView(Context context, AttributeSet attrs,AppsAdapter.OnFuncItemClickListener onFuncItemClickListener) {
         super(context, attrs);
+        this.onFuncItemClickListener = onFuncItemClickListener;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.chat_view_apps, this);
         init();
@@ -40,6 +41,9 @@ public class SimpleAppsGridView extends RelativeLayout {
         mAppBeanList.add(new AppBean(R.mipmap.icon_file, "文件"));
         mAppBeanList.add(new AppBean(R.mipmap.icon_loaction, "位置"));*/
         AppsAdapter adapter = new AppsAdapter(getContext(), mAppBeanList);
+        if(onFuncItemClickListener!=null){
+           adapter.setOnFuncItemClickListener(onFuncItemClickListener);
+        }
         gv_apps.setAdapter(adapter);
     }
 }

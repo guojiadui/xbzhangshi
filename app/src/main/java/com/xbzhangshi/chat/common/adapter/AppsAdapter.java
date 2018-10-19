@@ -1,6 +1,12 @@
 package com.xbzhangshi.chat.common.adapter;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.xbzhangshi.R;
+import com.xbzhangshi.chat.ChatActivity;
 import com.xbzhangshi.chat.common.data.AppBean;
+import com.xbzhangshi.util.CameraUtil;
 
 import java.util.ArrayList;
 
@@ -21,6 +30,15 @@ public class AppsAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<AppBean> mDdata = new ArrayList<AppBean>();
 
+    public OnFuncItemClickListener getOnFuncItemClickListener() {
+        return onFuncItemClickListener;
+    }
+
+    public void setOnFuncItemClickListener(OnFuncItemClickListener onFuncItemClickListener) {
+        this.onFuncItemClickListener = onFuncItemClickListener;
+    }
+
+    OnFuncItemClickListener onFuncItemClickListener;
     public AppsAdapter(Context context, ArrayList<AppBean> data) {
         this.mContext = context;
         this.inflater = LayoutInflater.from(context);
@@ -64,7 +82,9 @@ public class AppsAdapter extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext,appBean.getFuncName(), Toast.LENGTH_SHORT).show();
+                  if(onFuncItemClickListener!=null){
+                      onFuncItemClickListener.onItemClick(v,position);
+                  }
                 }
             });
         }
@@ -75,4 +95,14 @@ public class AppsAdapter extends BaseAdapter {
         public ImageView iv_icon;
         public TextView tv_name;
     }
+
+
+
+
+    public interface OnFuncItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+
+
 }
