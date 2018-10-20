@@ -3,16 +3,13 @@ package com.xbzhangshi.mvp.home.Fragment;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.classic.common.MultipleStatusView;
@@ -31,7 +28,7 @@ import com.xbzhangshi.mvp.record.LHCLotteryRecordActivity;
 import com.xbzhangshi.mvp.record.LotteryRecordActivity;
 import com.xbzhangshi.mvp.record.SportsRecordActivity;
 import com.xbzhangshi.mvp.record.ThreeLotteryRecordActivity;
-import com.xbzhangshi.mvp.record.adapter.ElectronicsLotteryRecordActivity;
+import com.xbzhangshi.mvp.record.ElectronicsLotteryRecordActivity;
 import com.xbzhangshi.mvp.usercenter.BindingBankCardActivity;
 import com.xbzhangshi.mvp.usercenter.DrawingMoneyActivity;
 import com.xbzhangshi.mvp.usercenter.ExchangeActivity;
@@ -53,9 +50,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * 用户中心
@@ -268,6 +263,14 @@ public class HomeUserCenterFragment extends BaseFragment implements IUserCenterB
          * 清空底部导航栏的信息
          */
         EventBus.getDefault().post(new ClearHomeMsgEvent());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (userCenterPresenter != null) {
+            userCenterPresenter.getBalance(mActivity);
+        }
     }
 
     @Override

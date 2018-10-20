@@ -78,7 +78,7 @@ public class LHCLotteryRecordPresenter extends BasePresenter {
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
 
-        Object tag = HttpManager.postObject(context, ResultLotteryRecordBean.class, Url.get_lottery_order, httpParams, new OkGoCallback<ResultLotteryRecordBean>() {
+        Object tag = HttpManager.getObject(context, ResultLotteryRecordBean.class, Url.get_lottery_order, httpParams, new OkGoCallback<ResultLotteryRecordBean>() {
             @Override
             public void onSuccess(ResultLotteryRecordBean response) {
                 double d = response.getSumWinMoney() - response.getSumBuyMoney();

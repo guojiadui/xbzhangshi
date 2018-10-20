@@ -2,49 +2,134 @@ package com.xbzhangshi.mvp.usercenter.bean;
 
 public class DrawMoneyInfoBean {
 
+
     /**
-     * commit : {"drawFlag":"是","curWnum":0,"min":"100","star":"00:00","max":"200000","checkBetNum":0,"wnum":4,"member":{"city":"","drawNeed":0,"bankName":"浦发银行","cardNo":"122222222","accountStatus":2,"score":0,"province":"","registerUrl":"xbzhanshi.com","id":2525,"levelGroup":2,"qq":"4444444","registerIp":"175.100.8.197","accountType":1,"wechat":"","moneyTypeId":1,"userName":"好","registerOs":"ANDROID_MOBILE","bankAddress":"","cardNoStatus":1,"createDatetime":1537680757071,"parentNames":",t006daili,","lastLoginDatetime":1538135184000,"money":0,"betNum":0,"online":2,"account":"zhang7"},"end":"23:59"}
+     * success : true
+     * accessToken : 70f8d37b-83e9-4c0a-99f2-8cf76905023c
+     * content : {"accountBalance":0,"accountStatus":0,"bankAddress":null,"bankName":"工商银行","cardNo":"***4646","checkBetNum":0,"curWnum":0,"drawFlag":"是","enablePick":true,"endTime":"23:59","maxPickMoney":"200000","minPickMoney":"100","startTime":"00:00","userName":"张","validBetMoney":0,"wnum":4}
      */
 
-    private CommitBean commit;
+    private boolean success;
+    private String accessToken;
+    private ContentBean content;
 
-    public CommitBean getCommit() {
-        return commit;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setCommit(CommitBean commit) {
-        this.commit = commit;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public static class CommitBean {
+    private  String msg;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public ContentBean getContent() {
+        return content;
+    }
+
+    public void setContent(ContentBean content) {
+        this.content = content;
+    }
+
+    public static class ContentBean {
         /**
-         * drawFlag : 是
+         * accountBalance : 0
+         * accountStatus : 0
+         * bankAddress : null
+         * bankName : 工商银行
+         * cardNo : ***4646
+         * checkBetNum : 0
          * curWnum : 0
-         * min : 100
-         * star : 00:00
-         * max : 200000
-         * checkBetNum : 0.0
+         * drawFlag : 是
+         * enablePick : true
+         * endTime : 23:59
+         * maxPickMoney : 200000
+         * minPickMoney : 100
+         * startTime : 00:00
+         * userName : 张
+         * validBetMoney : 0
          * wnum : 4
-         * member : {"city":"","drawNeed":0,"bankName":"浦发银行","cardNo":"122222222","accountStatus":2,"score":0,"province":"","registerUrl":"xbzhanshi.com","id":2525,"levelGroup":2,"qq":"4444444","registerIp":"175.100.8.197","accountType":1,"wechat":"","moneyTypeId":1,"userName":"好","registerOs":"ANDROID_MOBILE","bankAddress":"","cardNoStatus":1,"createDatetime":1537680757071,"parentNames":",t006daili,","lastLoginDatetime":1538135184000,"money":0,"betNum":0,"online":2,"account":"zhang7"}
-         * end : 23:59
          */
 
-        private String drawFlag;
+        private int accountBalance;
+        private int accountStatus;
+        private Object bankAddress;
+        private String bankName;
+        private String cardNo;
+        private int checkBetNum;
         private int curWnum;
-        private String min;
-        private String star;
-        private String max;
-        private double checkBetNum;
+        private String drawFlag;
+        private boolean enablePick;
+        private String endTime;
+        private String maxPickMoney;
+        private String minPickMoney;
+        private String startTime;
+        private String userName;
+        private int validBetMoney;
         private int wnum;
-        private MemberBean member;
-        private String end;
 
-        public String getDrawFlag() {
-            return drawFlag;
+        public int getAccountBalance() {
+            return accountBalance;
         }
 
-        public void setDrawFlag(String drawFlag) {
-            this.drawFlag = drawFlag;
+        public void setAccountBalance(int accountBalance) {
+            this.accountBalance = accountBalance;
+        }
+
+        public int getAccountStatus() {
+            return accountStatus;
+        }
+
+        public void setAccountStatus(int accountStatus) {
+            this.accountStatus = accountStatus;
+        }
+
+        public Object getBankAddress() {
+            return bankAddress;
+        }
+
+        public void setBankAddress(Object bankAddress) {
+            this.bankAddress = bankAddress;
+        }
+
+        public String getBankName() {
+            return bankName;
+        }
+
+        public void setBankName(String bankName) {
+            this.bankName = bankName;
+        }
+
+        public String getCardNo() {
+            return cardNo;
+        }
+
+        public void setCardNo(String cardNo) {
+            this.cardNo = cardNo;
+        }
+
+        public int getCheckBetNum() {
+            return checkBetNum;
+        }
+
+        public void setCheckBetNum(int checkBetNum) {
+            this.checkBetNum = checkBetNum;
         }
 
         public int getCurWnum() {
@@ -55,36 +140,68 @@ public class DrawMoneyInfoBean {
             this.curWnum = curWnum;
         }
 
-        public String getMin() {
-            return min;
+        public String getDrawFlag() {
+            return drawFlag;
         }
 
-        public void setMin(String min) {
-            this.min = min;
+        public void setDrawFlag(String drawFlag) {
+            this.drawFlag = drawFlag;
         }
 
-        public String getStar() {
-            return star;
+        public boolean isEnablePick() {
+            return enablePick;
         }
 
-        public void setStar(String star) {
-            this.star = star;
+        public void setEnablePick(boolean enablePick) {
+            this.enablePick = enablePick;
         }
 
-        public String getMax() {
-            return max;
+        public String getEndTime() {
+            return endTime;
         }
 
-        public void setMax(String max) {
-            this.max = max;
+        public void setEndTime(String endTime) {
+            this.endTime = endTime;
         }
 
-        public double getCheckBetNum() {
-            return checkBetNum;
+        public String getMaxPickMoney() {
+            return maxPickMoney;
         }
 
-        public void setCheckBetNum(double checkBetNum) {
-            this.checkBetNum = checkBetNum;
+        public void setMaxPickMoney(String maxPickMoney) {
+            this.maxPickMoney = maxPickMoney;
+        }
+
+        public String getMinPickMoney() {
+            return minPickMoney;
+        }
+
+        public void setMinPickMoney(String minPickMoney) {
+            this.minPickMoney = minPickMoney;
+        }
+
+        public String getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(String startTime) {
+            this.startTime = startTime;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public int getValidBetMoney() {
+            return validBetMoney;
+        }
+
+        public void setValidBetMoney(int validBetMoney) {
+            this.validBetMoney = validBetMoney;
         }
 
         public int getWnum() {
@@ -93,288 +210,6 @@ public class DrawMoneyInfoBean {
 
         public void setWnum(int wnum) {
             this.wnum = wnum;
-        }
-
-        public MemberBean getMember() {
-            return member;
-        }
-
-        public void setMember(MemberBean member) {
-            this.member = member;
-        }
-
-        public String getEnd() {
-            return end;
-        }
-
-        public void setEnd(String end) {
-            this.end = end;
-        }
-
-        public static class MemberBean {
-            /**
-             * city :
-             * drawNeed : 0.0
-             * bankName : 浦发银行
-             * cardNo : 122222222
-             * accountStatus : 2
-             * score : 0.0
-             * province :
-             * registerUrl : xbzhanshi.com
-             * id : 2525
-             * levelGroup : 2
-             * qq : 4444444
-             * registerIp : 175.100.8.197
-             * accountType : 1
-             * wechat :
-             * moneyTypeId : 1
-             * userName : 好
-             * registerOs : ANDROID_MOBILE
-             * bankAddress :
-             * cardNoStatus : 1
-             * createDatetime : 1537680757071
-             * parentNames : ,t006daili,
-             * lastLoginDatetime : 1538135184000
-             * money : 0.0
-             * betNum : 0.0
-             * online : 2
-             * account : zhang7
-             */
-
-            private String city;
-            private double drawNeed;
-            private String bankName;
-            private String cardNo;
-            private int accountStatus;
-            private double score;
-            private String province;
-            private String registerUrl;
-            private int id;
-            private int levelGroup;
-            private String qq;
-            private String registerIp;
-            private int accountType;
-            private String wechat;
-            private int moneyTypeId;
-            private String userName;
-            private String registerOs;
-            private String bankAddress;
-            private int cardNoStatus;
-            private long createDatetime;
-            private String parentNames;
-            private long lastLoginDatetime;
-            private double money;
-            private double betNum;
-            private int online;
-            private String account;
-
-            public String getCity() {
-                return city;
-            }
-
-            public void setCity(String city) {
-                this.city = city;
-            }
-
-            public double getDrawNeed() {
-                return drawNeed;
-            }
-
-            public void setDrawNeed(double drawNeed) {
-                this.drawNeed = drawNeed;
-            }
-
-            public String getBankName() {
-                return bankName;
-            }
-
-            public void setBankName(String bankName) {
-                this.bankName = bankName;
-            }
-
-            public String getCardNo() {
-                return cardNo;
-            }
-
-            public void setCardNo(String cardNo) {
-                this.cardNo = cardNo;
-            }
-
-            public int getAccountStatus() {
-                return accountStatus;
-            }
-
-            public void setAccountStatus(int accountStatus) {
-                this.accountStatus = accountStatus;
-            }
-
-            public double getScore() {
-                return score;
-            }
-
-            public void setScore(double score) {
-                this.score = score;
-            }
-
-            public String getProvince() {
-                return province;
-            }
-
-            public void setProvince(String province) {
-                this.province = province;
-            }
-
-            public String getRegisterUrl() {
-                return registerUrl;
-            }
-
-            public void setRegisterUrl(String registerUrl) {
-                this.registerUrl = registerUrl;
-            }
-
-            public int getId() {
-                return id;
-            }
-
-            public void setId(int id) {
-                this.id = id;
-            }
-
-            public int getLevelGroup() {
-                return levelGroup;
-            }
-
-            public void setLevelGroup(int levelGroup) {
-                this.levelGroup = levelGroup;
-            }
-
-            public String getQq() {
-                return qq;
-            }
-
-            public void setQq(String qq) {
-                this.qq = qq;
-            }
-
-            public String getRegisterIp() {
-                return registerIp;
-            }
-
-            public void setRegisterIp(String registerIp) {
-                this.registerIp = registerIp;
-            }
-
-            public int getAccountType() {
-                return accountType;
-            }
-
-            public void setAccountType(int accountType) {
-                this.accountType = accountType;
-            }
-
-            public String getWechat() {
-                return wechat;
-            }
-
-            public void setWechat(String wechat) {
-                this.wechat = wechat;
-            }
-
-            public int getMoneyTypeId() {
-                return moneyTypeId;
-            }
-
-            public void setMoneyTypeId(int moneyTypeId) {
-                this.moneyTypeId = moneyTypeId;
-            }
-
-            public String getUserName() {
-                return userName;
-            }
-
-            public void setUserName(String userName) {
-                this.userName = userName;
-            }
-
-            public String getRegisterOs() {
-                return registerOs;
-            }
-
-            public void setRegisterOs(String registerOs) {
-                this.registerOs = registerOs;
-            }
-
-            public String getBankAddress() {
-                return bankAddress;
-            }
-
-            public void setBankAddress(String bankAddress) {
-                this.bankAddress = bankAddress;
-            }
-
-            public int getCardNoStatus() {
-                return cardNoStatus;
-            }
-
-            public void setCardNoStatus(int cardNoStatus) {
-                this.cardNoStatus = cardNoStatus;
-            }
-
-            public long getCreateDatetime() {
-                return createDatetime;
-            }
-
-            public void setCreateDatetime(long createDatetime) {
-                this.createDatetime = createDatetime;
-            }
-
-            public String getParentNames() {
-                return parentNames;
-            }
-
-            public void setParentNames(String parentNames) {
-                this.parentNames = parentNames;
-            }
-
-            public long getLastLoginDatetime() {
-                return lastLoginDatetime;
-            }
-
-            public void setLastLoginDatetime(long lastLoginDatetime) {
-                this.lastLoginDatetime = lastLoginDatetime;
-            }
-
-            public double getMoney() {
-                return money;
-            }
-
-            public void setMoney(double money) {
-                this.money = money;
-            }
-
-            public double getBetNum() {
-                return betNum;
-            }
-
-            public void setBetNum(double betNum) {
-                this.betNum = betNum;
-            }
-
-            public int getOnline() {
-                return online;
-            }
-
-            public void setOnline(int online) {
-                this.online = online;
-            }
-
-            public String getAccount() {
-                return account;
-            }
-
-            public void setAccount(String account) {
-                this.account = account;
-            }
         }
     }
 }

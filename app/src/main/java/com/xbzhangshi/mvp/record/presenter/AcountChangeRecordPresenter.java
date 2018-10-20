@@ -14,6 +14,7 @@ import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
+import com.xbzhangshi.mvp.home.HomeActivity;
 import com.xbzhangshi.mvp.record.baseview.IAountChangeBaseView;
 import com.xbzhangshi.mvp.record.baseview.ILotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.AcountChangeRecordBean;
@@ -56,7 +57,10 @@ public class AcountChangeRecordPresenter extends BasePresenter {
         Object tag = HttpManager.get(context, Url.BASE_URL + Url.getMnyrecordType, null, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-
+                HttpManager.islogin(context, response.body());
+                if (response.body().contains("isLogin")) {
+                    return;
+                }
                 try {
                     JSONObject jsonObject = JSON.parseObject(response.body());
                     Set<String> keys = jsonObject.keySet();
@@ -104,8 +108,8 @@ public class AcountChangeRecordPresenter extends BasePresenter {
             Date curDate = new Date(System.currentTimeMillis());
             end = dFormat.format(curDate);
         }
-        if(isDateOneBigger(start,end)){
-            Toast.makeText(context,"截止时间要大于开始时间",Toast.LENGTH_SHORT).show();
+        if (isDateOneBigger(start, end)) {
+            Toast.makeText(context, "截止时间要大于开始时间", Toast.LENGTH_SHORT).show();
             contentView.empty();
             return;
         }
@@ -135,7 +139,7 @@ public class AcountChangeRecordPresenter extends BasePresenter {
         httpParams.put("page", curpage);
         httpParams.put("rows", 10);
 
-        Object tag = HttpManager.postObject(context,AcountChangeRecordBean.class, Url.mnyrecord_list, httpParams, new OkGoCallback<AcountChangeRecordBean>() {
+        Object tag = HttpManager.postObject(context, AcountChangeRecordBean.class, Url.mnyrecord_list, httpParams, new OkGoCallback<AcountChangeRecordBean>() {
             @Override
             public void onSuccess(AcountChangeRecordBean response) {
                 if (response.getList() != null && response.getList().size() > 0) {
@@ -156,7 +160,6 @@ public class AcountChangeRecordPresenter extends BasePresenter {
                 if (response.isHasNext()) {
                     curpage = response.getNextPage();
                 }
-
 
 
             }

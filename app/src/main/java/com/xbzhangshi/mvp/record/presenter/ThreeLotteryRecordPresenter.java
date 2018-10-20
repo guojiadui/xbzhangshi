@@ -93,9 +93,9 @@ public class ThreeLotteryRecordPresenter extends BasePresenter {
         if (curType == 1) {
             url = Url.thirdlotteryrecord;//三方彩票
         } else if (curType == 2) {
-            url = Url.liveBetRecord;//三方彩票
+            url = Url.liveBetRecord;//真人
         } else if (curType == 3) {
-            url = Url.chessrecord;//三方彩票
+            url = Url.chessrecord;//棋牌
         }
         Object tag = HttpManager.postObject(context,ThreeLotteryRecordBean.class, url, httpParams, new OkGoCallback<ThreeLotteryRecordBean>() {
             @Override

@@ -47,7 +47,7 @@ public class SetPwdPresenter extends BasePresenter {
 
         HttpParams httpParams = new HttpParams();
         httpParams.put("pwd", pwd);
-        httpParams.put("rpwd", rpwd);
+        httpParams.put("againPwd", rpwd);
         HttpManager.postObject(context, ResultBean.class, Url.drawing_money_pwd, httpParams, new OkGoCallback<ResultBean>() {
             @Override
             public void onSuccess(ResultBean response) {

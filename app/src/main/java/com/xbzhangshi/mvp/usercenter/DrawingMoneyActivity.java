@@ -90,7 +90,8 @@ public class DrawingMoneyActivity extends BaseActivity implements IDrawingMoneyB
     }
 
     DrawingMoneyPresenter drawingMoneyPresenter;
-  LoadingDailog loadingDialog;
+    LoadingDailog loadingDialog;
+
     @Override
     protected int getlayout() {
         return R.layout.drawing_money_activity_layout;
@@ -124,57 +125,55 @@ public class DrawingMoneyActivity extends BaseActivity implements IDrawingMoneyB
 
     @Override
     public void setConfigInfo(DrawMoneyInfoBean bean) {
-        String s1 = "1. 每天的提款处理时间为：<font color = \"red\">" + bean.getCommit().getStar() + "</font> 至 <font color = \"red\">" + bean.getCommit().getEnd() + ";";
+        String s1 = "1. 每天的提款处理时间为：<font color = \"red\">" + bean.getContent().getStartTime() + "</font> 至 <font color = \"red\">" + bean.getContent().getEndTime() + ";";
         textTip1.setText(Html.fromHtml(s1));
         textTip2.setText("2. 提款3分钟内到账。(如遇高峰期，可能需要延迟到十分钟内到帐);");
-        String s2 = "3. 用户每日最小提款<font color = \"red\">" + bean.getCommit().getMin() + "</font> 元，最大提款 <font color = \"red\">" + bean.getCommit().getMax() + "元;";
+        String s2 = "3. 用户每日最小提款<font color = \"red\">" + bean.getContent().getMinPickMoney() + "</font> 元，最大提款 <font color = \"red\">" + bean.getContent().getMinPickMoney() + "元;";
         textTip3.setText(Html.fromHtml(s2));
-        textTip4.setText("4. 今日可提款" + bean.getCommit().getWnum() + "  次，已提款 " + bean.getCommit().getCurWnum() + " 次 ;");
+        textTip4.setText("4. 今日可提款" + bean.getContent().getCurWnum() + "  次，已提款 " + bean.getContent().getWnum() + " 次 ;");
 
 
-        String s4 = "1. 出款需达投注量：<font color = \"red\">" + bean.getCommit().getMember().getDrawNeed() + "</font> ,当前有效投注金额： <font color = \"red\">" + bean.getCommit().getCheckBetNum();
+        String s4 = "1. 出款需达投注量：<font color = \"red\">" + bean.getContent().getCheckBetNum() + "</font> ,当前有效投注金额： <font color = \"red\">" + bean.getContent().getValidBetMoney();
         consumptionTip1.setText(Html.fromHtml(s4));
-        String s5 = "2. 是否能取款：<font color = \"red\">" + bean.getCommit().getDrawFlag() + "</font>";
+        String s5=null;
+        if (bean.getContent().isEnablePick()) {
+            s5 = "2. 是否能取款：<font color = \"red\">能</font>";
+        } else {
+            s5 = "2. 是否能取款：<font color = \"red\"不能</font>";
+        }
         consumptionTip2.setText(Html.fromHtml(s5));
 
-        String s6;
-        if (bean.getCommit().getMember().getCardNo().length() > 4) {
-            s6 = bean.getCommit().getMember().getBankName() + "(尾数" + bean.getCommit().getMember().getCardNo()
-                    .substring(bean.getCommit().getMember().getCardNo().length() - 4,
-                            bean.getCommit().getMember().getCardNo().length()) + ")";
-        } else {
-            s6 = bean.getCommit().getMember().getBankName() + "(尾数"+bean.getCommit().getMember().getCardNo()+")";
-        }
+        String s6 = "(尾数" + bean.getContent().getCardNo() + ")";
         blank.setText(s6);
-        name.setText(bean.getCommit().getMember().getUserName());
-        balance.setText(bean.getCommit().getMember().getMoney()+"");
+        name.setText(bean.getContent().getUserName());
+        balance.setText(bean.getContent().getAccountBalance()+"");
         commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String num = amountMoney.getText().toString();
-                if(TextUtils.isEmpty(num)){
-                    Toast.makeText(DrawingMoneyActivity.this,"请输入提款金额",Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(num)) {
+                    Toast.makeText(DrawingMoneyActivity.this, "请输入提款金额", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 long sum = Long.parseLong(num);
-                if(sum<100){
-                    Toast.makeText(DrawingMoneyActivity.this,"取款金额不能小于100元",Toast.LENGTH_LONG).show();
+                if (sum < 100) {
+                    Toast.makeText(DrawingMoneyActivity.this, "取款金额不能小于100元", Toast.LENGTH_LONG).show();
                     return;
                 }
                 String spwd = pwd.getText().toString();
-                if(TextUtils.isEmpty(spwd)){
-                    Toast.makeText(DrawingMoneyActivity.this,"请输入提款密码",Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(spwd)) {
+                    Toast.makeText(DrawingMoneyActivity.this, "请输入提款密码", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(loadingDialog==null){
-                    LoadingDailog.Builder loadBuilder=new LoadingDailog.Builder(DrawingMoneyActivity.this)
+                if (loadingDialog == null) {
+                    LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(DrawingMoneyActivity.this)
                             .setMessage("加载中...")
                             .setCancelable(true)
                             .setCancelOutside(true);
-                    loadingDialog=loadBuilder.create();
+                    loadingDialog = loadBuilder.create();
                 }
                 loadingDialog.show();
-                drawingMoneyPresenter.commit(DrawingMoneyActivity.this,num,spwd);
+                drawingMoneyPresenter.commit(DrawingMoneyActivity.this, num, spwd);
             }
         });
         commitLayout.setVisibility(View.VISIBLE);
@@ -186,21 +185,21 @@ public class DrawingMoneyActivity extends BaseActivity implements IDrawingMoneyB
     }
 
     @Override
-    public void drawSuccess( ) {
-        if(loadingDialog!=null&&loadingDialog.isShowing()){
+    public void drawSuccess() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
-        ExchangeDialog exchangeDialog = new ExchangeDialog(this,"提款成功");
+        ExchangeDialog exchangeDialog = new ExchangeDialog(this, "提款成功");
         exchangeDialog.show();
         amountMoney.setText("");
     }
 
     @Override
     public void drawError(String s) {
-        if(loadingDialog!=null&&loadingDialog.isShowing()){
+        if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
-        Toast.makeText(this,s,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
 

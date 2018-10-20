@@ -75,10 +75,14 @@ public class DrawingMoneyPresenter extends BasePresenter {
                 Url.BASE_URL + Url.withDrawData, null, new OkGoCallback<DrawMoneyInfoBean>() {
                     @Override
                     public void onSuccess(DrawMoneyInfoBean response) {
-                        if (response.getCommit() != null) {
+                        if (response.isSuccess()) {
                             contentView.setConfigInfo(response);
                         } else {
-                            contentView.setConfigError("请求出错");
+                            if(!TextUtils.isEmpty(response.getMsg())){
+                                contentView.setConfigError(response.getMsg());
+                            }else {
+                                contentView.setConfigError("请求出错");
+                            }
                         }
                     }
 

@@ -1,4 +1,4 @@
-package com.xbzhangshi.mvp.record.adapter;
+package com.xbzhangshi.mvp.record;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -21,10 +21,10 @@ import android.widget.Toast;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseActivity;
+import com.xbzhangshi.mvp.record.adapter.ThreeRecordAdapter;
 import com.xbzhangshi.mvp.record.baseview.IThreeLotteryBaseView;
 import com.xbzhangshi.mvp.record.bean.ThreeLotteryRecordBean;
 import com.xbzhangshi.mvp.record.presenter.ElectronicsLotteryRecordPresenter;
-import com.xbzhangshi.mvp.record.presenter.ThreeLotteryRecordPresenter;
 import com.xbzhangshi.view.CustomToolbar;
 
 import java.util.ArrayList;
@@ -43,7 +43,6 @@ public class ElectronicsLotteryRecordActivity extends BaseActivity implements IT
 
     public static void start(Context context ) {
         Intent intent = new Intent(context, ElectronicsLotteryRecordActivity.class);
-
         context.startActivity(intent);
     }
 

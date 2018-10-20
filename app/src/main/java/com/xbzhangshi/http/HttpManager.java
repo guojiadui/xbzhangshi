@@ -28,11 +28,11 @@ public class HttpManager {
     // public static HashSet<String> loadingparams = new HashSet<>();
 //{"success":true,"accessToken":"ce88f396-9d9c-4686-a6f9-d3f9dd74ded7","content":{"login":false}}
     public static <T> Object getObject(Context context,  Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-      //  Log.e("net", url);
+       Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-               // Log.e("net", response.body());
+              Log.e("net", response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -61,7 +61,7 @@ public class HttpManager {
 
 
     public static <T> Object postObject(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-      //  Log.e("net", url);
+      Log.e("net", url);
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
@@ -207,8 +207,14 @@ public class HttpManager {
                  return ;
              }
             JSONObject pa = JSONObject.parseObject(s);
-            boolean success = pa.getBoolean("success");
+            Boolean islogin = pa.getBoolean("isLogin");
+            String msg = pa.getString("msg");
+             if(islogin!=null&&!TextUtils.isEmpty(msg)&&!islogin){
+                 UserInfo.getInstance().logout();
+                 Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+             }
 
+            boolean success = pa.getBoolean("success");
             if (success) {
                 boolean login = pa.getJSONObject("content").getBoolean("login");
                 //  boolean login = pa.getBoolean("login");
@@ -221,6 +227,7 @@ public class HttpManager {
                     logInDialog.show();
                 }
             }
+
         } catch (Exception e) {
 
         }

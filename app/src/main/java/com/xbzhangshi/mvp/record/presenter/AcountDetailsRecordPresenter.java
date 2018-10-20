@@ -135,6 +135,7 @@ public class AcountDetailsRecordPresenter extends BasePresenter {
             }
         });
         addNet(tag);
+
     }
 
 

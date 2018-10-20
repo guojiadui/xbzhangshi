@@ -52,7 +52,7 @@ import java.util.Set;
 import butterknife.BindView;
 
 /**
- *
+ *账变
  */
 public class AcountChangeActivity extends BaseActivity implements IAountChangeBaseView, OnLoadMoreListener {
 

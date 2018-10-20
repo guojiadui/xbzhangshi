@@ -10,6 +10,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.lzy.okgo.model.Response;
 import com.xbzhangshi.app.Url;
 import com.xbzhangshi.http.HttpManager;
+import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.record.baseview.ISportsBaseView;
 import com.xbzhangshi.mvp.record.bean.SBSportsRecordBean;
@@ -91,59 +92,124 @@ public class SportsRecordPresenter extends BasePresenter {
             url = Url.betrecord;
         }
         final int cur = curSport;
-        Object tag = HttpManager.post(context, url, httpParams, new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                if (cur == hg_sport) {
-                    //皇冠体育
-                    HGSportsRecordBean bean = null;
-                    try {
-                        bean = JSON.parseObject(response.body(), HGSportsRecordBean.class);
-                    } catch (Exception e) {
-                        contentView.error("请求出错");
-                        return;
-                    }
-                    if (bean != null) {
-                        if (bean.getRows().size() > 0) {
-                            double d = bean.getAggsData().getTotalBetResult() - bean.getAggsData().getTotalBetMoney();
+        if(curSport==hg_sport){
+            Object tag = HttpManager.postObject(context, HGSportsRecordBean.class, url, httpParams, new OkGoCallback<HGSportsRecordBean>() {
+                @Override
+                public void onSuccess(HGSportsRecordBean response) {
+                    super.onSuccess(response);
+                    if (response != null) {
+                        if (response.getRows().size() > 0) {
+                            double d = response.getAggsData().getTotalBetResult() - response.getAggsData().getTotalBetMoney();
                             String s = df.format(d);
-                            contentView.setprofit(bean.getAggsData().getTotalBetMoney(), bean.getAggsData().getTotalBetResult(), Double.valueOf(s));
-                            contentView.HGsuccess(bean.getRows());
+                            contentView.setprofit(response.getAggsData().getTotalBetMoney(), response.getAggsData().getTotalBetResult(), Double.valueOf(s));
+                            contentView.HGsuccess(response.getRows());
                         } else {
                             contentView.empty();
                         }
                     } else {
                         contentView.error("请求出错");
                     }
+                }
 
-                } else if (cur == bs_sport) {
-                    //沙巴体育
-                    SBSportsRecordBean bean = null;
-                    try {
-                        bean = JSON.parseObject(response.body(), SBSportsRecordBean.class);
-                        if (bean.getRows().size() > 0) {
-                            double d = bean.getAggsData().getWinMoneyCount() - bean.getAggsData().getBettingMoneyCount();
+                @Override
+                public void parseError() {
+                    contentView.error("请求出错");
+                }
+
+                @Override
+                public void onError(Response<String> response) {
+                    contentView.error("请求出错");
+
+                }
+            });
+            addNet(tag);
+        }else {
+            Object tag = HttpManager.postObject(context, SBSportsRecordBean.class, url, httpParams, new OkGoCallback<SBSportsRecordBean>() {
+                @Override
+                public void onSuccess(SBSportsRecordBean response) {
+                    super.onSuccess(response);
+                    if (response != null) {
+                        if (response.getRows().size() > 0) {
+                            double d = response.getAggsData().getWinMoneyCount() - response.getAggsData().getBettingMoneyCount();
                             String s = df.format(d);
-                            contentView.setprofit(bean.getAggsData().getBettingMoneyCount(), bean.getAggsData().getWinMoneyCount(), Double.valueOf(s));
-                            contentView.BSsuccess(bean.getRows());
+                            contentView.setprofit(response.getAggsData().getBettingMoneyCount(), response.getAggsData().getWinMoneyCount(), Double.valueOf(s));
+                            contentView.BSsuccess(response.getRows());
                         } else {
                             contentView.empty();
                         }
-                    } catch (Exception e) {
+                    } else {
                         contentView.error("请求出错");
-                        return;
                     }
                 }
 
-            }
+                @Override
+                public void parseError() {
+                    contentView.error("请求出错");
+                }
 
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                contentView.error("请求出错");
-            }
-        });
-        addNet(tag);
+                @Override
+                public void onError(Response<String> response) {
+                    contentView.error("请求出错");
+
+                }
+            });
+            addNet(tag);
+
+            /*Object tag = HttpManager.post(context, url, httpParams, new StringCallback() {
+                @Override
+                public void onSuccess(Response<String> response) {
+                    if (cur == hg_sport) {
+                        //皇冠体育
+                        HGSportsRecordBean bean = null;
+                        try {
+                            bean = JSON.parseObject(response.body(), HGSportsRecordBean.class);
+                        } catch (Exception e) {
+                            contentView.error("请求出错");
+                            return;
+                        }
+                        if (bean != null) {
+                            if (bean.getRows().size() > 0) {
+                                double d = bean.getAggsData().getTotalBetResult() - bean.getAggsData().getTotalBetMoney();
+                                String s = df.format(d);
+                                contentView.setprofit(bean.getAggsData().getTotalBetMoney(), bean.getAggsData().getTotalBetResult(), Double.valueOf(s));
+                                contentView.HGsuccess(bean.getRows());
+                            } else {
+                                contentView.empty();
+                            }
+                        } else {
+                            contentView.error("请求出错");
+                        }
+
+                    } else if (cur == bs_sport) {
+                        //沙巴体育
+                        SBSportsRecordBean bean = null;
+                        try {
+                            bean = JSON.parseObject(response.body(), SBSportsRecordBean.class);
+                            if (bean.getRows().size() > 0) {
+                                double d = bean.getAggsData().getWinMoneyCount() - bean.getAggsData().getBettingMoneyCount();
+                                String s = df.format(d);
+                                contentView.setprofit(bean.getAggsData().getBettingMoneyCount(), bean.getAggsData().getWinMoneyCount(), Double.valueOf(s));
+                                contentView.BSsuccess(bean.getRows());
+                            } else {
+                                contentView.empty();
+                            }
+                        } catch (Exception e) {
+                            contentView.error("请求出错");
+                            return;
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onError(Response<String> response) {
+                    super.onError(response);
+                    contentView.error("请求出错");
+                }
+            });
+            addNet(tag);*/
+        }
+
     }
 
 

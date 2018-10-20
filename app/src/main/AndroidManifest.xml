@@ -53,7 +53,7 @@
         <activity android:name=".mvp.usercenter.DrawingMoneyActivity" />
         <activity android:name=".mvp.record.AcountDetailsRecordActivity" />
         <activity android:name=".mvp.record.ThreeLotteryRecordActivity" />
-        <activity android:name=".mvp.record.adapter.ElectronicsLotteryRecordActivity" />
+        <activity android:name=".mvp.record.ElectronicsLotteryRecordActivity" />
         <activity android:name=".mvp.usercenter.RealPersonExchangeActivity" />
         <activity android:name=".mvp.webview.RechargeDetailsActivity" />
         <activity android:name=".mvp.webview.SignInActivity" />
