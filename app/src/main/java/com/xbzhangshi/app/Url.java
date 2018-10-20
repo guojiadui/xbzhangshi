@@ -83,7 +83,7 @@ public class Url {
     public  final  static String cancelOrder =APP_URL_HEAD+"/mobile/v3/cancelOrder.do";// 	取消彩票订单
     public  final  static String betrecord =BASE_URL+"/sportsrecord.do";// 体育投注记录 （沙巴体育）
     public  final  static String hg_sport =BASE_URL+"/getOrderData.do";// 1)	体育投注记录 （皇冠体育
-    public  final  static String mnyrecord_list=APP_URL_HEAD+"/center/record/mnyrecord/list.do";// 账变记录
+    public  final  static String mnyrecord_list=BASE_URL+"/mnyrecordlist.do";// 账变记录
 
 
 
