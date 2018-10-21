@@ -122,6 +122,7 @@ public class MyApplication extends MultiDexApplication implements Utils.OnAppSta
                // System.exit(0);
             }
         },500);
+        UserInfo.getInstance().logout();
       // System.exit(0);
     }
 

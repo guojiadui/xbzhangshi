@@ -182,7 +182,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             balance.setText("");
             if (bettingPresenter != null) {
                 //获取余额
-                bettingPresenter.getBalance(mActivity);
+                bettingPresenter.getBalanceNoLogin(mActivity);
             }
             MainChatRoom.init();
         }
@@ -358,7 +358,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
             balance.setText("");
             if (bettingPresenter != null) {
                 //获取余额
-                bettingPresenter.getBalance(mActivity);
+                bettingPresenter.getBalanceNoLogin(mActivity);
             }
         }
     }

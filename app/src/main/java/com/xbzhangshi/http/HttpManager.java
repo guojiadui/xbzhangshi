@@ -27,12 +27,54 @@ public class HttpManager {
     // public static HashSet<String> loadingUrls = new HashSet<>();
     // public static HashSet<String> loadingparams = new HashSet<>();
 //{"success":true,"accessToken":"ce88f396-9d9c-4686-a6f9-d3f9dd74ded7","content":{"login":false}}
+
+    /**
+     * 没有登录检测
+     * @param context
+     * @param c
+     * @param url
+     * @param params
+     * @param back
+     * @param <T>
+     * @return
+     */
+    public static <T> Object getObjectNoLogin(Context context,  Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
+       Log.e("net", url);
+        OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+              Log.e("nonet",url+":"+ response.body());
+
+                try {
+                    T t = JSON.parseObject(response.body(), c);
+                    if (back != null) {
+                        back.onSuccess(t);
+                    }
+                } catch (Exception e) {
+                    if (back != null) {
+                        back.parseError();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+               /* if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("net", response.body());*/
+                super.onError(response);
+                if (back != null) {
+                    back.onError(response);
+                }
+            }
+        });
+        return url;
+    }
     public static <T> Object getObject(Context context,  Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
        Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-              Log.e("net", response.body());
+              Log.e("net",url+":"+ response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -65,7 +107,7 @@ public class HttpManager {
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-             //   Log.e("netuccess", response.body());
+               Log.e("net",url+":"+ response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -212,6 +254,7 @@ public class HttpManager {
              if(islogin!=null&&!TextUtils.isEmpty(msg)&&!islogin){
                  UserInfo.getInstance().logout();
                  Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+                 return;
              }
 
             boolean success = pa.getBoolean("success");

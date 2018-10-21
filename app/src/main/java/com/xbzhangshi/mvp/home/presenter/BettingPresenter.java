@@ -57,40 +57,68 @@ public class BettingPresenter extends BasePresenter {
         return UserInfo.getInstance().isLogin();
     }
 
+
     //加载公告
     public void loadData(Context context) {
         //加载公告
+        loadNotice(context);
+        getHomeTip(context);
+    }
+
+    public  void  getVersionUpdate(Context context){
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("flag","android");
+        //HttpManager.getObjectNoLogin(context,)
+    }
+
+
+    boolean isRepeatNotice = false;
+
+    private void loadNotice(Context context) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("code", "13");
-        Object tag = HttpManager.getObject(context, NoticeBean.class,
+        Object tag = HttpManager.getObjectNoLogin(context, NoticeBean.class,
                 Url.BASE_URL + Url.notice, httpParams, new OkGoCallback<NoticeBean>() {
                     @Override
                     public void onSuccess(NoticeBean response) {
                         if (response.isSuccess()) {
                             if (!TextUtils.isEmpty(response.getContent())) {
-
                                 contentView.setNotice(response.getContent());
                             }
+                        } else {
+                            if (TextUtils.isEmpty(response.getContent()) && !isRepeatNotice) {
+                                isRepeatNotice = true;
+                                loadNotice(context);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        if (!isRepeatNotice) {
+                            isRepeatNotice = true;
+                            loadNotice(context);
                         }
                     }
                 });
         addNet(tag);
-        Object tag2 = HttpManager.getObject(context, HomeSwithBean.class,
+        Object tag2 = HttpManager.getObjectNoLogin(context, HomeSwithBean.class,
                 Url.BASE_URL + Url.getUniversalSwitch, null, new OkGoCallback<HomeSwithBean>() {
                     @Override
                     public void onSuccess(HomeSwithBean response) {
 
                         boolean dzp, qd;
-                        if(TextUtils.isEmpty(response.getIsDzpOnOff()) ){
+                        if (TextUtils.isEmpty(response.getIsDzpOnOff())) {
                             dzp = true;
-                        }else if ( response.getIsDzpOnOff().equals("on")) {
+                        } else if (response.getIsDzpOnOff().equals("on")) {
                             dzp = true;
                         } else {
                             dzp = false;
                         }
-                        if(TextUtils.isEmpty(response.getIsQdOnOff())){
+                        if (TextUtils.isEmpty(response.getIsQdOnOff())) {
                             qd = true;
-                        }else if (response.getIsQdOnOff().equals("on")) {
+                        } else if (response.getIsQdOnOff().equals("on")) {
                             qd = true;
                         } else {
                             qd = false;
@@ -102,6 +130,7 @@ public class BettingPresenter extends BasePresenter {
                     public void parseError() {
                         super.parseError();
                         contentView.setSwith(true, true);
+
                     }
 
                     @Override
@@ -111,8 +140,8 @@ public class BettingPresenter extends BasePresenter {
                     }
                 });
         addNet(tag2);
-        getHomeTip(context);
     }
+
 
     public void getHomeTip(Context context) {
         //是否登出提窗口
@@ -261,7 +290,41 @@ public class BettingPresenter extends BasePresenter {
                     public void onSuccess(BalanceBean response) {
                         isLoadingBalance = false;
                         if (response.isSuccess()) {
-                            String  b = subZeroAndDot(response.getContent().getBalance() + "元");
+                            String b = subZeroAndDot(response.getContent().getBalance() + "元");
+                            contentView.updateBalance(b);
+                            EventBus.getDefault().post(new BalanceEvent(b));
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        isLoadingBalance = false;
+                    }
+
+                    @Override
+                    public void parseError() {
+                        super.parseError();
+                        isLoadingBalance = false;
+                    }
+                });
+        addNet(tag);
+    }
+    public void getBalanceNoLogin(Context context) {
+        if (!UserInfo.getInstance().isLogin) {
+            return;
+        }
+        if (isLoadingBalance) {
+            return;
+        }
+        isLoadingBalance = true;
+        Object tag = HttpManager.getObjectNoLogin(context, BalanceBean.class,
+                Url.BASE_URL + Url.meminfo, null, new OkGoCallback<BalanceBean>() {
+                    @Override
+                    public void onSuccess(BalanceBean response) {
+                        isLoadingBalance = false;
+                        if (response.isSuccess()) {
+                            String b = subZeroAndDot(response.getContent().getBalance() + "元");
                             contentView.updateBalance(b);
                             EventBus.getDefault().post(new BalanceEvent(b));
 

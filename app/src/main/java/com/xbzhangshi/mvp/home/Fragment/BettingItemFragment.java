@@ -35,7 +35,8 @@ import butterknife.BindView;
  * 投注类型
  */
 @SuppressLint("ValidFragment")
-public class BettingItemFragment extends BaseFragment implements IBettingItemBaseView<BesidesLotteryBean.ContentBean> {
+public class
+BettingItemFragment extends BaseFragment implements IBettingItemBaseView<BesidesLotteryBean.ContentBean> {
 
     public static BettingItemFragment newInstance(CustomViewPager vp, int fragmentID) {
         BettingItemFragment fragment = new BettingItemFragment(vp, fragmentID);

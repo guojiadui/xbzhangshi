@@ -87,6 +87,7 @@ public class MainChatRoom extends BaseChatRoom {
                     };
                     mSocketClient.connect();
 
+
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
