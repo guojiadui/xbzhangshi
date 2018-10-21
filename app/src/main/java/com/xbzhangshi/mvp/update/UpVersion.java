@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.allenliu.versionchecklib.callback.APKDownloadListener;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.NotificationBuilder;
@@ -16,60 +19,58 @@ import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
 import com.blankj.utilcode.util.FileUtils;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
+import com.xbzhangshi.mvp.home.bean.VersionBean;
 import com.xbzhangshi.view.dialog.UpVersionDialog;
+
+import java.io.File;
 
 public class UpVersion {
 
 
     private DownloadBuilder builder;
+    public static boolean isDownloading = false;
 
     public void upVersion(Context context) {
-        builder = AllenVersionChecker
+        if (isDownloading) {
+            return;
+        }
+        AllenVersionChecker
                 .getInstance()
-                .requestVersion()
-                .setRequestUrl("https://www.baidu.com")
-                .request(new RequestVersionListener() {
-                    @Nullable
+                .downloadOnly(
+                        UpVersion.crateUIData()
+                )
+                .setForceRedownload(false)//本地有安装包缓存也不会重新下载
+                .setShowDownloadingDialog(false)//显示下载进度
+                .setShowNotification(true)//通知栏
+                .setNotificationBuilder(createCustomNotification())//自定通知栏
+                .setCustomVersionDialogListener(new CustomVersionDialogListener() {
                     @Override
-                    public UIData onRequestVersionSuccess(String result) {
-                        // Toast.makeText(context, "request successful", Toast.LENGTH_SHORT).show();
-                        int curVersion = getVersionCode(context);
-                      //  builder.setNewestVersionCode(100);
-                        //是最新的版本
-                        if (true) {
-                            //有本部更新
-                            return crateUIData();
-                        } else {
-                            //FileUtils.deleteAllInDir(Url.verPath);
-                            //没有本部更新
-                            return null;
-                        }
-
+                    public Dialog getCustomVersionDialog(Context context, UIData versionBundle) {
+                        UpVersionDialog upVersionDialog = new UpVersionDialog(context);
+                        TextView mTitle = upVersionDialog.findViewById(R.id.title);
+                        TextView mContentTip = upVersionDialog.findViewById(R.id.content_tip);
+                        mTitle.setText(versionBundle.getTitle());
+                        mContentTip.setText(versionBundle.getContent());
+                        return upVersionDialog;
+                    }
+                })
+                .setApkDownloadListener(new APKDownloadListener() {
+                    @Override
+                    public void onDownloading(int progress) {
+                        isDownloading = true;
                     }
 
                     @Override
-                    public void onRequestVersionFailure(String message) {
-
+                    public void onDownloadSuccess(File file) {
+                        isDownloading = false;
                     }
-                });
-        builder.setForceRedownload(false);//本地有安装包缓存也不会重新下载
-        builder.setShowDownloadingDialog(false);//显示下载进度
-        builder.setShowNotification(true);//通知栏
-        builder.setNotificationBuilder(createCustomNotification());//自定通知栏
-        // builder.setDownloadAPKPath(Url.verPath);//下载路径
-        builder.setCustomVersionDialogListener(new CustomVersionDialogListener() {//自定义更新dialog
-            @Override
-            public Dialog getCustomVersionDialog(Context context, UIData versionBundle) {
-                UpVersionDialog upVersionDialog = new UpVersionDialog(context);
-                TextView mTitle = upVersionDialog.findViewById(R.id.title);
-                TextView mContentTip = upVersionDialog.findViewById(R.id.content_tip);
-                mTitle.setText(versionBundle.getTitle());
-                mContentTip.setText(versionBundle.getContent());
-                return upVersionDialog;
-            }
-        });
-        builder.excuteMission(context);
 
+                    @Override
+                    public void onDownloadFail() {
+                        isDownloading = false;
+                    }
+                })
+                .excuteMission(context);
     }
 
     /**
@@ -78,7 +79,7 @@ public class UpVersion {
      * 这里可以构造UI需要显示的数据
      * UIData 内部是一个Bundle
      */
-    private UIData crateUIData() {
+    public static UIData crateUIData() {
         UIData uiData = UIData.create();
         uiData.setTitle("本部2.0");
         uiData.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
@@ -89,10 +90,8 @@ public class UpVersion {
     private NotificationBuilder createCustomNotification() {
         return NotificationBuilder.create()
                 .setRingtone(true)
-                .setIcon(R.mipmap.ic_launcher)
-                .setTicker("custom_ticker")
-                .setContentTitle("custom title")
-                .setContentText("ddddddddddddd");
+                .setIcon(R.mipmap.logo)
+                .setTicker(R.string.app_name+"更新");
     }
 
     public static int getVersionCode(Context mContext) {

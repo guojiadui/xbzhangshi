@@ -26,7 +26,6 @@ public class UpVersionDialog extends Dialog {
     Context context;
 
 
-
    /* public void init() {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.up_version_dialog_layout, null);
@@ -39,5 +38,5 @@ public class UpVersionDialog extends Dialog {
         if (!TextUtils.isEmpty(contentTip)) {
             mContentTip.setText(contentTip);
         }
-    }*/
+    } */
 }

@@ -1,9 +1,13 @@
 package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.lzy.okgo.OkGo;
@@ -20,6 +24,7 @@ import com.xbzhangshi.mvp.home.bean.BalanceBean;
 import com.xbzhangshi.mvp.home.bean.HomeDialogBean;
 import com.xbzhangshi.mvp.home.bean.HomeSwithBean;
 import com.xbzhangshi.mvp.home.bean.NoticeBean;
+import com.xbzhangshi.mvp.home.bean.VersionBean;
 import com.xbzhangshi.mvp.home.event.BalanceEvent;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
 import com.xbzhangshi.mvp.login.bean.LoginBean;
@@ -27,12 +32,14 @@ import com.xbzhangshi.mvp.login.bean.LoginUserInfoBean;
 import com.xbzhangshi.mvp.update.UpVersion;
 import com.xbzhangshi.single.UserInfo;
 import com.xbzhangshi.util.DES;
+import com.xbzhangshi.view.dialog.UpVersionDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import io.reactivex.internal.operators.parallel.ParallelDoOnNextTry;
+import okhttp3.internal.Version;
 
 
 public class BettingPresenter extends BasePresenter {
@@ -63,12 +70,25 @@ public class BettingPresenter extends BasePresenter {
         //加载公告
         loadNotice(context);
         getHomeTip(context);
+       getVersionUpdate(context);
     }
 
-    public  void  getVersionUpdate(Context context){
+
+
+    public void getVersionUpdate(Context context) {
         HttpParams httpParams = new HttpParams();
-        httpParams.put("flag","android");
-        //HttpManager.getObjectNoLogin(context,)
+        httpParams.put("flag", "android");
+        HttpManager.getObjectNoLogin(context, VersionBean.class, Url.Version, httpParams, new OkGoCallback<VersionBean>() {
+            @Override
+            public void onSuccess(VersionBean response) {
+                super.onSuccess(response);
+                int cur = UpVersion.getVersionCode(context);
+                if (response.getCode() > cur) {
+                    UpVersion upVersion = new UpVersion();
+                    upVersion.upVersion(context);
+                }
+            }
+        });
     }
 
 
@@ -310,6 +330,7 @@ public class BettingPresenter extends BasePresenter {
                 });
         addNet(tag);
     }
+
     public void getBalanceNoLogin(Context context) {
         if (!UserInfo.getInstance().isLogin) {
             return;
