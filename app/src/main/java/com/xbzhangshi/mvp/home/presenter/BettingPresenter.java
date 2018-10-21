@@ -70,9 +70,8 @@ public class BettingPresenter extends BasePresenter {
         //加载公告
         loadNotice(context);
         getHomeTip(context);
-       getVersionUpdate(context);
+        getVersionUpdate(context);
     }
-
 
 
     public void getVersionUpdate(Context context) {
@@ -83,9 +82,9 @@ public class BettingPresenter extends BasePresenter {
             public void onSuccess(VersionBean response) {
                 super.onSuccess(response);
                 int cur = UpVersion.getVersionCode(context);
-                if (response.getCode() > cur) {
-                    UpVersion upVersion = new UpVersion();
-                    upVersion.upVersion(context);
+                Integer ver = Integer.parseInt(response.getContent().getVersion());
+                if (ver > cur) {
+                    UpVersion.upVersion(context, response);
                 }
             }
         });

@@ -12,42 +12,59 @@
         android:layout_marginTop="@dimen/dp_15"
         android:layout_marginBottom="@dimen/dp_10"
         android:textSize="@dimen/font_size_large"
+        android:textColor="@color/black"
         />
     <TextView
         android:id="@+id/content_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dp_15"
-        android:layout_gravity="center_horizontal"
+        android:paddingStart="@dimen/dp_20"
+        android:minWidth="@dimen/dp_240"
+        android:paddingEnd="@dimen/dp_20"
         android:layout_marginBottom="@dimen/dp_15"
-        android:paddingEnd="@dimen/dp_15"/>
+        android:textColor="@color/gray"
+       />
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
         android:background="@color/line_gray"/>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/dp_120"
+            android:layout_weight="1">
         <TextView
             android:id="@id/versionchecklib_version_dialog_cancel"
             android:layout_width="@dimen/dp_120"
             android:layout_height="@dimen/dp_45"
             android:text="取消"
+           android:layout_gravity="center"
             android:gravity="center"
             android:textSize="@dimen/font_size_large"
             android:textColor="#0894ce"/>
+        </FrameLayout>
         <View
             android:layout_width="@dimen/dp_1"
             android:layout_height="match_parent"
             android:background="@color/line_gray"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/dp_120"
+            android:layout_weight="1">
         <TextView
             android:id="@+id/versionchecklib_version_dialog_commit"
             android:layout_width="@dimen/dp_120"
             android:layout_height="@dimen/dp_45"
             android:textSize="@dimen/font_size_large"
             android:textColor="#0894ce"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:text="确定"/>
+            android:text="更新"/>
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

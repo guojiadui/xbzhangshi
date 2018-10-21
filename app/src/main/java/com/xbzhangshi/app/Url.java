@@ -65,6 +65,7 @@ public class Url {
      public  final  static String turnlate_cookie=APP_URL_HEAD+"/center/active/lastrd.do";//转盘页面cookie的绑定
      public  final  static String getArticle=APP_URL_HEAD+"/getConfig/getArticle.do";//首页弹出框
      public  final  static String Version=BASE_URL+"/getCurrentLastVersion.do";//版本更新
+     public  final  static String saveAppUpdate=BASE_URL+"/saveAppUpdate.do";//更新服务器的更新内容
 
 
 

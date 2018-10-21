@@ -17,8 +17,12 @@ import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener;
 import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
 import com.blankj.utilcode.util.FileUtils;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.HttpParams;
+import com.lzy.okgo.model.Response;
 import com.xbzhangshi.R;
 import com.xbzhangshi.app.Url;
+import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.mvp.home.bean.VersionBean;
 import com.xbzhangshi.view.dialog.UpVersionDialog;
 
@@ -27,20 +31,48 @@ import java.io.File;
 public class UpVersion {
 
 
-    private DownloadBuilder builder;
+
     public static boolean isDownloading = false;
 
-    public void upVersion(Context context) {
+    /**
+     * 更新本部内容到服务器
+     *
+     * @param
+     * @param
+     */
+    public static void setUpVerisonContent(Context content) {
+        HttpParams httpParams = new HttpParams();
+        httpParams.put("flag", "android");
+        httpParams.put("version", 2);
+        httpParams.put("content", "dddddddddddddddd");
+        HttpManager.post(content, Url.saveAppUpdate, httpParams, new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                Log.e("Up", response.body());
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+                super.onError(response);
+            }
+        });
+    }
+
+
+    public static void upVersion(Context context, VersionBean versionBean) {
         if (isDownloading) {
             return;
         }
         AllenVersionChecker
                 .getInstance()
                 .downloadOnly(
-                        UpVersion.crateUIData()
+                        UpVersion.crateUIData().setTitle("版本更新")
+                                .setContent(versionBean.getContent().getContent())
+                                .setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk")
                 )
                 .setForceRedownload(false)//本地有安装包缓存也不会重新下载
                 .setShowDownloadingDialog(false)//显示下载进度
+                .setNewestVersionCode(Integer.parseInt(versionBean.getContent().getVersion()))
                 .setShowNotification(true)//通知栏
                 .setNotificationBuilder(createCustomNotification())//自定通知栏
                 .setCustomVersionDialogListener(new CustomVersionDialogListener() {
@@ -81,17 +113,14 @@ public class UpVersion {
      */
     public static UIData crateUIData() {
         UIData uiData = UIData.create();
-        uiData.setTitle("本部2.0");
-        uiData.setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk");
-        uiData.setContent("修复部分bug");
         return uiData;
     }
 
-    private NotificationBuilder createCustomNotification() {
+    private static NotificationBuilder createCustomNotification() {
         return NotificationBuilder.create()
                 .setRingtone(true)
                 .setIcon(R.mipmap.logo)
-                .setTicker(R.string.app_name+"更新");
+                .setTicker(R.string.app_name + "更新");
     }
 
     public static int getVersionCode(Context mContext) {

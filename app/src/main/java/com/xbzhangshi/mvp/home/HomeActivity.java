@@ -35,6 +35,7 @@ import com.xbzhangshi.mvp.home.presenter.HomePresenter;
 import com.xbzhangshi.mvp.home.presenter.SidePesenter;
 import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.login.LoginSuccessEvent;
+import com.xbzhangshi.mvp.update.UpVersion;
 import com.xbzhangshi.mvp.webview.RedPackageActivity;
 import com.xbzhangshi.view.BottomBar;
 import com.xbzhangshi.view.BottomBarTab;
@@ -83,7 +84,10 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
     protected void initView(Bundle savedInstanceState) {
         homePresenter = HomePresenter.newInstance(this);
         EventBus.getDefault().register(this);
-
+        /**
+         * 上传更新的内容
+         */
+       // UpVersion.setUpVerisonContent(this);
         mBottomBar.addItem(new BottomBarTab(this, R.mipmap.sy_nor, "投注大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.gcdt_nor, "购彩大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.kjdt_nor, "开奖公告"))
