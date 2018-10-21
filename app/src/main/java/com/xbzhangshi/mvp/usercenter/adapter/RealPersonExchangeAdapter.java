@@ -14,25 +14,26 @@ import com.xbzhangshi.mvp.usercenter.bean.RealExhangeBean;
 
 import java.util.List;
 
-public class RealPersonExchangeAdapter extends BaseQuickAdapter<RealExhangeBean, BaseViewHolder> {
+public class RealPersonExchangeAdapter extends BaseQuickAdapter<RealExhangeBean.ContentBean, BaseViewHolder> {
     Context context;
 
-    public RealPersonExchangeAdapter(Context context, @Nullable List<RealExhangeBean> data) {
+    public RealPersonExchangeAdapter(Context context, @Nullable List<RealExhangeBean.ContentBean> data) {
         super(R.layout.real_person_exchange_adapter_item, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, RealExhangeBean item) {
+    protected void convert(BaseViewHolder helper, RealExhangeBean.ContentBean item) {
         helper.addOnClickListener(R.id.input).addOnClickListener(R.id.out)
                 .addOnClickListener(R.id.refresh).addOnClickListener(R.id.enter_game);
-        String url = Url.realpng + item.getKey() + ".png";
+        String url = Url.realpng + item.getPlayCode() + ".png";
         Glide.with(context)
                 .load(url)
                 .into((ImageView) helper.getView(R.id.icon));
-        helper.setText(R.id.name, item.getName());
-        if (!TextUtils.isEmpty(item.getBalance())) {
-            helper.setText(R.id.balance_item, item.getBalance());
+        helper.setText(R.id.name, item.getTitle());
+        helper.setText(R.id.balance_item, item.getBalance()+"");
+        if (item.getBalance()>=0) {
+            helper.setText(R.id.balance_item, item.getBalance()+"");
         } else {
             helper.setText(R.id.balance_item, "点击刷新");
         }

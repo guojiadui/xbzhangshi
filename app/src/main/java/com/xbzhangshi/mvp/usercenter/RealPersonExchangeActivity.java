@@ -107,17 +107,17 @@ public class RealPersonExchangeActivity extends BaseActivity implements IRealPer
     }
 
     @Override
-    public void success(List<RealExhangeBean> list) {
+    public void success(List<RealExhangeBean.ContentBean> list) {
         multipleStatusView.showContent();
         RealPersonExchangeAdapter exchangeAdapter = new RealPersonExchangeAdapter(this, list);
         exchangeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                RealExhangeBean realExhangeBean = (RealExhangeBean) adapter.getData().get(position);
+                RealExhangeBean.ContentBean realExhangeBean = (RealExhangeBean.ContentBean) adapter.getData().get(position);
                 switch (view.getId()) {
                     case R.id.input:
                         RealExhangeDialog dialog = new RealExhangeDialog(RealPersonExchangeActivity.this,
-                                "从系统转到" + realExhangeBean.getKey(), "转入金额", new RealExhangeDialog.ClickListener() {
+                                "从系统转到" + realExhangeBean.getPlayCode(), "转入金额", new RealExhangeDialog.ClickListener() {
                             @Override
                             public void onClickListener(String content) {
                                 if (TextUtils.isEmpty(content)) {
@@ -132,14 +132,14 @@ public class RealPersonExchangeActivity extends BaseActivity implements IRealPer
                                     loadingdialog = loadBuilder.create();
                                 }
                                 loadingdialog.show();
-                                excahngePresenter.transMoney(RealPersonExchangeActivity.this, "sys", realExhangeBean.key, content);
+                                excahngePresenter.transMoney(RealPersonExchangeActivity.this, "sys", realExhangeBean.getPlayCode(), content);
                             }
                         });
                         dialog.show();
                         break;
                     case R.id.out:
                         dialog = new RealExhangeDialog(RealPersonExchangeActivity.this,
-                                "从" + realExhangeBean.getKey() + "转到系统", "转出金额", new RealExhangeDialog.ClickListener() {
+                                "从" + realExhangeBean.getPlayCode() + "转到系统", "转出金额", new RealExhangeDialog.ClickListener() {
                             @Override
                             public void onClickListener(String content) {
                                 if (TextUtils.isEmpty(content)) {
@@ -154,7 +154,7 @@ public class RealPersonExchangeActivity extends BaseActivity implements IRealPer
                                     loadingdialog = loadBuilder.create();
                                 }
                                 loadingdialog.show();
-                                excahngePresenter.transMoney(RealPersonExchangeActivity.this, realExhangeBean.key, "sys", content);
+                                excahngePresenter.transMoney(RealPersonExchangeActivity.this, realExhangeBean.getPlayCode(), "sys", content);
                             }
                         });
                         dialog.show();
@@ -168,7 +168,7 @@ public class RealPersonExchangeActivity extends BaseActivity implements IRealPer
                             loadingdialog = loadBuilder.create();
                         }
                         loadingdialog.show();
-                        excahngePresenter.getBalanceItem(RealPersonExchangeActivity.this, realExhangeBean.key);
+                        excahngePresenter.getBalanceItem(RealPersonExchangeActivity.this, realExhangeBean.getPlayCode());
                         break;
                     case R.id.enter_game:
                         break;
@@ -208,15 +208,15 @@ public class RealPersonExchangeActivity extends BaseActivity implements IRealPer
     }
 
     @Override
-    public void updateBalanceItem(String type, String balance) {
+    public void updateBalanceItem(String type, double balance) {
         if(loadingdialog!=null&&loadingdialog.isShowing()){
             loadingdialog.dismiss();
         }
         if(recyclerView!=null&&recyclerView.getAdapter()!=null){
             RealPersonExchangeAdapter adapter = (RealPersonExchangeAdapter) recyclerView.getAdapter();
             for(int i =0;i<adapter.getData().size();i++){
-                RealExhangeBean exchangeBean  =adapter.getItem(i);
-                if(type.equals(exchangeBean.key)){
+                RealExhangeBean.ContentBean exchangeBean  =adapter.getItem(i);
+                if(type.equals(((RealExhangeBean.ContentBean) exchangeBean).getPlayCode())){
                     exchangeBean.setBalance(balance);
                     adapter.notifyItemChanged(i);
                     return;

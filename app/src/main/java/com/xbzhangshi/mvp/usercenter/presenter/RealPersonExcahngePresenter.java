@@ -2,6 +2,7 @@ package com.xbzhangshi.mvp.usercenter.presenter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.blankj.utilcode.util.LogUtils;
@@ -48,6 +49,7 @@ public class RealPersonExcahngePresenter extends BasePresenter {
         Object tag = HttpManager.postObject(context, ResultBean.class, Url.thirdRealTransMoney, httpParams, new OkGoCallback<ResultBean>() {
             @Override
             public void onSuccess(ResultBean response) {
+
                 if (response.isSuccess()) {
                     contentView.transMoneySuccess();
                 } else {
@@ -77,23 +79,20 @@ public class RealPersonExcahngePresenter extends BasePresenter {
      */
 
     public void getList(Context context) {
-        Object tag = HttpManager.get(context, Url.getRealNameType, null, new StringCallback() {
+        Object tag = HttpManager.getObject(context, RealExhangeBean.class, Url.getRealNameType, null, new OkGoCallback<RealExhangeBean>() {
             @Override
-            public void onSuccess(Response<String> response) {
-                List<RealExhangeBean> list;
-                try {
-                    LogUtils.e("TAG", response.body());
-                    list = JSON.parseArray(response.body(), RealExhangeBean.class);
-                    if (list.size() > 0) {
-                        contentView.success(list);
-                    } else {
-                        contentView.empty();
+            public void onSuccess(RealExhangeBean response) {
+                super.onSuccess(response);
+                if (response.isSuccess()) {
+                    for (RealExhangeBean.ContentBean contentBean : response.getContent()) {
+                        contentBean.setBalance(-1.0);
                     }
-                } catch (Exception e) {
-                    LogUtils.e("TAG", e.toString());
-                    contentView.error("请求出错");
+                    contentView.success(response.getContent());
+                } else {
+                    if (!TextUtils.isEmpty(response.getMsg())) {
+                        contentView.error(response.getMsg());
+                    }
                 }
-
             }
         });
         addNet(tag);
@@ -102,14 +101,10 @@ public class RealPersonExcahngePresenter extends BasePresenter {
     public void getBalanceItem(Context context, String type) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("type", type);
-        HttpManager.postObject(context,ItemBalanceBean.class, Url.getBalanceitem, httpParams, new OkGoCallback<ItemBalanceBean>() {
+        HttpManager.postObject(context, ItemBalanceBean.class, Url.getBalanceitem, httpParams, new OkGoCallback<ItemBalanceBean>() {
             @Override
             public void onSuccess(ItemBalanceBean response) {
-                if (!TextUtils.isEmpty(response.getBalance())) {
-                    contentView.updateBalanceItem(type, response.getBalance());
-                } else {
-                    contentView.updateBalanceError("");
-                }
+                contentView.updateBalanceItem(type, response.getBalance());
             }
 
             @Override
@@ -139,7 +134,7 @@ public class RealPersonExcahngePresenter extends BasePresenter {
                 if (response.isSuccess()) {
                     try {
                         DecimalFormat df = new DecimalFormat("#0.00");
-                        contentView.updateBalance(df.format(response.getContent().getBalance())+"元");
+                        contentView.updateBalance(df.format(response.getContent().getBalance()) + "元");
                     } catch (Exception e) {
 
                     }
