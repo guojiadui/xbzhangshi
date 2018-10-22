@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.xbzhangshi.R;
+import com.xbzhangshi.util.HtmlFormat;
 
 /**
  * 首页的服务提示
@@ -37,6 +38,9 @@ public class HomeTipDialog extends Dialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.home_tip_dialog, null);
         WebView mNotice = view.findViewById(R.id.notice);
+        mNotice.setHorizontalScrollBarEnabled(false);//水平不显示
+       // mNotice.setVerticalScrollBarEnabled(false); //垂直不显示
+
         // TextView notice2 = view.findViewById(R.id.notice2);
         TextView cancel = view.findViewById(R.id.cancel_action);
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +49,7 @@ public class HomeTipDialog extends Dialog {
                 dismiss();
             }
         });
+        notice = HtmlFormat.getNewContent(notice);
         mNotice.loadDataWithBaseURL(null, notice, "text/html", "utf-8", null);
         setContentView(view);
 

@@ -407,6 +407,7 @@ public class HomeBettingFragment extends BaseFragment implements IBettingBaseVie
     public void showDialog(String s) {
         if (homeTipDialog == null) {
             homeTipDialog = new HomeTipDialog(mActivity, s);
+
         }
         homeTipDialog.show();
     }
