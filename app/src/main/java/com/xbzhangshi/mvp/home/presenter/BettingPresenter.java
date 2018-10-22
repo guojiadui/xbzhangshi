@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.UIData;
 import com.allenliu.versionchecklib.v2.callback.RequestVersionListener;
+import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.lzy.okgo.OkGo;
@@ -36,6 +37,7 @@ import com.xbzhangshi.view.dialog.UpVersionDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.internal.operators.parallel.ParallelDoOnNextTry;
@@ -85,6 +87,11 @@ public class BettingPresenter extends BasePresenter {
                 Integer ver = Integer.parseInt(response.getContent().getVersion());
                 if (ver > cur) {
                     UpVersion.upVersion(context, response);
+                } else {
+                    File file = com.xbzhangshi.util.FileUtils.createAppStoragePath("apk");
+                    if (file.exists()) {
+                        FileUtils.deleteAllInDir(file);
+                    }
                 }
             }
         });

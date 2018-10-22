@@ -2,6 +2,8 @@ package com.xbzhangshi.app;
 
 public class Key {
 
+
+
     /**
      * 保存应用设置
      */

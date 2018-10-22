@@ -11,8 +11,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 
 import com.xbzhangshi.R;
-import com.xbzhangshi.mvp.login.LoginActivity;
-import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
 import com.xbzhangshi.mvp.base.BaseFragment;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
 import com.xbzhangshi.mvp.home.bean.BesidesLotteryBean;
@@ -21,9 +19,10 @@ import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter;
 
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
+import com.xbzhangshi.mvp.threegame.CardGameActivity;
+import com.xbzhangshi.mvp.threegame.EleGameActivity;
 import com.xbzhangshi.mvp.webview.CrownSportsActivity;
-import com.xbzhangshi.mvp.webview.ThreeGameActivity;
-import com.xbzhangshi.single.UserInfo;
+import com.xbzhangshi.mvp.threegame.ThreeGameActivity;
 import com.xbzhangshi.view.CustomViewPager;
 
 import java.util.List;
@@ -107,7 +106,7 @@ BettingItemFragment extends BaseFragment implements IBettingItemBaseView<Besides
             }
         });
         int postion = getArguments().getInt("postion");
-        if(postion==1){
+        if (postion == 1) {
             tip.setVisibility(View.VISIBLE);
         }
     }
@@ -123,11 +122,20 @@ BettingItemFragment extends BaseFragment implements IBettingItemBaseView<Besides
 
                 BettingTypeAdapter bettingTypeAdapter1 = (BettingTypeAdapter) adapter;
                 BesidesLotteryBean.ContentBean contentBean = bettingTypeAdapter1.getData().get(position);
-                if("hgty".equals(contentBean.getPlayCode())){
+                if ("hgty".equals(contentBean.getPlayCode())) {
                     //皇冠体育
                     CrownSportsActivity.start(mActivity, contentBean.getPlayCode());
-                }else {
-                    ThreeGameActivity.start(mActivity, contentBean.getPlayCode());
+                } else {
+                    if (fragmentID == 3) {
+                        //电子
+                        EleGameActivity.start(mActivity, contentBean.getPlayCode());
+                    } else if (fragmentID == 4) {
+                        //棋牌
+                        CardGameActivity.start(mActivity,contentBean.getPlayCode(),contentBean.getGameId());
+                    } else {
+                        ThreeGameActivity.start(mActivity, contentBean.getPlayCode());
+                    }
+
                 }
 
             }

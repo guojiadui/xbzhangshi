@@ -11,6 +11,9 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+import com.xbzhangshi.app.Key;
+import com.xbzhangshi.app.Url;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,11 +30,11 @@ public class FileUtils {
 
 
     /**
-     * 创建根缓存图片地址
+     * 创建app 的外部存储路径
      *
      * @return 图片地址
      */
-    public static File createXincaidongPath() {
+    public static File createAppStoragePath( String name) {
         String picturePath = "";
         if (isSdCardAvailable()) {
             // /storage/emulated/0
@@ -40,30 +43,14 @@ public class FileUtils {
             // /data
             picturePath = Environment.getDataDirectory().getPath();
         }
-        File xincaidong = new File(picturePath, "xincaidong");
+        File xincaidong = new File(picturePath, Url.StoragePath+File.separator+name);
         if (!xincaidong.exists()) {
             xincaidong.mkdirs();
         }
         return xincaidong;
     }
 
-    /**
-     * 创建外部图片地址
-     *
-     * @return 图片地址
-     */
-    public static String createExternalPicturePath(Context context) {
-        return new File(createXincaidongPath(), "Pictures").getPath();
-    }
 
-    /**
-     * 创建外部图片文件
-     *
-     * @return 图片文件
-     */
-    public static File createExternalPictureFile(Context context) {
-        return new File(createXincaidongPath(), "Pictures");
-    }
 
     /**
      * 创建根缓存图片地址

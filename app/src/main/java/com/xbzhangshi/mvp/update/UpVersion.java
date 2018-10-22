@@ -43,8 +43,9 @@ public class UpVersion {
     public static void setUpVerisonContent(Context content) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("flag", "android");
-        httpParams.put("version", 2);
+        httpParams.put("version", "2");
         httpParams.put("content", "dddddddddddddddd");
+        httpParams.put("url", "http://test-1251233192.coscd.myqcloud.com/1_1.apk");
         HttpManager.post(content, Url.saveAppUpdate, httpParams, new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
@@ -68,8 +69,9 @@ public class UpVersion {
                 .downloadOnly(
                         UpVersion.crateUIData().setTitle("版本更新")
                                 .setContent(versionBean.getContent().getContent())
-                                .setDownloadUrl("http://test-1251233192.coscd.myqcloud.com/1_1.apk")
+                                .setDownloadUrl(versionBean.getContent().getUrl())
                 )
+                .setDownloadAPKPath(com.xbzhangshi.util.FileUtils.createAppStoragePath("apk").getAbsolutePath()+File.separator)
                 .setForceRedownload(false)//本地有安装包缓存也不会重新下载
                 .setShowDownloadingDialog(false)//显示下载进度
                 .setNewestVersionCode(Integer.parseInt(versionBean.getContent().getVersion()))

@@ -47,12 +47,21 @@ public class BesidesLotteryBean {
          * title : AG真人娱乐
          */
 
+
         private int balance;
         private int dataCode;
         private String imgUrl;
         private String playCode;
         private String title;
+        private  String gameId;
 
+        public String getGameId() {
+            return gameId;
+        }
+
+        public void setGameId(String gameId) {
+            this.gameId = gameId;
+        }
         public int getBalance() {
             return balance;
         }

@@ -1,41 +1,31 @@
 package com.xbzhangshi.mvp.home.Fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
-import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter2;
 import com.xbzhangshi.mvp.home.baseView.IPurchaseItemView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
-import com.xbzhangshi.mvp.home.bean.LotterysCountDownBean;
-import com.xbzhangshi.mvp.home.bean.PurchaseTypeBean;
 import com.xbzhangshi.mvp.home.adapter.GPurchaseTypeAdapter;
 import com.xbzhangshi.mvp.home.adapter.VPurchaseTypeAdapter;
 import com.xbzhangshi.mvp.home.event.SwithEvent;
 import com.xbzhangshi.mvp.home.event.UpdateLotteryEvent;
 import com.xbzhangshi.mvp.home.presenter.PurchaseItemPesenter;
-import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
-import com.xbzhangshi.mvp.webview.ThreeGameActivity;
-import com.xbzhangshi.single.UserInfo;
+import com.xbzhangshi.mvp.threegame.ThreeGameActivity;
 import com.xbzhangshi.view.DividerGridItemDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;

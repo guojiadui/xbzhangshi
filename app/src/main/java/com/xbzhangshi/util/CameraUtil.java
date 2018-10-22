@@ -19,7 +19,7 @@ public class CameraUtil {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         //图片路径
-        File takePhotoDir = FileUtils.createPictureFile(context);
+        File takePhotoDir = FileUtils.createAppStoragePath("picture");
         File file = new File(takePhotoDir, System.currentTimeMillis() + ".png");
 //        String picPath = takePhotoDir.getAbsolutePath() + "/" + System.currentTimeMillis() + ".png";
         Uri mOriginUri;

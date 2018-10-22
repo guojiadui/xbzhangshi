@@ -14,6 +14,7 @@ import com.xbzhangshi.http.HttpManager;
 import com.xbzhangshi.http.OkGoCallback;
 import com.xbzhangshi.mvp.base.BasePresenter;
 import com.xbzhangshi.mvp.usercenter.BaseView.IMesssageListBaseView;
+import com.xbzhangshi.mvp.usercenter.bean.DelMsgBean;
 import com.xbzhangshi.mvp.usercenter.bean.MsgBean;
 import com.xbzhangshi.mvp.usercenter.bean.ReadBean;
 import com.xbzhangshi.mvp.usercenter.event.UpdateMsgCount;
@@ -226,12 +227,15 @@ public class MessageListPresenter extends BasePresenter {
 
     public void del(Context context, String value) {
         HttpParams httpParams = new HttpParams();
-        httpParams.put("id", value);
-        Object tag = HttpManager.getObject(context,ReadBean.class, Url.del_msg, httpParams, new OkGoCallback<ReadBean>() {
+        httpParams.put("batchId", value);
+        Object tag = HttpManager.postObject(context,DelMsgBean.class, Url.del_msg, httpParams, new OkGoCallback<DelMsgBean>() {
             @Override
-            public void onSuccess(ReadBean response) {
+            public void onSuccess(DelMsgBean response) {
                 if (response.isSuccess()) {
                     contentView.delSuccess(value);
+                    if(!TextUtils.isEmpty(response.getMsg())){
+                        Toast.makeText(context,response.getMsg(),Toast.LENGTH_SHORT).show();
+                    }
                     EventBus.getDefault().post(new UpdateMsgCount());
                 } else {
                     if (!TextUtils.isEmpty(response.getMsg())) {

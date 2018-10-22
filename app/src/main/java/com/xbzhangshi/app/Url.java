@@ -1,7 +1,11 @@
 package com.xbzhangshi.app;
 
 public class Url {
-   public static  String verPath = "/storage/emulated/0/AllenVersionPath"; //版本更新
+    /**
+     * 外部存储路径的文件名称
+     */
+    public  static  final String StoragePath = "xbzhangshi";
+
     public  final  static String APP_URL_HEAD ="http://xbzhanshi.com";
    public  final  static String intercept_Home_Back1 =APP_URL_HEAD+"/mobile";//返回webview的返回首页拦截
    public  final  static String intercept_Home_Back2 =APP_URL_HEAD+"/index.do";//返回webview的返回首页拦截釦
@@ -32,7 +36,7 @@ public class Url {
      public  final  static String drawcommit ="/post_pick_money.do" ;//申请提款
      public  final  static String geRecordSwitch ="/geRecordSwitch"+BASE_END;//用户中心的几状态
      public  final  static String read =APP_URL_HEAD+"/center/news/message/batchRead.do";//设置站内信已读
-     public  final  static String del_msg =APP_URL_HEAD+"/center/news/message/batchDelete.do";//删除内信
+     public  final  static String del_msg =BASE_URL+"/batchDelete.do";//删除内信
      public  final  static String up_login_pwd =APP_URL_HEAD+"/center/member/meminfo/newpwd.do";//更新登录密码
      public  final  static String drawing_money_pwd =BASE_URL+"/set_receipt_pwd.do";//设置取款密码
      public  final  static String bindingBlank =BASE_URL+"/post_bank_data.do";//绑定银行卡
@@ -45,7 +49,7 @@ public class Url {
      public  final  static String getRealNameType =BASE_URL+"/getRealGameData.do";//真人额度转换
      public  final  static String realpng =APP_URL_HEAD+"/mobile/v3/images/real/";//真人额度转换
      public  final  static String thirdRealTransMoney =BASE_URL+"/thirdRealTransMoney.do";//转出转入第三方额度
-     public  final  static String getBalanceitem =APP_URL_HEAD+"/rc4m/getBalance.do";//获得某真人余额
+     public  final  static String getBalanceitem =BASE_URL+"/getBalance.do";//获得某真人余额
      public  final  static String signByMonth =APP_URL_HEAD+"/sign/signByMonth.do";//获取每个月的签到天
      public  final  static String signIn =APP_URL_HEAD+"/sign/signIn.do";//签到
      public  final  static String lastrd =APP_URL_HEAD+"/center/active/lastrd.do";//获奖名单
@@ -58,7 +62,6 @@ public class Url {
      public  final  static String customerService =APP_URL_HEAD+"/mobile/v3/customerService.do";//客服
      public  final  static String helplist =APP_URL_HEAD+"/native/helplist.do";//帮助中心
      public  final  static String bet_lotterys =APP_URL_HEAD+"/mobile/v3/bet_lotterys.do?lotCode=";//投注网页
-     public  final  static String forwardReal =APP_URL_HEAD+"/native/forwardReal.do?playCode=";//三方跳转网页
      public  final  static String Crown_Sports=APP_URL_HEAD+"/mobile/v3/sport/hg/goPage.do?dataType=TD_FT_MN";//皇冠体育
      public  final  static String Crown_Sports_cookis=APP_URL_HEAD+"/mobile/sports/hg/getData.do";//皇冠体育的cookie绑定
      public  final  static String turnlate=APP_URL_HEAD+"/mobile/v3/turnlate.do";//转盘页面
@@ -67,6 +70,12 @@ public class Url {
      public  final  static String Version=BASE_URL+"/getCurrentLastVersion.do";//版本更新
      public  final  static String saveAppUpdate=BASE_URL+"/saveAppUpdate.do";//更新服务器的更新内容
 
+
+    /**
+     * 三方游戏的跳转
+     */
+    public  final  static String ele_index=APP_URL_HEAD+"/mobile/v3/third/index.do?code=";//电子游戏的跳转
+    public  final  static String forwardReal =APP_URL_HEAD+"/native/forwardReal.do?playCode=";//真人游戏的跳转
 
 
  /**

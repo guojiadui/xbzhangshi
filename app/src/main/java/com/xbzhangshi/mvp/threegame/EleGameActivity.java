@@ -1,4 +1,4 @@
-package com.xbzhangshi.mvp.webview;
+package com.xbzhangshi.mvp.threegame;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,7 +31,10 @@ import java.util.List;
 
 import okhttp3.Cookie;
 
-public class ThreeGameActivity extends BaseWebViewActivity {
+/**
+ * 三方电子游戏
+ */
+public class EleGameActivity extends BaseWebViewActivity {
 
     public static long startitme = 0;
 
@@ -46,7 +49,7 @@ public class ThreeGameActivity extends BaseWebViewActivity {
             LoginActivity.startLogin(context);
             return;
         }
-        Intent intent = new Intent(context, ThreeGameActivity.class);
+        Intent intent = new Intent(context, EleGameActivity.class);
         intent.putExtra("code", code);
         context.startActivity(intent);
     }
@@ -61,42 +64,11 @@ public class ThreeGameActivity extends BaseWebViewActivity {
         webView = (WebView) findViewById(getWebViewId());
         multipleStatusView = findViewById(R.id.multipleStatusView);
         code = getIntent().getStringExtra("code");
-        multipleStatusView.setOnRetryClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getUrl();
-            }
-        });
-        getUrl();
+        String url =Url.ele_index+code;
+        initWeb(url);
     }
 
-    public void getUrl() {
 
-        multipleStatusView.showLoading();
-        HttpManager.getObject(this, TransUrlBean.class, Url.forwardReal + code, null, new OkGoCallback<TransUrlBean>() {
-            @Override
-            public void onSuccess(TransUrlBean response) {
-                multipleStatusView.showContent();
-                if (response.isSuccess()) {
-                    initWeb(response.getContent().getUrl());
-                } else {
-                    if (!TextUtils.isEmpty(response.getMsg())) {
-                        Toast.makeText(ThreeGameActivity.this, response.getMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void parseError() {
-                multipleStatusView.showError();
-            }
-
-            @Override
-            public void onError(Response<String> response) {
-                multipleStatusView.showError();
-            }
-        });
-    }
 
     public void initWeb(String url) {
         webView.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端

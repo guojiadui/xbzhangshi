@@ -64,11 +64,13 @@
         <activity android:name=".mvp.webview.CustomerServiceActivity" />
         <activity android:name=".mvp.webview.HelpCneterActivity" />
         <activity android:name=".mvp.webview.HelpDetailActivity" />
-        <activity android:name=".mvp.webview.ThreeGameActivity" />
+        <activity android:name=".mvp.threegame.ThreeGameActivity" />
         <activity android:name=".mvp.webview.CrownSportsActivity" />
         <activity android:name=".mvp.webview.LuckDrawActivity" />
         <activity android:name=".mvp.record.details.SportsRecordDetailsActivity" />
         <activity android:name=".mvp.record.details.SBSportsRecordDetailsActivity" />
+        <activity android:name=".mvp.threegame.EleGameActivity" />
+        <activity android:name=".mvp.threegame.CardGameActivity" />
 
 
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"

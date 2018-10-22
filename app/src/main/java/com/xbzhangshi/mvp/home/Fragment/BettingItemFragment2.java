@@ -10,14 +10,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.classic.common.MultipleStatusView;
 import com.xbzhangshi.R;
 import com.xbzhangshi.mvp.base.BaseFragment;
-import com.xbzhangshi.mvp.login.LoginActivity;
 import com.xbzhangshi.mvp.webview.BettingDetailsActivity;
 import com.xbzhangshi.mvp.home.adapter.BettingTypeAdapter2;
 import com.xbzhangshi.mvp.home.baseView.IBettingItemBaseView;
 import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
-import com.xbzhangshi.mvp.webview.ThreeGameActivity;
-import com.xbzhangshi.single.UserInfo;
+import com.xbzhangshi.mvp.threegame.ThreeGameActivity;
 import com.xbzhangshi.view.CustomViewPager;
 
 import java.util.List;

@@ -104,7 +104,13 @@ public class RealPersonExcahngePresenter extends BasePresenter {
         HttpManager.postObject(context, ItemBalanceBean.class, Url.getBalanceitem, httpParams, new OkGoCallback<ItemBalanceBean>() {
             @Override
             public void onSuccess(ItemBalanceBean response) {
-                contentView.updateBalanceItem(type, response.getBalance());
+                if(response.isSuccess()){
+                    contentView.updateBalanceItem(type, response.getBalance());
+                }else {
+                    if(!TextUtils.isEmpty(response.getMsg())){
+                        contentView.error(response.getMsg());
+                    }
+                }
             }
 
             @Override

@@ -90,8 +90,8 @@ public class HttpManager {
 
             @Override
             public void onError(Response<String> response) {
-               /* if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("net", response.body());*/
+                if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("net", response.body());
                 super.onError(response);
                 if (back != null) {
                     back.onError(response);
@@ -124,8 +124,8 @@ public class HttpManager {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-              /*  if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("netonError", response.body());*/
+                 if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("netonError", response.body());
                 if (back != null) {
                     back.onError(response);
                 }

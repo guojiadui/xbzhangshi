@@ -135,6 +135,10 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     }
 
     @JavascriptInterface
+    public void backPage (String ss) {
+        finish();
+    }
+    @JavascriptInterface
     public void webBack(String ss) {
         finish();
     }
