@@ -116,12 +116,12 @@ public class MyApplication extends MultiDexApplication implements Utils.OnAppSta
             ServiceTime.getInstance().exit();
         }
         isExit = true;
-        handler.postDelayed(new Runnable() {
+      /*  handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                // System.exit(0);
             }
-        },500);
+        },500);*/
         UserInfo.getInstance().logout();
       // System.exit(0);
     }

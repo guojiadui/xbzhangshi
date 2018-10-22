@@ -51,12 +51,13 @@ import butterknife.BindView;
 public class HomeActivity extends BaseActivity implements IHomeBaseView {
 
 
-    public  static void start(Context context){
-        Intent intent = new Intent(context,HomeActivity.class);
+    public static void start(Context context) {
+        Intent intent = new Intent(context, HomeActivity.class);
         context.startActivity(intent);
     }
-    public  static void start(Context context,int ppostion){
-        Intent intent = new Intent(context,HomeActivity.class);
+
+    public static void start(Context context, int ppostion) {
+        Intent intent = new Intent(context, HomeActivity.class);
         context.startActivity(intent);
         EventBus.getDefault().post(new SelectEvent(0));
     }
@@ -87,7 +88,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         /**
          * 上传更新的内容
          */
-         //UpVersion.setUpVerisonContent(this);
+         UpVersion.setUpVerisonContent(this);
         mBottomBar.addItem(new BottomBarTab(this, R.mipmap.sy_nor, "投注大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.gcdt_nor, "购彩大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.kjdt_nor, "开奖公告"))
@@ -165,7 +166,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         //为侧滑菜单设置布局
         viewMenu = LayoutInflater.from(this).inflate(R.layout.sideslip_layout, null);
         menu.setMenu(viewMenu);
-        sidePesenter = SidePesenter.newInstance(menu,viewMenu);
+        sidePesenter = SidePesenter.newInstance(menu, viewMenu);
         sidePesenter.init(this);
         RelativeLayout sideExit = viewMenu.findViewById(R.id.side_app_exit);
         sideExit.setOnClickListener(new View.OnClickListener() {
@@ -184,11 +185,12 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
             menu.toggle();
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(BalanceEvent event) {
-       if(sidePesenter!=null){
-       sidePesenter.setBalance(event.getS());
-       }
+        if (sidePesenter != null) {
+            sidePesenter.setBalance(event.getS());
+        }
     }
 
     //退出
@@ -212,7 +214,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
             sidePesenter.login(this);
         }
         //登录成功后获取没读
-        if(homePresenter!=null){
+        if (homePresenter != null) {
             homePresenter.getMsgCount(this);
         }
     }
@@ -223,6 +225,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
             mBottomBar.setCurrentItem(event.getPosition());
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ClearHomeMsgEvent event) {
         if (mBottomBar != null) {
@@ -339,9 +342,10 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         }
 
     }
+
     @Override
     public void upMsgCount(int msg) {
-        if(mBottomBar==null){
+        if (mBottomBar == null) {
             return;
         }
         mBottomBar.getItem(3).setUnreadCount(msg);

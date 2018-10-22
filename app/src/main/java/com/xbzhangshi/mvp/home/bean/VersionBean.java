@@ -42,6 +42,17 @@ public class VersionBean {
         private int status;
         private String version;
 
+
+        public int getIsUpdate() {
+            return isUpdate;
+        }
+
+        public void setIsUpdate(int isUpdate) {
+            this.isUpdate = isUpdate;
+        }
+
+        private  int isUpdate;
+
         public String getUrl() {
             return url;
         }

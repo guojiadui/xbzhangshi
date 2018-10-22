@@ -21,6 +21,7 @@ import com.xbzhangshi.mvp.home.bean.LoctteryBean;
 import com.xbzhangshi.mvp.home.presenter.BettingItemPresenter;
 import com.xbzhangshi.mvp.threegame.CardGameActivity;
 import com.xbzhangshi.mvp.threegame.EleGameActivity;
+import com.xbzhangshi.mvp.threegame.RealGameActivity;
 import com.xbzhangshi.mvp.webview.CrownSportsActivity;
 import com.xbzhangshi.mvp.threegame.ThreeGameActivity;
 import com.xbzhangshi.view.CustomViewPager;
@@ -131,7 +132,10 @@ BettingItemFragment extends BaseFragment implements IBettingItemBaseView<Besides
                         EleGameActivity.start(mActivity, contentBean.getPlayCode());
                     } else if (fragmentID == 4) {
                         //棋牌
-                        CardGameActivity.start(mActivity,contentBean.getPlayCode(),contentBean.getGameId());
+                        CardGameActivity.start(mActivity, contentBean.getPlayCode(), contentBean.getGameId());
+                    } else if (fragmentID == 2) {
+                        //真人
+                        RealGameActivity.start(mActivity, contentBean.getPlayCode(), contentBean.getTitle());
                     } else {
                         ThreeGameActivity.start(mActivity, contentBean.getPlayCode());
                     }

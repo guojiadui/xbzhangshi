@@ -135,9 +135,10 @@ public abstract class BaseWebViewActivity extends BaseActivity {
     }
 
     @JavascriptInterface
-    public void backPage (String ss) {
+    public void backPage(String ss) {
         finish();
     }
+
     @JavascriptInterface
     public void webBack(String ss) {
         finish();
@@ -194,8 +195,8 @@ public abstract class BaseWebViewActivity extends BaseActivity {
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            Log.e("TAG1", request.getUrl().toString());
-            if (Url.intercept_Home_Back1.equals(request.getUrl().toString())||
+          //  Log.e("TAG1", request.getUrl().toString());
+            if (Url.intercept_Home_Back1.equals(request.getUrl().toString()) ||
                     Url.intercept_Home_Back2.equals(request.getUrl().toString())) {
                 HomeActivity.start(BaseWebViewActivity.this);
                 return true;
@@ -206,9 +207,9 @@ public abstract class BaseWebViewActivity extends BaseActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.e("TAG2", url);
-            if (Url.intercept_Home_Back1.equals(url)||
-                    Url.intercept_Home_Back2.equals(url)) {
+           // Log.e("TAG2", url);
+            if (Url.intercept_Home_Back1.equals(url) ||
+                    Url.intercept_Home_Back2.equals(url) || Url.intercept_Home_Back3.equals(url)) {
                 HomeActivity.start(BaseWebViewActivity.this);
                 return true;
             }

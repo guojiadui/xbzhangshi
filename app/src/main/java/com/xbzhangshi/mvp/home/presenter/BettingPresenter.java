@@ -1,8 +1,11 @@
 package com.xbzhangshi.mvp.home.presenter;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
@@ -77,8 +80,22 @@ public class BettingPresenter extends BasePresenter {
 
 
     public void getVersionUpdate(Context context) {
+
+        //判断文件是否可以解析。下载是否完整
+       /* String apkPath = com.xbzhangshi.util.FileUtils.createAppStoragePath("apk").getAbsolutePath()
+                + File.separator + context.getPackageName() + ".apk";
+        Log.e("Up", apkPath);
+        File file = new File(apkPath);
+        if(file.exists()){
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_ACTIVITIES);
+            if (packageInfo == null) {
+                Log.e("Up", "解析异常");
+            }
+        }*/
         HttpParams httpParams = new HttpParams();
         httpParams.put("flag", "android");
+
         HttpManager.getObjectNoLogin(context, VersionBean.class, Url.Version, httpParams, new OkGoCallback<VersionBean>() {
             @Override
             public void onSuccess(VersionBean response) {

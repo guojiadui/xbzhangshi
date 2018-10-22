@@ -81,7 +81,6 @@ public class ChatActivity extends BaseActivity implements FuncLayout.OnFuncKeyBo
         recyclerview.setLayoutManager(layoutManager);
         chatAdapter = new ChatAdapter(this);
         recyclerview.setAdapter(chatAdapter);
-
         initEmoticonsKeyBoardBar();
     }
 

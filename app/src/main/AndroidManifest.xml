@@ -71,6 +71,7 @@
         <activity android:name=".mvp.record.details.SBSportsRecordDetailsActivity" />
         <activity android:name=".mvp.threegame.EleGameActivity" />
         <activity android:name=".mvp.threegame.CardGameActivity" />
+        <activity android:name=".mvp.threegame.RealGameActivity" />
 
 
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
