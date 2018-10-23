@@ -45,9 +45,9 @@ public class UpVersion {
     public static void setUpVerisonContent(Context content) {
         HttpParams httpParams = new HttpParams();
         httpParams.put("flag", "android");
-        httpParams.put("version", "2");
+        httpParams.put("version", "1");
         httpParams.put("content", "版本更新测试");
-        httpParams.put("isUpdate", "2");
+        httpParams.put("isUpdate", "2");//1为强制更新
         httpParams.put("url", "https://app.xbzhanshi.com/download/xbzhangshi2.0.apk");
         HttpManager.post(content, Url.saveAppUpdate, httpParams, new StringCallback() {
             @Override

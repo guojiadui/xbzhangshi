@@ -106,10 +106,10 @@ BettingItemFragment extends BaseFragment implements IBettingItemBaseView<Besides
                 bettingItemPresenter.loadDataBesidesLotterys(mActivity, p);
             }
         });
-        int postion = getArguments().getInt("postion");
-        if (postion == 1) {
+      //  int postion = getArguments().getInt("postion");
+       /* if (postion == 1) {
             tip.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
 
