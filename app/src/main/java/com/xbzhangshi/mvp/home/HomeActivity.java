@@ -88,7 +88,7 @@ public class HomeActivity extends BaseActivity implements IHomeBaseView {
         /**
          * 上传更新的内容
          */
-         UpVersion.setUpVerisonContent(this);
+       //  UpVersion.setUpVerisonContent(this);
         mBottomBar.addItem(new BottomBarTab(this, R.mipmap.sy_nor, "投注大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.gcdt_nor, "购彩大厅"))
                 .addItem(new BottomBarTab(this, R.mipmap.kjdt_nor, "开奖公告"))

@@ -39,11 +39,11 @@ public class HttpManager {
      * @return
      */
     public static <T> Object getObjectNoLogin(Context context,  Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-       Log.e("net", url);
+      // Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-              Log.e("nonet",url+":"+ response.body());
+             // Log.e("nonet",url+":"+ response.body());
 
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -70,11 +70,11 @@ public class HttpManager {
         return url;
     }
     public static <T> Object getObject(Context context,  Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-       Log.e("net", url);
+     //  Log.e("net", url);
         OkGo.<String>get(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-              Log.e("net",url+":"+ response.body());
+            //  Log.e("net",url+":"+ response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -90,8 +90,8 @@ public class HttpManager {
 
             @Override
             public void onError(Response<String> response) {
-                if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("net", response.body());
+            /*    if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("net", response.body());*/
                 super.onError(response);
                 if (back != null) {
                     back.onError(response);
@@ -103,11 +103,11 @@ public class HttpManager {
 
 
     public static <T> Object postObject(Context context, Class<T> c, String url, HttpParams params, OkGoCallback<T> back) {
-      Log.e("net", url);
+     // Log.e("net", url);
         OkGo.<String>post(url).tag(url).params(params).execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
-               Log.e("net",url+":"+ response.body());
+            //   Log.e("net",url+":"+ response.body());
                 islogin(context, response.body());
                 try {
                     T t = JSON.parseObject(response.body(), c);
@@ -124,9 +124,9 @@ public class HttpManager {
             @Override
             public void onError(Response<String> response) {
                 super.onError(response);
-                 if (response != null && !TextUtils.isEmpty(response.body()))
-                    Log.e("netonError", response.body());
-                if (back != null) {
+                 /*if (response != null && !TextUtils.isEmpty(response.body()))
+                    Log.e("netonError", response.body());*/
+                    if (back != null) {
                     back.onError(response);
                 }
             }
