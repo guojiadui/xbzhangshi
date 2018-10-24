@@ -95,7 +95,7 @@ public class OpenPrizedetailsActivity extends BaseActivity implements OnLoadMore
             @Override
             public void onClick(View v) {
                 multipleStatusView.showLoading();
-                refreshLayout.setNoMoreData(false);
+               // refreshLayout.setNoMoreData(false);
                 openPrizeDetailspresenter.LoadDaata(OpenPrizedetailsActivity.this);
             }
         });
